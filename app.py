@@ -5,6 +5,7 @@ import ttkbootstrap as ttk
 import information as info
 from EditorGui import GUI
 from PokedexController import Controller
+import os
 
 #Setup Initials
 root = ttk.Window(themename='darkly')

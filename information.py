@@ -2,7 +2,28 @@ import re
 from Pokemon import Pokemon
 import os
 from tkinter import messagebox as mb
+# Check Directories
+directories = [
+    "PBS FILES/abilities.txt",
+    "PBS FILES/moves.txt",
+    "PBS FILES/pokemon.txt",
+    "PBS FILES/Export"
+]
 
+def check_directories(file_paths):
+    for file_path in file_paths:
+    # Extract the directory path from the file path
+        directory = os.path.dirname(file_path)
+        
+        # Check if the directory exists, create it if not
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        
+        # Now check if the file exists, create it if not
+        if not os.path.isfile(file_path):
+            with open(file_path, 'w') as file:
+                pass  
+check_directories(directories)
 
 types = ['NORMAL', 'FIRE','WATER','ELECTRIC','GRASS','ICE','FIGHTING','POISON','GROUND','FLYING','PSYCHIC','BUG','ROCK','GHOST','DRAGON','DARK','STEEL','FAIRY']
 
