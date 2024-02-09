@@ -7,7 +7,6 @@ directories = [
     "PBS FILES/abilities.txt",
     "PBS FILES/moves.txt",
     "PBS FILES/pokemon.txt",
-    "PBS FILES/Export"
 ]
 
 def check_directories(file_paths):

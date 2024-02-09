@@ -9,6 +9,7 @@ class GUI:
     def __init__(self, ROOT,):
       self.ROOT = ROOT
       self.ROOT.title("Pokemon PBS Editor")
+      self.ROOT.iconbitmap('icon.ico')
       self.val_num_only = (self.ROOT.register(self._validate_num_only), '%P')
       self.val_num_float = (self.ROOT.register(self._validate_num_float_only), '%P')
       self.val_char_only = (self.ROOT.register(self._validate_char_only), '%P')
