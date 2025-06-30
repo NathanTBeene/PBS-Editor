@@ -1,8 +1,7 @@
 <script lang="ts">
-  import TypeSelector from './../components/TypeSelector.svelte'
-  import TypeButton from './../components/TypeButton.svelte'
   import { PokemonParser, type PokemonData } from '../lib/services/PokemonParser'
   import { pokemonData, selectedPokemon } from '../lib/data/globals'
+  import TypeSelector from './../components/TypeSelector.svelte'
 
   let pokemonList: PokemonData[] = $pokemonData
 
@@ -29,6 +28,16 @@
       console.error('Error opening file:', error)
     }
   }
+
+  const createPokemon = (id: string) => {
+    const emptyPokemon = PokemonParser.createEmptyPokemonData(id)
+    if (emptyPokemon) {
+      pokemonData.update((data) => [...data, emptyPokemon])
+      selectPokemon(emptyPokemon)
+    } else {
+      console.error('Failed to create empty Pokemon data')
+    }
+  }
 </script>
 
 <header>
@@ -38,7 +47,10 @@
 
 <div class="page-container">
   <div class="pokemon-list-container">
-    <h2>Pokemon ({pokemonList.length})</h2>
+    <div class="list-header">
+      <h2>Pokemon ({pokemonList.length})</h2>
+      <button class="add-pokemon-button">+</button>
+    </div>
     <div class="pokemon-list-search">
       <input
         type="text"
@@ -97,6 +109,8 @@
     {/if}
   </div>
 </div>
+
+<!-- Add Pokemon Modal -->
 
 <style>
   .page-container {

@@ -103,15 +103,79 @@ export class PokemonParser {
 
     return pokemonData.filter((data) => data !== null) as PokemonData[]
   }
-
   private static validateData(data: Partial<PokemonData>): PokemonData | null {
-    // Implement validation logic here
-    // For now, just return the data if it has an ID
-    if (data.id) {
-      return data as PokemonData
+    // Must have an ID to be valid
+    if (!data.id) {
+      console.warn('Invalid Pokemon data - missing ID:', data)
+      return null
     }
-    console.warn('Invalid Pokemon data:', data)
-    return null
+
+    // Create validated data with defaults
+    const validatedData: PokemonData = {
+      // Core identification
+      id: data.id,
+      name: data.name || '',
+      formName: data.formName || '',
+
+      // Type information
+      types: data.types || [],
+
+      // Base stats
+      baseStats: data.baseStats || {
+        hp: 0,
+        atk: 0,
+        def: 0,
+        spe: 0,
+        spa: 0,
+        spd: 0
+      },
+
+      // Training
+      genderRatio: data.genderRatio || GenderRatio.Female50Percent,
+      growthRate: data.growthRate || GrowthRate.Medium,
+      baseExp: data.baseExp || 0,
+      evs: data.evs || {},
+      catchRate: data.catchRate || 0,
+      happiness: data.happiness || 0,
+
+      // Abilities
+      abilities: data.abilities || [],
+      hiddenAbilities: data.hiddenAbilities || [],
+
+      // Moves
+      moves: data.moves || [],
+      tutorMoves: data.tutorMoves || [],
+      eggMoves: data.eggMoves || [],
+
+      // Breeding
+      eggGroups: data.eggGroups || [],
+      hatchSteps: data.hatchSteps || 0,
+      insence: data.insence || '',
+      offspring: data.offspring || [],
+
+      // Physical characteristics
+      height: data.height || 0,
+      weight: data.weight || 0,
+      color: data.color || PokemonColor.Gray,
+      shape: data.shape || PokemonShape.Quadruped,
+      habitat: data.habitat || Habitat.None,
+
+      // Pokedex information
+      category: data.category || '',
+      pokedex: data.pokedex || '',
+      generation: data.generation || 1,
+
+      // Evolution
+      evolutions: data.evolutions || [],
+
+      // Miscellaneous
+      flags: data.flags || [],
+      wildItemCommon: data.wildItemCommon || [],
+      wildItemUncommon: data.wildItemUncommon || [],
+      wildItemRare: data.wildItemRare || []
+    }
+
+    return validatedData
   }
 
   private static validateEnum(content: string, type: any): boolean {
@@ -200,6 +264,14 @@ export class PokemonParser {
 
     return moves
   }
+
+  public static createEmptyPokemonData(id: string): PokemonData | null {
+    const emptyData: Partial<PokemonData> = {
+      id: id
+    }
+
+    return PokemonParser.validateData(emptyData) || null
+  }
 }
 
 // Types and interfaces for Pokemon data
@@ -282,10 +354,42 @@ export enum PokemonShape {
   Armor = 'Armor'
 }
 
+export enum EggGroup {
+  Monster = 'Monster',
+  Water1 = 'Water1',
+  Bug = 'Bug',
+  Flying = 'Flying',
+  Field = 'Field',
+  Fairy = 'Fairy',
+  Grass = 'Grass',
+  Humanlike = 'Humanlike',
+  Water3 = 'Water3',
+  Mineral = 'Mineral',
+  Amorphous = 'Amorphous',
+  Water2 = 'Water2',
+  Ditto = 'Ditto',
+  Dragon = 'Dragon',
+  Undiscovered = 'Undiscovered'
+}
+
+export enum Habitat {
+  None = 'None',
+  Cave = 'Cave',
+  Forest = 'Forest',
+  Grassland = 'Grassland',
+  Mountain = 'Mountain',
+  Rare = 'Rare',
+  RoughTerrain = 'RoughTerrain',
+  Sea = 'Sea',
+  Urban = 'Urban',
+  WatersEdge = 'WatersEdge'
+}
+
 export interface PokemonData {
   // Core identification
   id: string
-  name?: string
+  name: string
+  formName: string
 
   // Type information
   types: PokemonType[]
@@ -293,39 +397,47 @@ export interface PokemonData {
   // Base stats
   baseStats: PokemonStats
 
-  // Training and breeding
-  genderRatio?: GenderRatio
-  growthRate?: GrowthRate
-  baseExp?: number
-  evs?: PokemonEVs
-  catchRate?: number
-  happiness?: number
+  // Training
+  genderRatio: GenderRatio
+  growthRate: GrowthRate
+  baseExp: number
+  evs: PokemonEVs
+  catchRate: number
+  happiness: number
 
   // Abilities
-  abilities?: string[]
-  hiddenAbilities?: string[]
+  abilities: string[]
+  hiddenAbilities: string[]
 
   // Moves
-  moves?: PokemonMove[]
-  tutorMoves?: string[]
-  eggMoves?: string[]
+  moves: PokemonMove[]
+  tutorMoves: string[]
+  eggMoves: string[]
 
   // Breeding
-  eggGroups?: string[]
-  hatchSteps?: number
+  eggGroups: EggGroup[]
+  hatchSteps: number
+  insence: string
+  offspring: string[]
 
   // Physical characteristics
-  height?: number
-  weight?: number
-  color?: PokemonColor
-  shape?: PokemonShape
-  habitat?: string
+  height: number
+  weight: number
+  color: PokemonColor
+  shape: PokemonShape
+  habitat: Habitat
 
   // Pokedex information
-  category?: string
-  pokedex?: string
-  generation?: number
+  category: string
+  pokedex: string
+  generation: number
 
   // Evolution
-  evolutions?: PokemonEvolution[]
+  evolutions: PokemonEvolution[]
+
+  // Miscellaneous
+  flags: string[]
+  wildItemCommon: string[]
+  wildItemUncommon: string[]
+  wildItemRare: string[]
 }
