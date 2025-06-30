@@ -1,7 +1,8 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import fs from 'fs'
 
 function createWindow(): void {
   // Create the browser window.
@@ -72,3 +73,47 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.handle('open-file-dialog', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [
+      { name: 'Text Files', extensions: ['txt'] },
+      { name: 'All Files', extensions: ['*'] }
+    ]
+  })
+
+  if (!result.canceled && result.filePaths.length > 0) {
+    const filePath = result.filePaths[0]
+    try {
+      const content = fs.readFileSync(filePath, 'utf-8')
+      return { success: true, content, filePath }
+    } catch (error) {
+      console.error('Error reading file:', error)
+      return { success: false, error: 'Failed to read file' }
+    }
+  }
+
+  return { success: false, error: 'No file selected' }
+})
+
+ipcMain.handle('save-file-dialog', async (_, content: string) => {
+  const result = await dialog.showSaveDialog({
+    filters: [
+      { name: 'Text Files', extensions: ['txt'] },
+      { name: 'All Files', extensions: ['*'] }
+    ]
+  })
+
+  if (!result.canceled && result.filePath) {
+    try {
+      fs.writeFileSync(result.filePath, content, 'utf-8')
+      return { success: true, filePath: result.filePath }
+    } catch (error) {
+      console.error('Error writing file:', error)
+      return { success: false, error: 'Failed to save file' }
+    }
+  }
+
+  return { success: false, error: 'Save operation was canceled' }
+})
