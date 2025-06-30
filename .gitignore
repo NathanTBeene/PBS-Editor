@@ -1,3 +1,18 @@
+# Build outputs
+dist/
+build/
+out/
+release/
+
+# Electron specific
+dist_electron/
+release-builds/
+
+
+# VsCode settings
+.vscode/
+
+
 node_modules
 dist
 out
