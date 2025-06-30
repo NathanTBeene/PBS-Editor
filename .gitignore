@@ -1,31 +1,6 @@
-# Python
-__pycache__/
-
-# Build output
-dist/
-build/
-out/
-
-# Logs
-*.log
-
-# OS generated files
+node_modules
+dist
+out
 .DS_Store
-Thumbs.db
-
-# Environment files
-.env
-.env.local
-.env.*.local
-
-# VSCode settings
-.vscode/
-.venv/
-
-# Coverage reports
-coverage/
-
-# Misc
-*.log
-*.tmp
-*.swp
+.eslintcache
+*.log*
