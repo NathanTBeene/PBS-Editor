@@ -20,6 +20,7 @@ Thumbs.db
 
 # VSCode settings
 .vscode/
+.venv/
 
 # Coverage reports
 coverage/

@@ -1,2 +1,0 @@
-
-gui = GUI(root)
