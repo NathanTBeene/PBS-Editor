@@ -1,5 +1,7 @@
+import { type PokemonType } from '../data/globals'
+
 export class PokemonParser {
-  public static parse(content: String): PokemonData[] {
+  public static parse(content: string): PokemonData[] {
     const lines = content.split(/\r?\n/)
     const pokemonData: PokemonData[] = []
     // Split by #----
@@ -37,10 +39,13 @@ export class PokemonParser {
             partialData.name = value
             break
           case 'Types':
-            partialData.types = value
+            const types = value
               .split(',')
               .map((type) => type.trim())
-              .filter((type) => type.length > 0)
+              .filter((type) => type.length > 0) as PokemonType[]
+            if (types.length > 0) {
+              partialData.types = types
+            }
           case 'BaseStats':
             const stats: PokemonStats = PokemonParser.parseBaseStats(value)
             partialData.baseStats = stats
@@ -283,7 +288,7 @@ export interface PokemonData {
   name?: string
 
   // Type information
-  types: string[]
+  types: PokemonType[]
 
   // Base stats
   baseStats: PokemonStats

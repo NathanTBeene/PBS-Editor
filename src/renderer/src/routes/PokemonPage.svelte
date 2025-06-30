@@ -1,23 +1,26 @@
 <script lang="ts">
+  import TypeButton from './../components/TypeButton.svelte'
   import { PokemonParser, type PokemonData } from '../lib/services/PokemonParser'
+  import { pokemonData, selectedPokemon } from '../lib/data/globals'
 
-  let pokemonData: PokemonData[] = []
-  let selectedPokemon: PokemonData | null = null
+  let pokemonList: PokemonData[] = $pokemonData
 
   function selectPokemon(pokemon: PokemonData) {
-    selectedPokemon = pokemon
+    selectedPokemon.set(pokemon)
     console.log('Selected Pokemon:', pokemon)
   }
 
-  async function importFile() {
+  async function importPokemonPBS() {
     try {
       const result = await window.api.openFile()
 
       if (result.success) {
         const content = result.content || ''
-        pokemonData = PokemonParser.parse(content)
+        const data = PokemonParser.parse(content)
+        pokemonData.set(data)
+        pokemonList = data
         console.log('Pokemon data imported')
-        console.log('First Pokemon:', pokemonData[3])
+        console.log('First Pokemon:', data[3])
       } else {
         console.error('Failed to open file:', result.error)
       }
@@ -27,64 +30,127 @@
   }
 </script>
 
-<main>
-  <h1>PBS-Editor</h1>
-  <button onclick={importFile}>Import PBS File</button>
-  <aside>
-    <div>
-      <h2>Pokemon ({pokemonData.length})</h2>
-      {#if pokemonData.length > 0}
-        <div class="pokemon-list">
-          {#each pokemonData as pokemon}
-            <div
-              class="pokemon-item"
-              class:selected={selectedPokemon === pokemon}
-              onclick={() => selectPokemon(pokemon)}
-              role="button"
-              tabindex="0"
-              onkeydown={(e) => e.key === 'Enter' && selectPokemon(pokemon)}
-            >
-              {pokemon.name}
-            </div>
-          {/each}
-        </div>
-      {:else}
-        <p>No Pokemon data available.</p>
-      {/if}
+<header>
+  <h1>Pokemon Editing Page</h1>
+  <button on:click={importPokemonPBS}>Import Pokemon File</button>
+</header>
+
+<div class="page-container">
+  <div class="pokemon-list-container">
+    <h2>Pokemon ({pokemonList.length})</h2>
+    <div class="pokemon-list-search">
+      <input
+        type="text"
+        placeholder="Search Pokemon..."
+        on:input={(e) => {
+          const searchTerm = (e.target as HTMLInputElement).value.toLowerCase()
+          pokemonList = $pokemonData.filter((pokemon) =>
+            pokemon.id.toString().toLowerCase().includes(searchTerm)
+          )
+        }}
+      />
     </div>
-  </aside>
-</main>
+    <div class="pokemon-list">
+      {#each pokemonList as pokemon (pokemon.id)}
+        <div
+          class="pokemon-item"
+          role="button"
+          tabindex="0"
+          on:click={() => selectPokemon(pokemon)}
+          on:keydown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              selectPokemon(pokemon)
+              e.preventDefault()
+            }
+          }}
+          class:selected={$selectedPokemon?.id === pokemon.id}
+        >
+          {pokemon.id}
+        </div>
+      {/each}
+    </div>
+  </div>
+  <div class="pokemon-details-container">
+    <TypeButton type="psychic" />
+  </div>
+</div>
 
 <style>
-  .pokemon-list {
+  .page-container {
+    flex: 1;
+    display: flex;
+    padding: 10px;
+  }
+
+  .pokemon-list-container {
     width: 300px;
-    max-height: 700px;
+    border-radius: 10px;
+    border: 1px solid #90a1b9;
+    padding: 10px;
+  }
+
+  .pokemon-list-container h2 {
+    margin: 0;
+    font-size: 1.6em;
+    color: #f1f5f9;
+    text-align: center;
+  }
+
+  .pokemon-details-container {
+    flex: 1;
+    padding: 10px;
+  }
+
+  .pokemon-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-radius: 5px;
+    max-height: calc(100vh - 260px);
     overflow-y: auto;
-    border-radius: 8px;
-    background-color: #0f172b;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer and Edge */
+  }
+
+  .pokemon-list-search {
+    margin: 10px 0px;
+  }
+
+  .pokemon-list-search input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #90a1b9;
+    background: none;
+    border-radius: 4px;
+    color: #f1f5f9;
+    font-size: 1em;
+  }
+
+  .pokemon-list-search input:focus {
+    outline: none;
+    border-color: #0f172b;
+    box-shadow: 0 0 0 2px rgba(46, 69, 97, 0.5);
   }
 
   .pokemon-item {
-    padding: 8px 12px;
+    border: 1px solid #90a1b9;
+    border-radius: 8px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: #f1f5f9;
+    font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s ease;
     user-select: none;
   }
 
-  .pokemon-item:last-child {
-    border-bottom: none;
-  }
-
   .pokemon-item:hover {
-    background-color: #e6f3ff;
+    background: linear-gradient(135deg, #334155 0%, #475569 100%);
+    border-color: #64748b;
+    transform: translateY(1px);
   }
 
-  .pokemon-item.selected {
-    background-color: #007acc;
-    color: white;
-  }
-
-  .pokemon-item:focus {
-    outline: 2px solid #007acc;
-    outline-offset: -2px;
+  .pokemon-item:active {
+    transform: translateY(0);
   }
 </style>
