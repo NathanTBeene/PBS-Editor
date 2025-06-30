@@ -1,4 +1,5 @@
 <script lang="ts">
+  import TypeSelector from './../components/TypeSelector.svelte'
   import TypeButton from './../components/TypeButton.svelte'
   import { PokemonParser, type PokemonData } from '../lib/services/PokemonParser'
   import { pokemonData, selectedPokemon } from '../lib/data/globals'
@@ -71,7 +72,29 @@
     </div>
   </div>
   <div class="pokemon-details-container">
-    <TypeButton type="psychic" />
+    {#if $selectedPokemon}
+      <h2>Selected Pokemon: {$selectedPokemon.id}</h2>
+      <div class="basic-info-contianer">
+        <h2>Basic Information</h2>
+        <!-- ID -->
+        <div class="section id">
+          <strong>ID:</strong>
+          <input type="text" name="id" id="id" bind:value={$selectedPokemon.id} />
+        </div>
+        <!-- Name -->
+        <div class="section name">
+          <strong>Name:</strong>
+          <input type="text" name="name" id="name" bind:value={$selectedPokemon.name} />
+        </div>
+        <!-- FormName -->
+        <div class="section form-name">
+          <strong>Form Name:</strong>
+          <input type="text" name="formName" id="formName" />
+        </div>
+      </div>
+    {:else}
+      <p>Select a Pokemon to see details</p>
+    {/if}
   </div>
 </div>
 
