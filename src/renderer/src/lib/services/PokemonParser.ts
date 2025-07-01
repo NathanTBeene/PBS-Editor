@@ -65,12 +65,12 @@ export class PokemonParser {
             partialData.baseStats = stats
           case 'GenderRatio':
             if (genderRatioManager.isValidRatio(value)) {
-              partialData.genderRatio = value as GenderRatio
+              partialData.genderRatio = value.toUpperCase() as GenderRatio
             }
             break
           case 'GrowthRate':
             if (growthRateManager.isValidRate(value)) {
-              partialData.growthRate = value as GrowthRate
+              partialData.growthRate = value.toUpperCase() as GrowthRate
             }
             break
           case 'BaseExp':
@@ -271,7 +271,14 @@ export class PokemonParser {
   }
 
   private static parseEvs(content: string): PokemonEVs {
-    const evs: PokemonEVs = {}
+    const evs: PokemonEVs = {
+      hp: 0,
+      atk: 0,
+      def: 0,
+      spe: 0,
+      spa: 0,
+      spd: 0
+    }
 
     const parts = content.split(',')
 

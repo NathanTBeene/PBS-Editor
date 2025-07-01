@@ -1,17 +1,21 @@
 class GenderRatioManager {
   private genderRatios = new Map<string, string>([
-    ['ALWAYS_MALE', 'AlwaysMale'],
-    ['FEMALE_ONE_EIGHTH', 'FemaleOneEighth'],
-    ['FEMALE_25_PERCENT', 'Female25Percent'],
-    ['FEMALE_50_PERCENT', 'Female50Percent'],
-    ['FEMALE_75_PERCENT', 'Female75Percent'],
-    ['FEMALE_SEVEN_EIGHTHS', 'FemaleSevenEighths'],
-    ['ALWAYS_FEMALE', 'AlwaysFemale'],
+    ['ALWAYSMALE', 'AlwaysMale'],
+    ['FEMALEONEEIGHTH', 'FemaleOneEighth'],
+    ['FEMALE25PERCENT', 'Female25Percent'],
+    ['FEMALE50PERCENT', 'Female50Percent'],
+    ['FEMALE75PERCENT', 'Female75Percent'],
+    ['FEMALESEVENEIGHTHS', 'FemaleSevenEighths'],
+    ['ALWAYSFEMALE', 'AlwaysFemale'],
     ['GENDERLESS', 'Genderless']
   ])
 
   getRatios(): string[] {
     return Array.from(this.genderRatios.keys())
+  }
+
+  getRatioDisplayNames(): string[] {
+    return Array.from(this.genderRatios.values())
   }
 
   getRatioName(ratio: string): string | undefined {
