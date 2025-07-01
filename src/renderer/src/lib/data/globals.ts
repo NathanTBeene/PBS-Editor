@@ -3,68 +3,32 @@ import { PokemonParser, type PokemonData } from '../services/PokemonParser'
 import { AbilitiesParser, type Ability } from '../services/AbilitiesParser'
 import { MovesParser, type Move } from '../services/MovesParser'
 
+// Import Managers
+import { TypeManager } from './constants/TypeManager'
+import { GenderRatioManager } from './constants/GenderRatioManager'
+import { GrowthRateManager } from './constants/GrowthRateManager'
+import { PokemonColorManager } from './constants/PokemonColorManager'
+import { PokemonShapeManager } from './constants/PokemonShapeManager'
+import { EggGroupManager } from './constants/EggGroupManager'
+import { HabitatManager } from './constants/HabitatManager'
+
+// Svelte Stores
 export const pokemonData = writable<PokemonData[]>([])
 export const selectedPokemon = writable<PokemonData | null>(null)
+
 export const abilitiesList = writable<Ability[]>([])
 export const movesList = writable<Move[]>([])
 
-const abilitiesFilePath = '../../assets/pbs_base_files/abilities.txt'
-const pokemonFilePath = '../../assets/pbs_base_files/pokemon.txt'
-const movesFilePath = '../../assets/pbs_base_files/moves.txt'
+// Managers
+export const typeManager = new TypeManager()
+export const genderRatioManager = new GenderRatioManager()
+export const growthRateManager = new GrowthRateManager()
+export const pokemonColorManager = new PokemonColorManager()
+export const pokemonShapeManager = new PokemonShapeManager()
+export const eggGroupManager = new EggGroupManager()
+export const habitatManager = new HabitatManager()
 
-export const importBaseAbilities = async () => {
-  const response = await fetch(abilitiesFilePath)
-  if (!response.ok) {
-    console.error('Failed to fetch abilities file:', response.statusText)
-    return
-  }
-
-  const content = await response.text()
-  const abilities = AbilitiesParser.parse(content)
-  abilitiesList.set(abilities)
-}
-
-export const importBasePokemon = async () => {
-  const response = await fetch(pokemonFilePath)
-  if (!response.ok) {
-    console.error('Failed to fetch pokemon file:', response.statusText)
-    return
-  }
-
-  const content = await response.text()
-  const pokemon = PokemonParser.parse(content)
-  pokemonData.set(pokemon)
-}
-
-export const importBaseMoves = async () => {
-  const response = await fetch(movesFilePath)
-  if (!response.ok) {
-    console.error('Failed to fetch moves file:', response.statusText)
-    return
-  }
-
-  const content = await response.text()
-  const moves = MovesParser.parse(content)
-  movesList.set(moves)
-}
-
-export enum PokemonType {
-  Normal = 'Normal',
-  Fighting = 'Fighting',
-  Flying = 'Flying',
-  Poison = 'Poison',
-  Ground = 'Ground',
-  Rock = 'Rock',
-  Bug = 'Bug',
-  Ghost = 'Ghost',
-  Steel = 'Steel',
-  Fire = 'Fire',
-  Water = 'Water',
-  Grass = 'Grass',
-  Electric = 'Electric',
-  Psychic = 'Psychic',
-  Ice = 'Ice',
-  Dragon = 'Dragon',
-  Dark = 'Dark',
-  Fairy = 'Fairy'
-}
+// TODO: Implement import functions
+export const importBaseAbilities = async () => {}
+export const importBasePokemon = async () => {}
+export const importBaseMoves = async () => {}

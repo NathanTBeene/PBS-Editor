@@ -42,7 +42,7 @@
 
 <header>
   <h1>Pokemon Editing Page</h1>
-  <button on:click={importPokemonPBS}>Import Pokemon File</button>
+  <button onclick={importPokemonPBS}>Import Pokemon File</button>
 </header>
 
 <div class="page-container">
@@ -55,7 +55,7 @@
       <input
         type="text"
         placeholder="Search Pokemon..."
-        on:input={(e) => {
+        oninput={(e) => {
           const searchTerm = (e.target as HTMLInputElement).value.toLowerCase()
           pokemonList = $pokemonData.filter((pokemon) =>
             pokemon.id.toString().toLowerCase().includes(searchTerm)
@@ -69,8 +69,8 @@
           class="pokemon-item"
           role="button"
           tabindex="0"
-          on:click={() => selectPokemon(pokemon)}
-          on:keydown={(e) => {
+          onclick={() => selectPokemon(pokemon)}
+          onkeydown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               selectPokemon(pokemon)
               e.preventDefault()

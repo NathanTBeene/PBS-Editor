@@ -106,7 +106,6 @@ export class PokemonParser {
   private static validateData(data: Partial<PokemonData>): PokemonData | null {
     // Must have an ID to be valid
     if (!data.id) {
-      console.warn('Invalid Pokemon data - missing ID:', data)
       return null
     }
 
