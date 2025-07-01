@@ -1,54 +1,54 @@
 <script lang="ts">
   import {
-    genderRatioManager,
-    genderRatioStore,
-    updateGenderRatioStore
+    pokemonShapeManager,
+    pokemonShapeStore,
+    updatePokemonShapeStore
   } from '../../lib/data/globals'
 
-  let ratioInput = ''
+  let shapeInput = $state('')
 
-  const removeRatio = (ratio: string) => {
-    if (genderRatioManager.removeRatio(ratio)) {
-      updateGenderRatioStore()
-      console.log(`Removed gender ratio: ${ratio}`)
+  const removeShape = (shape: string) => {
+    if (pokemonShapeManager.removeShape(shape)) {
+      updatePokemonShapeStore()
+      console.log(`Removed shape: ${shape}`)
     } else {
-      console.warn(`Failed to remove gender ratio: ${ratio}`)
+      console.warn(`Failed to remove shape: ${shape}`)
     }
   }
 
-  const addRatio = () => {
-    if (!ratioInput.trim()) {
-      console.warn('Gender ratio name cannot be empty')
+  const addShape = () => {
+    if (!shapeInput.trim()) {
+      console.warn('Shape name cannot be empty')
       return
     }
 
-    const ratioName = ratioInput.trim()
-    if (ratioName && !genderRatioManager.isValidRatio(ratioName)) {
-      if (genderRatioManager.addRatio(ratioName)) {
-        updateGenderRatioStore()
-        console.log(`Added gender ratio: ${ratioName}`)
-        ratioInput = ''
+    const shapeName = shapeInput.trim()
+    if (shapeName && !pokemonShapeManager.isValidShape(shapeName)) {
+      if (pokemonShapeManager.addShape(shapeName)) {
+        updatePokemonShapeStore()
+        console.log(`Added shape: ${shapeName}`)
+        shapeInput = ''
       } else {
-        console.warn(`Failed to add gender ratio: ${ratioName}`)
+        console.warn(`Failed to add shape: ${shapeName}`)
       }
     } else {
-      console.warn(`Invalid or duplicate gender ratio name: ${ratioName}`)
+      console.warn(`Invalid or duplicate shape name: ${shapeName}`)
     }
   }
 </script>
 
-<div class="constants-container">
-  <h2>Gender Ratios</h2>
+<div class="shape constants-container">
+  <h2>Shape</h2>
   <div class="list-container">
-    {#each $genderRatioStore as ratio}
+    {#each $pokemonShapeStore as shape}
       <button type="button" class="list-item">
-        {ratio}
+        {shape}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
           onclick={(event) => {
             event.stopPropagation()
-            removeRatio(ratio)
+            removeShape(shape)
           }}
           class="remove-item"
         >
@@ -59,14 +59,14 @@
   </div>
   <div class="actions">
     <input
-      bind:value={ratioInput}
+      bind:value={shapeInput}
       type="text"
-      name="add-ratio"
-      id="add-ratio"
-      placeholder="Type Ratio and press Enter..."
+      name="add-shape"
+      id="add-shape"
+      placeholder="Add shape and press Enter..."
       onkeydown={(event) => {
         if (event.key === 'Enter') {
-          addRatio()
+          addShape()
         }
       }}
     />

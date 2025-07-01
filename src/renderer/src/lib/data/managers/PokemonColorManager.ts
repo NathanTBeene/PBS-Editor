@@ -1,5 +1,5 @@
 class PokemonColorManager {
-  private static colors = new Map<string, string>([
+  private colors = new Map<string, string>([
     ['RED', 'Red'],
     ['BLUE', 'Blue'],
     ['YELLOW', 'Yellow'],
@@ -12,19 +12,19 @@ class PokemonColorManager {
     ['PINK', 'Pink']
   ])
 
-  static getColors(): string[] {
+  getColors(): string[] {
     return Array.from(this.colors.keys())
   }
 
-  static getColorName(color: string): string | undefined {
+  getColorName(color: string): string | undefined {
     return this.colors.get(color.toUpperCase())
   }
 
-  static isValidColor(color: string): boolean {
+  isValidColor(color: string): boolean {
     return this.colors.has(color.toUpperCase())
   }
 
-  static addColor(id: string, displayName?: string): boolean {
+  addColor(id: string, displayName?: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (this.colors.has(normalizedKey)) {
       console.warn(`Color "${id}" already exists.`)
@@ -38,7 +38,7 @@ class PokemonColorManager {
     return true
   }
 
-  static removeColor(id: string): boolean {
+  removeColor(id: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (!this.colors.has(normalizedKey)) {
       console.warn(`Color "${id}" does not exist.`)
@@ -49,7 +49,7 @@ class PokemonColorManager {
     return true
   }
 
-  static getDefault(): string {
+  getDefault(): string {
     return 'Gray'
   }
 }

@@ -1,54 +1,50 @@
 <script lang="ts">
-  import {
-    genderRatioManager,
-    genderRatioStore,
-    updateGenderRatioStore
-  } from '../../lib/data/globals'
+  import { growthRateManager, growthRateStore, updateGrowthRateStore } from '../../lib/data/globals'
 
-  let ratioInput = ''
+  let growthRateInput = $state('')
 
-  const removeRatio = (ratio: string) => {
-    if (genderRatioManager.removeRatio(ratio)) {
-      updateGenderRatioStore()
-      console.log(`Removed gender ratio: ${ratio}`)
+  const removeGrowthRate = (rate: string) => {
+    if (growthRateManager.removeRate(rate)) {
+      updateGrowthRateStore()
+      console.log(`Removed growth rate: ${rate}`)
     } else {
-      console.warn(`Failed to remove gender ratio: ${ratio}`)
+      console.warn(`Failed to remove growth rate: ${rate}`)
     }
   }
 
-  const addRatio = () => {
-    if (!ratioInput.trim()) {
-      console.warn('Gender ratio name cannot be empty')
+  const addGrowthRate = () => {
+    if (!growthRateInput.trim()) {
+      console.warn('Growth rate name cannot be empty')
       return
     }
 
-    const ratioName = ratioInput.trim()
-    if (ratioName && !genderRatioManager.isValidRatio(ratioName)) {
-      if (genderRatioManager.addRatio(ratioName)) {
-        updateGenderRatioStore()
-        console.log(`Added gender ratio: ${ratioName}`)
-        ratioInput = ''
+    const rateName = growthRateInput.trim()
+    if (rateName && !growthRateManager.isValidRate(rateName)) {
+      if (growthRateManager.addRate(rateName)) {
+        updateGrowthRateStore()
+        console.log(`Added growth rate: ${rateName}`)
+        growthRateInput = ''
       } else {
-        console.warn(`Failed to add gender ratio: ${ratioName}`)
+        console.warn(`Failed to add growth rate: ${rateName}`)
       }
     } else {
-      console.warn(`Invalid or duplicate gender ratio name: ${ratioName}`)
+      console.warn(`Invalid or duplicate growth rate name: ${rateName}`)
     }
   }
 </script>
 
-<div class="constants-container">
-  <h2>Gender Ratios</h2>
+<div class="growth-rate constants-container">
+  <h2>Growth Rates</h2>
   <div class="list-container">
-    {#each $genderRatioStore as ratio}
+    {#each $growthRateStore as rate}
       <button type="button" class="list-item">
-        {ratio}
+        {rate}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
           onclick={(event) => {
             event.stopPropagation()
-            removeRatio(ratio)
+            removeGrowthRate(rate)
           }}
           class="remove-item"
         >
@@ -59,14 +55,14 @@
   </div>
   <div class="actions">
     <input
-      bind:value={ratioInput}
+      bind:value={growthRateInput}
       type="text"
-      name="add-ratio"
-      id="add-ratio"
-      placeholder="Type Ratio and press Enter..."
+      name="add-growth-rate"
+      id="add-growth-rate"
+      placeholder="Add growth rate and press Enter..."
       onkeydown={(event) => {
         if (event.key === 'Enter') {
-          addRatio()
+          addGrowthRate()
         }
       }}
     />

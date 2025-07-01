@@ -4,13 +4,13 @@ import { AbilitiesParser, type Ability } from '../services/AbilitiesParser'
 import { MovesParser, type Move } from '../services/MovesParser'
 
 // Import Managers
-import { TypeManager } from './constants/TypeManager'
-import { GenderRatioManager } from './constants/GenderRatioManager'
-import { GrowthRateManager } from './constants/GrowthRateManager'
-import { PokemonColorManager } from './constants/PokemonColorManager'
-import { PokemonShapeManager } from './constants/PokemonShapeManager'
-import { EggGroupManager } from './constants/EggGroupManager'
-import { HabitatManager } from './constants/HabitatManager'
+import { TypeManager } from './managers/TypeManager'
+import { GenderRatioManager } from './managers/GenderRatioManager'
+import { GrowthRateManager } from './managers/GrowthRateManager'
+import { PokemonColorManager } from './managers/PokemonColorManager'
+import { PokemonShapeManager } from './managers/PokemonShapeManager'
+import { EggGroupManager } from './managers/EggGroupManager'
+import { HabitatManager } from './managers/HabitatManager'
 
 // Svelte Stores
 export const pokemonData = writable<PokemonData[]>([])
@@ -36,6 +36,26 @@ export const updateTypeStore = () => {
 export const genderRatioStore = writable(genderRatioManager.getRatios())
 export const updateGenderRatioStore = () => {
   genderRatioStore.set(genderRatioManager.getRatios())
+}
+export const growthRateStore = writable(growthRateManager.getRates())
+export const updateGrowthRateStore = () => {
+  growthRateStore.set(growthRateManager.getRates())
+}
+export const pokemonColorStore = writable(pokemonColorManager.getColors())
+export const updatePokemonColorStore = () => {
+  pokemonColorStore.set(pokemonColorManager.getColors())
+}
+export const pokemonShapeStore = writable(pokemonShapeManager.getShapes())
+export const updatePokemonShapeStore = () => {
+  pokemonShapeStore.set(pokemonShapeManager.getShapes())
+}
+export const eggGroupStore = writable(eggGroupManager.getGroups())
+export const updateEggGroupStore = () => {
+  eggGroupStore.set(eggGroupManager.getGroups())
+}
+export const habitatStore = writable(habitatManager.getHabitats())
+export const updateHabitatStore = () => {
+  habitatStore.set(habitatManager.getHabitats())
 }
 
 // TODO: Implement import functions

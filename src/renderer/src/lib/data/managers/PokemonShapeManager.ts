@@ -1,5 +1,5 @@
 class PokemonShapeManager {
-  private static shapes = new Map<string, string>([
+  private shapes = new Map<string, string>([
     ['HEAD', 'Head'],
     ['SERPENTINE', 'Serpentine'],
     ['FINS', 'Fins'],
@@ -16,19 +16,19 @@ class PokemonShapeManager {
     ['ARMOR', 'Armor']
   ])
 
-  static getShapes(): string[] {
+  getShapes(): string[] {
     return Array.from(this.shapes.keys())
   }
 
-  static getShapeName(shape: string): string | undefined {
+  getShapeName(shape: string): string | undefined {
     return this.shapes.get(shape.toUpperCase())
   }
 
-  static isValidShape(shape: string): boolean {
+  isValidShape(shape: string): boolean {
     return this.shapes.has(shape.toUpperCase())
   }
 
-  static addShape(id: string, displayName?: string): boolean {
+  addShape(id: string, displayName?: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (this.shapes.has(normalizedKey)) {
       console.warn(`Shape "${id}" already exists.`)
@@ -42,7 +42,7 @@ class PokemonShapeManager {
     return true
   }
 
-  static removeShape(id: string): boolean {
+  removeShape(id: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (!this.shapes.has(normalizedKey)) {
       console.warn(`Shape "${id}" does not exist.`)
@@ -53,7 +53,7 @@ class PokemonShapeManager {
     return true
   }
 
-  static getDefault(): string {
+  getDefault(): string {
     return 'Quadruped'
   }
 }

@@ -2,6 +2,7 @@
   import { PokemonParser, type PokemonData } from '../lib/services/PokemonParser'
   import { pokemonData, selectedPokemon } from '../lib/data/globals'
   import TypeSelector from './../components/TypeSelector.svelte'
+  import Header from '../components/Header.svelte'
 
   let pokemonList: PokemonData[] = $pokemonData
 
@@ -28,22 +29,10 @@
       console.error('Error opening file:', error)
     }
   }
-
-  const createPokemon = (id: string) => {
-    const emptyPokemon = PokemonParser.createEmptyPokemonData(id)
-    if (emptyPokemon) {
-      pokemonData.update((data) => [...data, emptyPokemon])
-      selectPokemon(emptyPokemon)
-    } else {
-      console.error('Failed to create empty Pokemon data')
-    }
-  }
 </script>
 
-<header>
-  <h1>Pokemon Editing Page</h1>
-  <button onclick={importPokemonPBS}>Import Pokemon File</button>
-</header>
+<Header title="Pokemon PBS Editor" back={true} />
+<button onclick={importPokemonPBS}>Import Pokemon File</button>
 
 <div class="page-container">
   <div class="pokemon-list-container">

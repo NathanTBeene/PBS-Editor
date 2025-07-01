@@ -1,5 +1,5 @@
 class GrowthRateManager {
-  private static growthRates = new Map<string, string>([
+  private growthRates = new Map<string, string>([
     ['FAST', 'Fast'],
     ['MEDIUM', 'Medium'],
     ['SLOW', 'Slow'],
@@ -8,19 +8,19 @@ class GrowthRateManager {
     ['FLUCTUATING', 'Fluctuating']
   ])
 
-  static getRates(): string[] {
+  getRates(): string[] {
     return Array.from(this.growthRates.keys())
   }
 
-  static getRateName(rate: string): string | undefined {
+  getRateName(rate: string): string | undefined {
     return this.growthRates.get(rate.toUpperCase())
   }
 
-  static isValidRate(rate: string): boolean {
+  isValidRate(rate: string): boolean {
     return this.growthRates.has(rate.toUpperCase())
   }
 
-  static addRate(id: string, displayName?: string): boolean {
+  addRate(id: string, displayName?: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (this.growthRates.has(normalizedKey)) {
       console.warn(`Growth rate "${id}" already exists.`)
@@ -34,7 +34,7 @@ class GrowthRateManager {
     return true
   }
 
-  static removeRate(id: string): boolean {
+  removeRate(id: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (!this.growthRates.has(normalizedKey)) {
       console.warn(`Growth rate "${id}" does not exist.`)
@@ -45,7 +45,7 @@ class GrowthRateManager {
     return true
   }
 
-  static getDefault(): string {
+  getDefault(): string {
     return 'Medium'
   }
 }

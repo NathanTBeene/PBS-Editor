@@ -1,54 +1,54 @@
 <script lang="ts">
   import {
-    genderRatioManager,
-    genderRatioStore,
-    updateGenderRatioStore
+    pokemonColorManager,
+    pokemonColorStore,
+    updatePokemonColorStore
   } from '../../lib/data/globals'
 
-  let ratioInput = ''
+  let colorInput = $state('')
 
-  const removeRatio = (ratio: string) => {
-    if (genderRatioManager.removeRatio(ratio)) {
-      updateGenderRatioStore()
-      console.log(`Removed gender ratio: ${ratio}`)
+  const removeColor = (color: string) => {
+    if (pokemonColorManager.removeColor(color)) {
+      updatePokemonColorStore()
+      console.log(`Removed color: ${color}`)
     } else {
-      console.warn(`Failed to remove gender ratio: ${ratio}`)
+      console.warn(`Failed to remove color: ${color}`)
     }
   }
 
-  const addRatio = () => {
-    if (!ratioInput.trim()) {
-      console.warn('Gender ratio name cannot be empty')
+  const addColor = () => {
+    if (!colorInput.trim()) {
+      console.warn('Color name cannot be empty')
       return
     }
 
-    const ratioName = ratioInput.trim()
-    if (ratioName && !genderRatioManager.isValidRatio(ratioName)) {
-      if (genderRatioManager.addRatio(ratioName)) {
-        updateGenderRatioStore()
-        console.log(`Added gender ratio: ${ratioName}`)
-        ratioInput = ''
+    const colorName = colorInput.trim()
+    if (colorName && !pokemonColorManager.isValidColor(colorName)) {
+      if (pokemonColorManager.addColor(colorName)) {
+        updatePokemonColorStore()
+        console.log(`Added color: ${colorName}`)
+        colorInput = ''
       } else {
-        console.warn(`Failed to add gender ratio: ${ratioName}`)
+        console.warn(`Failed to add color: ${colorName}`)
       }
     } else {
-      console.warn(`Invalid or duplicate gender ratio name: ${ratioName}`)
+      console.warn(`Invalid or duplicate color name: ${colorName}`)
     }
   }
 </script>
 
-<div class="constants-container">
-  <h2>Gender Ratios</h2>
+<div class="color constants-container">
+  <h2>Color</h2>
   <div class="list-container">
-    {#each $genderRatioStore as ratio}
+    {#each $pokemonColorStore as color}
       <button type="button" class="list-item">
-        {ratio}
+        {color}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
           onclick={(event) => {
             event.stopPropagation()
-            removeRatio(ratio)
+            removeColor(color)
           }}
           class="remove-item"
         >
@@ -59,14 +59,14 @@
   </div>
   <div class="actions">
     <input
-      bind:value={ratioInput}
+      bind:value={colorInput}
       type="text"
-      name="add-ratio"
-      id="add-ratio"
-      placeholder="Type Ratio and press Enter..."
+      name="add-color"
+      id="add-color"
+      placeholder="Add color and press Enter..."
       onkeydown={(event) => {
         if (event.key === 'Enter') {
-          addRatio()
+          addColor()
         }
       }}
     />

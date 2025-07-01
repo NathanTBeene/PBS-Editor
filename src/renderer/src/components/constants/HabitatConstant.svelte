@@ -1,54 +1,50 @@
 <script lang="ts">
-  import {
-    genderRatioManager,
-    genderRatioStore,
-    updateGenderRatioStore
-  } from '../../lib/data/globals'
+  import { habitatManager, habitatStore, updateHabitatStore } from '../../lib/data/globals'
 
-  let ratioInput = ''
+  let habitatInput = $state('')
 
-  const removeRatio = (ratio: string) => {
-    if (genderRatioManager.removeRatio(ratio)) {
-      updateGenderRatioStore()
-      console.log(`Removed gender ratio: ${ratio}`)
+  const removeHabitat = (habitat: string) => {
+    if (habitatManager.removeHabitat(habitat)) {
+      updateHabitatStore()
+      console.log(`Removed habitat: ${habitat}`)
     } else {
-      console.warn(`Failed to remove gender ratio: ${ratio}`)
+      console.warn(`Failed to remove habitat: ${habitat}`)
     }
   }
 
-  const addRatio = () => {
-    if (!ratioInput.trim()) {
-      console.warn('Gender ratio name cannot be empty')
+  const addHabitat = () => {
+    if (!habitatInput.trim()) {
+      console.warn('Habitat name cannot be empty')
       return
     }
 
-    const ratioName = ratioInput.trim()
-    if (ratioName && !genderRatioManager.isValidRatio(ratioName)) {
-      if (genderRatioManager.addRatio(ratioName)) {
-        updateGenderRatioStore()
-        console.log(`Added gender ratio: ${ratioName}`)
-        ratioInput = ''
+    const habitatName = habitatInput.trim()
+    if (habitatName && !habitatManager.isValidHabitat(habitatName)) {
+      if (habitatManager.addHabitat(habitatName)) {
+        updateHabitatStore()
+        console.log(`Added habitat: ${habitatName}`)
+        habitatInput = ''
       } else {
-        console.warn(`Failed to add gender ratio: ${ratioName}`)
+        console.warn(`Failed to add habitat: ${habitatName}`)
       }
     } else {
-      console.warn(`Invalid or duplicate gender ratio name: ${ratioName}`)
+      console.warn(`Invalid or duplicate habitat name: ${habitatName}`)
     }
   }
 </script>
 
-<div class="constants-container">
-  <h2>Gender Ratios</h2>
+<div class="habitat constants-container">
+  <h2>Habitat</h2>
   <div class="list-container">
-    {#each $genderRatioStore as ratio}
+    {#each $habitatStore as habitat}
       <button type="button" class="list-item">
-        {ratio}
+        {habitat}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
           onclick={(event) => {
             event.stopPropagation()
-            removeRatio(ratio)
+            removeHabitat(habitat)
           }}
           class="remove-item"
         >
@@ -59,14 +55,14 @@
   </div>
   <div class="actions">
     <input
-      bind:value={ratioInput}
+      bind:value={habitatInput}
       type="text"
-      name="add-ratio"
-      id="add-ratio"
-      placeholder="Type Ratio and press Enter..."
+      name="add-habitat"
+      id="add-habitat"
+      placeholder="Add habitat and press Enter..."
       onkeydown={(event) => {
         if (event.key === 'Enter') {
-          addRatio()
+          addHabitat()
         }
       }}
     />

@@ -1,54 +1,50 @@
 <script lang="ts">
-  import {
-    genderRatioManager,
-    genderRatioStore,
-    updateGenderRatioStore
-  } from '../../lib/data/globals'
+  import { eggGroupManager, eggGroupStore, updateEggGroupStore } from '../../lib/data/globals'
 
-  let ratioInput = ''
+  let eggGroupInput = $state('')
 
-  const removeRatio = (ratio: string) => {
-    if (genderRatioManager.removeRatio(ratio)) {
-      updateGenderRatioStore()
-      console.log(`Removed gender ratio: ${ratio}`)
+  const removeEggGroup = (group: string) => {
+    if (eggGroupManager.removeGroup(group)) {
+      updateEggGroupStore()
+      console.log(`Removed egg group: ${group}`)
     } else {
-      console.warn(`Failed to remove gender ratio: ${ratio}`)
+      console.warn(`Failed to remove egg group: ${group}`)
     }
   }
 
-  const addRatio = () => {
-    if (!ratioInput.trim()) {
-      console.warn('Gender ratio name cannot be empty')
+  const addEggGroup = () => {
+    if (!eggGroupInput.trim()) {
+      console.warn('Egg group name cannot be empty')
       return
     }
 
-    const ratioName = ratioInput.trim()
-    if (ratioName && !genderRatioManager.isValidRatio(ratioName)) {
-      if (genderRatioManager.addRatio(ratioName)) {
-        updateGenderRatioStore()
-        console.log(`Added gender ratio: ${ratioName}`)
-        ratioInput = ''
+    const groupName = eggGroupInput.trim()
+    if (groupName && !eggGroupManager.isValidGroup(groupName)) {
+      if (eggGroupManager.addGroup(groupName)) {
+        updateEggGroupStore()
+        console.log(`Added egg group: ${groupName}`)
+        eggGroupInput = ''
       } else {
-        console.warn(`Failed to add gender ratio: ${ratioName}`)
+        console.warn(`Failed to add egg group: ${groupName}`)
       }
     } else {
-      console.warn(`Invalid or duplicate gender ratio name: ${ratioName}`)
+      console.warn(`Invalid or duplicate egg group name: ${groupName}`)
     }
   }
 </script>
 
-<div class="constants-container">
-  <h2>Gender Ratios</h2>
+<div class="egg-group constants-container">
+  <h2>Egg Groups</h2>
   <div class="list-container">
-    {#each $genderRatioStore as ratio}
+    {#each $eggGroupStore as group}
       <button type="button" class="list-item">
-        {ratio}
+        {group}
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
           onclick={(event) => {
             event.stopPropagation()
-            removeRatio(ratio)
+            removeEggGroup(group)
           }}
           class="remove-item"
         >
@@ -59,14 +55,14 @@
   </div>
   <div class="actions">
     <input
-      bind:value={ratioInput}
+      bind:value={eggGroupInput}
       type="text"
-      name="add-ratio"
-      id="add-ratio"
-      placeholder="Type Ratio and press Enter..."
+      name="add-egg-group"
+      id="add-egg-group"
+      placeholder="Add egg group and press Enter..."
       onkeydown={(event) => {
         if (event.key === 'Enter') {
-          addRatio()
+          addEggGroup()
         }
       }}
     />

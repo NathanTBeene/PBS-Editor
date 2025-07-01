@@ -1,6 +1,8 @@
 <script lang="ts">
   import { typeManager, typeStore, updateTypeStore } from '../../lib/data/globals'
+  import ColorPicker from 'svelte-awesome-color-picker'
 
+  let selectedType = $state<string | null>(null)
   let typeInput = $state('')
 
   const removeType = (type: string) => {
@@ -31,18 +33,70 @@
       console.warn(`Invalid or duplicate type name: ${typeName}`)
     }
   }
+
+  const updateTypeColor = (id: string, color: string) => {
+    const typeData = typeManager.getType(id)
+    if (typeData) {
+      const colorData = typeData.color
+      if (color == colorData) {
+        return
+      }
+      typeManager.setTypeColor(id, color)
+      updateTypeStore()
+    } else {
+      console.warn(`Type with id ${id} not found`)
+    }
+  }
+
+  const getSelectedTypeColor = () => {
+    const store = $typeStore
+    return (selectedType && store[selectedType]?.color) || '#ffffff'
+  }
+  let selectedTypeColor = $derived(getSelectedTypeColor())
 </script>
 
 <div class="type constants-container">
-  <h2>Type Constants</h2>
+  <h2>Types</h2>
+  <p>Select a type to edit the color.</p>
+  <div class="selected-type">
+    {#if selectedType}
+      <div class="selected-type-info">
+        <span>{selectedType}</span>
+        <ColorPicker
+          bind:hex={selectedTypeColor}
+          position="responsive"
+          label=""
+          onInput={(event) => updateTypeColor(selectedType, event.hex)}
+        />
+      </div>
+    {:else}
+      <span>No type selected</span>
+    {/if}
+  </div>
+
   <div class="list-container">
-    {#each $typeStore as type}
-      <button type="button" class="list-item">
-        {type}
+    {#each Object.keys($typeStore) as typeId}
+      <button
+        type="button"
+        class="list-item {selectedType === typeId ? 'selected' : ''}"
+        onclick={() => {
+          if (selectedType === typeId) {
+            selectedType = null
+          } else {
+            selectedType = typeId
+          }
+        }}
+      >
+        <span>
+          {typeId}
+          <div class="item-color" style="background-color:{$typeStore[typeId].color}"></div>
+        </span>
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
           onclick={(event) => {
             event.stopPropagation()
-            removeType(type)
+            removeType(typeId)
           }}
           class="remove-item"
         >
@@ -77,17 +131,15 @@
   }
 
   .list-container {
-    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    overflow-y: auto;
+    overflow-y: scroll;
     max-height: 300px;
     padding: 0.5rem;
     scrollbar-width: none;
     -ms-overflow-style: none; /* IE and Edge */
     border: 1px solid #ccc;
-    border-radius: 12px 12px 0 0;
   }
 
   .list-item {
@@ -105,6 +157,41 @@
 
   .list-item:hover {
     background-color: #444;
+  }
+
+  .list-item.selected {
+    background-color: #9f8ece;
+  }
+
+  .list-item span {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .item-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1px solid #22222262;
+  }
+
+  .selected-type {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    margin-top: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px 10px 0 0;
+    border-bottom: none;
+    padding: 0.5rem;
+  }
+
+  .selected-type-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   .remove-item {

@@ -1,5 +1,5 @@
 class EggGroupManager {
-  private static eggGroups = new Map<string, string>([
+  private eggGroups = new Map<string, string>([
     ['MONSTER', 'Monster'],
     ['WATER1', 'Water1'],
     ['BUG', 'Bug'],
@@ -17,19 +17,19 @@ class EggGroupManager {
     ['UNDISCOVERED', 'Undiscovered']
   ])
 
-  static getGroups(): string[] {
+  getGroups(): string[] {
     return Array.from(this.eggGroups.keys())
   }
 
-  static getGroupName(group: string): string | undefined {
+  getGroupName(group: string): string | undefined {
     return this.eggGroups.get(group.toUpperCase())
   }
 
-  static isValidGroup(group: string): boolean {
+  isValidGroup(group: string): boolean {
     return this.eggGroups.has(group.toUpperCase())
   }
 
-  static addGroup(id: string, displayName?: string): boolean {
+  addGroup(id: string, displayName?: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (this.eggGroups.has(normalizedKey)) {
       console.warn(`Egg group "${id}" already exists.`)
@@ -43,7 +43,7 @@ class EggGroupManager {
     return true
   }
 
-  static removeGroup(id: string): boolean {
+  removeGroup(id: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (!this.eggGroups.has(normalizedKey)) {
       console.warn(`Egg group "${id}" does not exist.`)
@@ -54,7 +54,7 @@ class EggGroupManager {
     return true
   }
 
-  static getDefault(): string {
+  getDefault(): string {
     return 'Undiscovered'
   }
 }

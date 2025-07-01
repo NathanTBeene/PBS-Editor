@@ -1,5 +1,5 @@
 class HabitatManager {
-  private static habitats = new Map<string, string>([
+  private habitats = new Map<string, string>([
     ['NONE', 'None'],
     ['CAVE', 'Cave'],
     ['FOREST', 'Forest'],
@@ -12,19 +12,19 @@ class HabitatManager {
     ['WATERS_EDGE', 'WatersEdge']
   ])
 
-  static getHabitats(): string[] {
+  getHabitats(): string[] {
     return Array.from(this.habitats.keys())
   }
 
-  static getHabitatName(habitat: string): string | undefined {
+  getHabitatName(habitat: string): string | undefined {
     return this.habitats.get(habitat.toUpperCase())
   }
 
-  static isValidHabitat(habitat: string): boolean {
+  isValidHabitat(habitat: string): boolean {
     return this.habitats.has(habitat.toUpperCase())
   }
 
-  static addHabitat(id: string, displayName?: string): boolean {
+  addHabitat(id: string, displayName?: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (this.habitats.has(normalizedKey)) {
       console.warn(`Habitat "${id}" already exists.`)
@@ -38,7 +38,7 @@ class HabitatManager {
     return true
   }
 
-  static removeHabitat(id: string): boolean {
+  removeHabitat(id: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (!this.habitats.has(normalizedKey)) {
       console.warn(`Habitat "${id}" does not exist.`)
@@ -49,7 +49,7 @@ class HabitatManager {
     return true
   }
 
-  static getDefault(): string {
+  getDefault(): string {
     return 'None'
   }
 }
