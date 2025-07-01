@@ -216,17 +216,12 @@
 
   .selected-type {
     position: absolute;
-    top: 15%;
+    left: 8px;
+    top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
     z-index: 1;
     border: none;
-  }
-
-  .selected-type + .type-input {
-    padding-left: 110px;
-    color: transparent;
-    caret-color: transparent;
   }
 
   .input-actions {

@@ -108,6 +108,7 @@
   .pokemon-details-container {
     flex: 1;
     padding: 10px;
+    overflow-y: auto;
   }
 
   .pokemon-list {

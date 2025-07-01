@@ -14,93 +14,97 @@
 </script>
 
 <h2>Selected Pokemon: {$selectedPokemon.id}</h2>
-<div class="basic-info container">
+<div class="container">
   <h2>Basic Information</h2>
-  <!-- Name -->
-  <div class="section name">
-    <strong>Name:</strong>
-    <input
-      type="text"
-      name="name"
-      id="name"
-      bind:value={$selectedPokemon.name}
-      oninput={updateId}
-    />
-  </div>
-  <!-- FormName -->
-  <div class="section form-name">
-    <strong>Form Name:</strong>
-    <input type="text" name="formName" id="formName" bind:value={$selectedPokemon.formName} />
-  </div>
-  <!-- Types -->
-  <div class="section types">
-    <TypeSelector bind:selectedType={$selectedPokemon.types[0]} />
-    <TypeSelector bind:selectedType={$selectedPokemon.types[1]} />
-  </div>
-  <!-- Base Stats -->
-  <div class="section base-stats">
-    <div class="stat-list">
-      <div class="stat">
-        <strong>HP</strong>
+  <div class="basic-info">
+    <section class="name-form-type">
+      <!-- Name -->
+      <div class="name">
+        <strong>Name:</strong>
         <input
-          min="0"
-          max="255"
-          type="number"
-          name="hp"
-          bind:value={$selectedPokemon.baseStats.hp}
+          type="text"
+          name="name"
+          id="name"
+          bind:value={$selectedPokemon.name}
+          oninput={updateId}
         />
       </div>
-      <div class="stat">
-        <strong>Attack</strong>
-        <input
-          min="0"
-          max="255"
-          type="number"
-          name="attack"
-          bind:value={$selectedPokemon.baseStats.atk}
-        />
+      <!-- FormName -->
+      <div class="form-name">
+        <strong>Form Name:</strong>
+        <input type="text" name="formName" id="formName" bind:value={$selectedPokemon.formName} />
       </div>
-      <div class="stat">
-        <strong>Defense</strong>
-        <input
-          min="0"
-          max="255"
-          type="number"
-          name="defense"
-          bind:value={$selectedPokemon.baseStats.def}
-        />
+      <!-- Types -->
+      <div class="types">
+        <TypeSelector bind:selectedType={$selectedPokemon.types[0]} />
+        <TypeSelector bind:selectedType={$selectedPokemon.types[1]} />
       </div>
-      <div class="stat">
-        <strong>Spe. Attack</strong>
-        <input
-          min="0"
-          max="255"
-          type="number"
-          name="special-attack"
-          bind:value={$selectedPokemon.baseStats.spa}
-        />
+    </section>
+    <!-- Base Stats -->
+    <section class="base-stats">
+      <div class="stat-list">
+        <div class="stat">
+          <strong>HP</strong>
+          <input
+            min="0"
+            max="255"
+            type="number"
+            name="hp"
+            bind:value={$selectedPokemon.baseStats.hp}
+          />
+        </div>
+        <div class="stat">
+          <strong>Attack</strong>
+          <input
+            min="0"
+            max="255"
+            type="number"
+            name="attack"
+            bind:value={$selectedPokemon.baseStats.atk}
+          />
+        </div>
+        <div class="stat">
+          <strong>Defense</strong>
+          <input
+            min="0"
+            max="255"
+            type="number"
+            name="defense"
+            bind:value={$selectedPokemon.baseStats.def}
+          />
+        </div>
+        <div class="stat">
+          <strong>Spe. Attack</strong>
+          <input
+            min="0"
+            max="255"
+            type="number"
+            name="special-attack"
+            bind:value={$selectedPokemon.baseStats.spa}
+          />
+        </div>
+        <div class="stat">
+          <strong>Spe. Defense</strong>
+          <input
+            min="0"
+            max="255"
+            type="number"
+            name="special-defense"
+            bind:value={$selectedPokemon.baseStats.spd}
+          />
+        </div>
+        <div class="stat">
+          <strong>Speed</strong>
+          <input
+            min="0"
+            max="255"
+            type="number"
+            name="speed"
+            bind:value={$selectedPokemon.baseStats.spe}
+          />
+        </div>
       </div>
-      <div class="stat">
-        <strong>Spe. Defense</strong>
-        <input
-          min="0"
-          max="255"
-          type="number"
-          name="special-defense"
-          bind:value={$selectedPokemon.baseStats.spd}
-        />
-      </div>
-      <div class="stat">
-        <strong>Speed</strong>
-        <input
-          min="0"
-          max="255"
-          type="number"
-          name="speed"
-          bind:value={$selectedPokemon.baseStats.spe}
-        />
-      </div>
-    </div>
+    </section>
   </div>
 </div>
 <div class="container training">
@@ -211,7 +215,36 @@
   </div>
 </div>
 
+<div class="container abilities">
+  <h2>Abilities</h2>
+</div>
+
 <style>
+  input {
+    background: none;
+    color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #6385b6;
+  }
+
+  input[type='number'] {
+    width: 50px;
+    text-align: center;
+  }
+
+  /* Removing spinboxes for number fields */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   .container {
     margin: 1rem auto;
     padding: 1rem;
@@ -225,5 +258,9 @@
     font-size: 1.6rem;
     color: #dddddd;
     border-bottom: 1px solid #ccc;
+  }
+
+  .basic-info {
+    display: flex;
   }
 </style>
