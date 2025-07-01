@@ -55,3 +55,4 @@ class HabitatManager {
 }
 
 export { HabitatManager }
+export type Habitat = keyof HabitatManager['habitats']

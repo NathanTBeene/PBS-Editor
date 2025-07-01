@@ -51,3 +51,4 @@ class GrowthRateManager {
 }
 
 export { GrowthRateManager }
+export type GrowthRate = keyof GrowthRateManager['growthRates']

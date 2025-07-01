@@ -59,3 +59,4 @@ class PokemonShapeManager {
 }
 
 export { PokemonShapeManager }
+export type PokemonShape = keyof PokemonShapeManager['shapes']

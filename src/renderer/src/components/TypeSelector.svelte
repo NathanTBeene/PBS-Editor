@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { PokemonType } from '../lib/data/globals'
   import TypeButton from './TypeButton.svelte'
+  import { typeManager } from '../lib/data/globals'
+  import type { PokemonType } from '../lib/data/managers/TypeManager'
 
   let {
     selectedType = $bindable(),
@@ -8,7 +9,7 @@
     allowClear = true,
     disabled = false
   }: {
-    selectedType?: string | null
+    selectedType?: PokemonType | null
     placeholder?: string
     allowClear?: boolean
     disabled?: boolean
@@ -19,7 +20,7 @@
   let comboboxRef: HTMLDivElement
   let inputRef: HTMLInputElement
   // Get all types from the enum with a blank option
-  const allTypes = ['', ...Object.values(PokemonType)]
+  const allTypes = typeManager.getTypeList()
 
   // Filter types based on search term
   const filteredTypes = $derived(
@@ -27,7 +28,7 @@
   )
 
   function selectType(type: string) {
-    selectedType = type
+    selectedType = type as PokemonType
     searchTerm = ''
     isOpen = false
     inputRef?.blur()
@@ -110,7 +111,7 @@
     />
     {#if selectedType && !searchTerm}
       <div class="selected-type">
-        {#if selectedType === ''}
+        {#if !selectedType}
           <div class="blank-option">No Type</div>
         {:else}
           <TypeButton type={selectedType} />
@@ -158,7 +159,7 @@
             {#if type === ''}
               <div class="blank-option">No Type</div>
             {:else}
-              <TypeButton {type} />
+              <TypeButton type={type as PokemonType} />
             {/if}
           </button>
         {/each}
@@ -215,18 +216,18 @@
 
   .selected-type {
     position: absolute;
-    left: 8px;
-    top: 50%;
+    top: 15%;
     transform: translateY(-50%);
     pointer-events: none;
     z-index: 1;
+    border: none;
   }
 
-  /* .selected-type + .type-input {
+  .selected-type + .type-input {
     padding-left: 110px;
     color: transparent;
     caret-color: transparent;
-  } */
+  }
 
   .input-actions {
     display: flex;

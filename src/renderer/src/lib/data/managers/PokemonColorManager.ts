@@ -55,3 +55,4 @@ class PokemonColorManager {
 }
 
 export { PokemonColorManager }
+export type PokemonColor = keyof PokemonColorManager['colors']

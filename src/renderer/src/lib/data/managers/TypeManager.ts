@@ -28,6 +28,10 @@ class TypeManager {
     return typesObject
   }
 
+  getTypeList(): string[] {
+    return Array.from(this.types.keys()).map((key) => key.toLowerCase())
+  }
+
   getType(id: string): { displayName: string; color: string } | undefined {
     return this.types.get(id.toUpperCase())
   }
@@ -86,4 +90,4 @@ class TypeManager {
 }
 
 export { TypeManager }
-export type PokemonType = string
+export type PokemonType = keyof TypeManager['types']

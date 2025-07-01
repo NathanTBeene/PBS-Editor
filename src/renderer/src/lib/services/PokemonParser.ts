@@ -1,4 +1,19 @@
-import { type PokemonType } from '../data/globals'
+import {
+  typeManager,
+  genderRatioManager,
+  growthRateManager,
+  pokemonColorManager,
+  eggGroupManager,
+  habitatManager,
+  pokemonShapeManager
+} from '../data/globals'
+import type { PokemonType } from '../data/managers/TypeManager'
+import type { GenderRatio } from '../data/managers/GenderRatioManager'
+import type { GrowthRate } from '../data/managers/GrowthRateManager'
+import type { EggGroup } from '../data/managers/EggGroupManager'
+import type { PokemonColor } from '../data/managers/PokemonColorManager'
+import type { Habitat } from '../data/managers/HabitatManager'
+import type { PokemonShape } from '../data/managers/PokemonShapeManager'
 
 export class PokemonParser {
   public static parse(content: string): PokemonData[] {
@@ -42,20 +57,19 @@ export class PokemonParser {
             const types = value
               .split(',')
               .map((type) => type.trim())
-              .filter((type) => type.length > 0) as PokemonType[]
-            if (types.length > 0) {
-              partialData.types = types
-            }
+              .filter((type) => typeManager.isValidType(type))
+            partialData.types = types as (keyof (typeof typeManager)['types'])[] // Type assertion
+            break
           case 'BaseStats':
             const stats: PokemonStats = PokemonParser.parseBaseStats(value)
             partialData.baseStats = stats
           case 'GenderRatio':
-            if (PokemonParser.validateEnum(value, GenderRatio)) {
+            if (genderRatioManager.isValidRatio(value)) {
               partialData.genderRatio = value as GenderRatio
             }
             break
           case 'GrowthRate':
-            if (PokemonParser.validateEnum(value, GrowthRate)) {
+            if (growthRateManager.isValidRate(value)) {
               partialData.growthRate = value as GrowthRate
             }
             break
@@ -91,6 +105,63 @@ export class PokemonParser {
           case 'TutorMoves':
             const moves = value.split(',').map((move) => move.trim())
             partialData.tutorMoves = moves.filter((move) => move.length > 0)
+            break
+          case 'EggMoves':
+            const eggMoves = value.split(',').map((move) => move.trim())
+            partialData.eggMoves = eggMoves.filter((move) => move.length > 0)
+            break
+          case 'EggGroups':
+            const eggGroups = value
+              .split(',')
+              .map((group) => group.trim())
+              .filter((group) => eggGroupManager.isValidGroup(group))
+            partialData.eggGroups = eggGroups as (keyof (typeof eggGroupManager)['eggGroups'])[] // Type assertion
+            break
+          case 'HatchSteps':
+            partialData.hatchSteps = parseInt(value)
+            break
+          case 'Insence':
+            partialData.insence = value
+            break
+          case 'Offspring':
+            const offspring = value
+              .split(',')
+              .map((offspring) => offspring.trim())
+              .filter((offspring) => offspring.length > 0)
+            partialData.offspring = offspring
+            break
+          case 'Height':
+            partialData.height = parseFloat(value)
+            break
+          case 'Weight':
+            partialData.weight = parseFloat(value)
+            break
+          case 'Color':
+            if (pokemonColorManager.isValidColor(value)) {
+              partialData.color = value as PokemonColor
+            }
+            break
+          case 'Shape':
+            if (pokemonShapeManager.isValidShape(value)) {
+              partialData.shape = value as PokemonShape
+            }
+            break
+          case 'Habitat':
+            if (habitatManager.isValidHabitat(value)) {
+              partialData.habitat = value as Habitat
+            }
+            break
+          case 'Category':
+            partialData.category = value
+            break
+          case 'Pokedex':
+            partialData.pokedex = value
+            break
+          case 'Generation':
+            partialData.generation = parseInt(value)
+            break
+          case 'Evolutions':
+            partialData.evolutions = PokemonParser.parseEvolutions(value)
             break
           default:
             // console.warn(`Unknown key: ${key} with value: ${value}`)
@@ -130,8 +201,8 @@ export class PokemonParser {
       },
 
       // Training
-      genderRatio: data.genderRatio || GenderRatio.Female50Percent,
-      growthRate: data.growthRate || GrowthRate.Medium,
+      genderRatio: data.genderRatio || ('Female50Percent' as GenderRatio),
+      growthRate: data.growthRate || ('Medium' as GrowthRate),
       baseExp: data.baseExp || 0,
       evs: data.evs || {},
       catchRate: data.catchRate || 0,
@@ -155,9 +226,9 @@ export class PokemonParser {
       // Physical characteristics
       height: data.height || 0,
       weight: data.weight || 0,
-      color: data.color || PokemonColor.Gray,
-      shape: data.shape || PokemonShape.Quadruped,
-      habitat: data.habitat || Habitat.None,
+      color: data.color || ('Gray' as PokemonColor),
+      shape: data.shape || ('Quadruped' as PokemonShape),
+      habitat: data.habitat || ('None' as Habitat),
 
       // Pokedex information
       category: data.category || '',
@@ -175,12 +246,6 @@ export class PokemonParser {
     }
 
     return validatedData
-  }
-
-  private static validateEnum(content: string, type: any): boolean {
-    // Check if the content is a valid enum
-    const enumValues = Object.values(type)
-    return enumValues.includes(content as any)
   }
 
   private static parseBaseStats(content: string): PokemonStats {
@@ -264,6 +329,43 @@ export class PokemonParser {
     return moves
   }
 
+  public static parseEvolutions(content: string): PokemonEvolution[] {
+    const evolutions: PokemonEvolution[] = []
+
+    if (!content) {
+      return evolutions
+    }
+
+    const parts = content.split(',')
+
+    // Split by three parts: species, method, parameter
+    for (let i = 0; i < parts.length; i += 3) {
+      const species = parts[i].trim()
+      const method = parts[i + 1].trim()
+      const parameter = parts[i + 2]?.trim()
+
+      if (!species || !method) {
+        console.warn(`Invalid evolution entry: ${parts[i]} ${parts[i + 1]} ${parts[i + 2]}`)
+        continue
+      }
+
+      const evolution: PokemonEvolution = {
+        species,
+        method
+      }
+
+      if (parameter) {
+        // Try to parse parameter as number or keep as string
+        const numParam = parseFloat(parameter)
+        evolution.parameter = isNaN(numParam) ? parameter : numParam
+      }
+
+      evolutions.push(evolution)
+    }
+
+    return evolutions
+  }
+
   public static createEmptyPokemonData(id: string): PokemonData | null {
     const emptyData: Partial<PokemonData> = {
       id: id
@@ -301,87 +403,6 @@ export interface PokemonEVs {
   spe?: number
   spa?: number
   spd?: number
-}
-
-export enum GenderRatio {
-  AlwaysMale = 'AlwaysMale',
-  FemaleOneEighth = 'FemaleOneEighth',
-  Female25Percent = 'Female25Percent',
-  Female50Percent = 'Female50Percent',
-  Female75Percent = 'Female75Percent',
-  FemaleSevenEighths = 'FemaleSevenEighths',
-  AlwaysFemale = 'AlwaysFemale',
-  Genderless = 'Genderless'
-}
-
-export enum GrowthRate {
-  Fast = 'Fast',
-  Medium = 'Medium',
-  Slow = 'Slow',
-  Parabolic = 'Parabolic',
-  Erratic = 'Erratic',
-  Fluctuating = 'Fluctuating'
-}
-
-export enum PokemonColor {
-  Red = 'Red',
-  Blue = 'Blue',
-  Yellow = 'Yellow',
-  Green = 'Green',
-  Black = 'Black',
-  Brown = 'Brown',
-  Purple = 'Purple',
-  Gray = 'Gray',
-  White = 'White',
-  Pink = 'Pink'
-}
-
-export enum PokemonShape {
-  Head = 'Head',
-  Serpentine = 'Serpentine',
-  Fins = 'Fins',
-  HeadArms = 'HeadArms',
-  Bipedal = 'Bipedal',
-  HeadBase = 'HeadBase',
-  HeadLegs = 'HeadLegs',
-  Quadruped = 'Quadruped',
-  Wings = 'Wings',
-  Tentacles = 'Tentacles',
-  Heads = 'Heads',
-  Humanoid = 'Humanoid',
-  BugWings = 'BugWings',
-  Armor = 'Armor'
-}
-
-export enum EggGroup {
-  Monster = 'Monster',
-  Water1 = 'Water1',
-  Bug = 'Bug',
-  Flying = 'Flying',
-  Field = 'Field',
-  Fairy = 'Fairy',
-  Grass = 'Grass',
-  Humanlike = 'Humanlike',
-  Water3 = 'Water3',
-  Mineral = 'Mineral',
-  Amorphous = 'Amorphous',
-  Water2 = 'Water2',
-  Ditto = 'Ditto',
-  Dragon = 'Dragon',
-  Undiscovered = 'Undiscovered'
-}
-
-export enum Habitat {
-  None = 'None',
-  Cave = 'Cave',
-  Forest = 'Forest',
-  Grassland = 'Grassland',
-  Mountain = 'Mountain',
-  Rare = 'Rare',
-  RoughTerrain = 'RoughTerrain',
-  Sea = 'Sea',
-  Urban = 'Urban',
-  WatersEdge = 'WatersEdge'
 }
 
 export interface PokemonData {

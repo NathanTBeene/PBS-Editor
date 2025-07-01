@@ -53,3 +53,4 @@ class GenderRatioManager {
 }
 
 export { GenderRatioManager }
+export type GenderRatio = keyof GenderRatioManager['genderRatios']

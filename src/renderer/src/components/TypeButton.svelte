@@ -1,5 +1,6 @@
 <script lang="ts">
-  let { type } = $props<{ type: string }>()
+  import type { PokemonType } from '../lib/data/managers/TypeManager'
+  let { type } = $props<{ type: PokemonType }>()
 </script>
 
 <div class="type-button" data-type={type.toLowerCase()}>

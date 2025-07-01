@@ -60,3 +60,4 @@ class EggGroupManager {
 }
 
 export { EggGroupManager }
+export type EggGroup = keyof EggGroupManager['eggGroups']
