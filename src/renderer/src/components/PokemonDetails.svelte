@@ -42,6 +42,7 @@
     </section>
     <!-- Base Stats -->
     <section class="base-stats">
+      <h2>Base Stats</h2>
       <div class="stat-list">
         <div class="stat">
           <strong>HP</strong>
@@ -245,6 +246,13 @@
     margin: 0;
   }
 
+  strong {
+    color: #f1f5f9;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 0.8rem;
+  }
+
   .container {
     margin: 1rem auto;
     padding: 1rem;
@@ -262,5 +270,31 @@
 
   .basic-info {
     display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .name-form-type {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .types {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .stat-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
   }
 </style>
