@@ -28,7 +28,38 @@ export const pokemonShapeManager = new PokemonShapeManager()
 export const eggGroupManager = new EggGroupManager()
 export const habitatManager = new HabitatManager()
 
+// Stores
+export const typeStore = writable(typeManager.getTypes())
+export const updateTypeStore = () => {
+  typeStore.set(typeManager.getTypes())
+}
+export const genderRatioStore = writable(genderRatioManager.getRatios())
+export const updateGenderRatioStore = () => {
+  genderRatioStore.set(genderRatioManager.getRatios())
+}
+
 // TODO: Implement import functions
 export const importBaseAbilities = async () => {}
 export const importBasePokemon = async () => {}
 export const importBaseMoves = async () => {}
+
+export enum PokemonType {
+  Normal = 'Normal',
+  Fighting = 'Fighting',
+  Flying = 'Flying',
+  Poison = 'Poison',
+  Ground = 'Ground',
+  Rock = 'Rock',
+  Bug = 'Bug',
+  Ghost = 'Ghost',
+  Steel = 'Steel',
+  Fire = 'Fire',
+  Water = 'Water',
+  Grass = 'Grass',
+  Electric = 'Electric',
+  Psychic = 'Psychic',
+  Ice = 'Ice',
+  Dragon = 'Dragon',
+  Dark = 'Dark',
+  Fairy = 'Fairy'
+}

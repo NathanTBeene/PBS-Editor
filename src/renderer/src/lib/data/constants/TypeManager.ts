@@ -1,5 +1,5 @@
 class TypeManager {
-  private static types = new Map<string, string>([
+  private types = new Map<string, string>([
     ['NORMAL', 'Normal'],
     ['FIRE', 'Fire'],
     ['WATER', 'Water'],
@@ -20,19 +20,23 @@ class TypeManager {
     ['FAIRY', 'Fairy']
   ])
 
-  static getTypes(): string[] {
+  getTypes(): string[] {
     return Array.from(this.types.keys())
   }
 
-  static getTypeName(type: string): string | undefined {
+  getType(id: string): string | undefined {
+    return this.types.get(id.toUpperCase())
+  }
+
+  getTypeName(type: string): string | undefined {
     return this.types.get(type.toUpperCase())
   }
 
-  static isValidType(type: string): boolean {
+  isValidType(type: string): boolean {
     return this.types.has(type.toUpperCase())
   }
 
-  static addType(id: string, displayName?: string): boolean {
+  addType(id: string, displayName?: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (this.types.has(normalizedKey)) {
       console.warn(`Type "${id}" already exists.`)
@@ -46,7 +50,7 @@ class TypeManager {
     return true
   }
 
-  static removeType(id: string): boolean {
+  removeType(id: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (!this.types.has(normalizedKey)) {
       console.warn(`Type "${id}" does not exist.`)
@@ -57,7 +61,7 @@ class TypeManager {
     return true
   }
 
-  static getDefault(): string {
+  getDefault(): string {
     return 'Normal'
   }
 }

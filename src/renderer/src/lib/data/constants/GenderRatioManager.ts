@@ -1,5 +1,5 @@
 class GenderRatioManager {
-  private static genderRatios = new Map<string, string>([
+  private genderRatios = new Map<string, string>([
     ['ALWAYS_MALE', 'AlwaysMale'],
     ['FEMALE_ONE_EIGHTH', 'FemaleOneEighth'],
     ['FEMALE_25_PERCENT', 'Female25Percent'],
@@ -10,19 +10,19 @@ class GenderRatioManager {
     ['GENDERLESS', 'Genderless']
   ])
 
-  static getRatios(): string[] {
+  getRatios(): string[] {
     return Array.from(this.genderRatios.keys())
   }
 
-  static getRatioName(ratio: string): string | undefined {
+  getRatioName(ratio: string): string | undefined {
     return this.genderRatios.get(ratio.toUpperCase())
   }
 
-  static isValidRatio(ratio: string): boolean {
+  isValidRatio(ratio: string): boolean {
     return this.genderRatios.has(ratio.toUpperCase())
   }
 
-  static addRatio(id: string, displayName?: string): boolean {
+  addRatio(id: string, displayName?: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (this.genderRatios.has(normalizedKey)) {
       console.warn(`Gender ratio "${id}" already exists.`)
@@ -36,7 +36,7 @@ class GenderRatioManager {
     return true
   }
 
-  static removeRatio(id: string): boolean {
+  removeRatio(id: string): boolean {
     const normalizedKey = id.toUpperCase()
     if (!this.genderRatios.has(normalizedKey)) {
       console.warn(`Gender ratio "${id}" does not exist.`)
@@ -47,7 +47,7 @@ class GenderRatioManager {
     return true
   }
 
-  static getDefault(): string {
+  getDefault(): string {
     return 'Female50Percent'
   }
 }
