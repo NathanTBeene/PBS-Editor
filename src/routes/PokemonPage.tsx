@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, Save, RotateCcw, X } from "lucide-react";
+import { Plus, Save, RotateCcw, X, ArrowDownToLine } from "lucide-react";
 import { type Pokemon } from "../lib/models/Pokemon";
 import CustomSelect from "../components/Base/CustomSelect";
 import { usePokedexContext } from "../lib/providers/PokedexProvider";
@@ -27,7 +27,8 @@ import DeleteButton from "../components/Base/DeleteButton";
 import PokemonList from "../components/Pokemon Page/PokemonList";
 
 const PokemonPage = () => {
-  const { pokemon, setPokemonData, removePokemon } = usePokedexContext();
+  const { pokemon, setPokemonData, removePokemon, setDefault } =
+    usePokedexContext();
 
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(
     pokemon[0] || null
@@ -44,12 +45,20 @@ const PokemonPage = () => {
     if (pokemon.length > 0 && !selectedPokemon) {
       setSelectedPokemon(pokemon[0]);
       setEditData(pokemon[0]);
+    } else {
+      setEditData(pokemon.find((p) => p.id === selectedPokemon?.id) || null);
     }
   }, [pokemon, selectedPokemon]);
 
   const resetChanges = () => {
     if (selectedPokemon) {
       setEditData(selectedPokemon);
+    }
+  };
+
+  const setToDefault = () => {
+    if (selectedPokemon) {
+      setDefault(selectedPokemon.id);
     }
   };
 
@@ -221,6 +230,13 @@ const PokemonPage = () => {
               </div>
             </div>
             <div className="flex gap-3">
+              <button
+                onClick={setToDefault}
+                className="flex bg-slate-700 items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-600 transition-colors shadow-sm cursor-pointer"
+              >
+                <ArrowDownToLine className="w-4 h-4" />
+                Default
+              </button>
               <button
                 onClick={resetChanges}
                 className="flex bg-slate-700 items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-600 transition-colors shadow-sm cursor-pointer"

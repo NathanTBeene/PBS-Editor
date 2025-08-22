@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, Plus } from "lucide-react";
 import { type Pokemon } from "../../lib/models/Pokemon";
 import { typeColors, type TypeColor } from "../../lib/models/constants";
@@ -23,6 +23,42 @@ const PokemonList = ({
       pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       pokemon.id.includes(searchTerm)
   );
+
+  const pokemonRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const listContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedPokemon) {
+      scrollToPokemon(selectedPokemon.id);
+    }
+  }, [selectedPokemon]);
+
+  const scrollToPokemon = (pokemonId: string) => {
+    const pokemonElement = pokemonRefs.current[pokemonId];
+    const containerElement = listContainerRef.current;
+
+    if (pokemonElement && containerElement) {
+      const containerRect = containerElement.getBoundingClientRect();
+      const pokemonRect = pokemonElement.getBoundingClientRect();
+
+      // Calculate the scroll position needed to center the Pokemon in the container
+      const scrollTop =
+        pokemonElement.offsetTop -
+        containerElement.offsetTop -
+        containerRect.height / 2 +
+        pokemonRect.height / 2;
+
+      containerElement.scrollTo({
+        top: scrollTop,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const selectAndScrollToPokemon = (pokemon: Pokemon) => {
+    onPokemonSelect(pokemon);
+    scrollToPokemon(pokemon.id);
+  };
 
   return (
     <div className="w-80 bg-gradient-to-r from-slate-800/40 to-slate-800 flex flex-col">
@@ -49,18 +85,26 @@ const PokemonList = ({
       </div>
 
       {/* Pokemon List */}
-      <div className="flex-1 overflow-y-auto border-r-3 border-slate-700">
+      <div
+        ref={listContainerRef}
+        className="flex-1 overflow-y-auto border-r-3 border-slate-700"
+      >
         {filteredPokemon
           .sort((a, b) => a.dexNumber - b.dexNumber)
           .map((pokemon) => (
             <div
               key={pokemon.id}
+              ref={(el) => {
+                pokemonRefs.current[pokemon.id] = el;
+              }}
               className={`p-3 border-b border-slate-500 bg-gradient-to-r from-slate-800/10 to-slate-800 cursor-pointer transition-colors ${
                 selectedPokemon?.id === pokemon.id
                   ? "bg-blue-600/20 border-l-4 border-l-blue-600/40"
                   : "hover:bg-slate-600/40"
               }`}
-              onClick={() => onPokemonSelect(pokemon)}
+              onClick={() => {
+                selectAndScrollToPokemon(pokemon);
+              }}
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center text-md font-bold">

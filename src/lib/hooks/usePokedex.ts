@@ -19,6 +19,7 @@ import { defaultPokemon, type Pokemon } from "../models/Pokemon";
 
 export const usePokedex = () => {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+  const [defaults, setDefaults] = useState<Pokemon[]>([]);
   const [abilities, setAbilities] = useState<Ability[]>([]);
   const [moves, setMoves] = useState<Move[]>([]);
 
@@ -45,6 +46,18 @@ export const usePokedex = () => {
         const data = await response.text();
         const parsedPokemon = importPokemon(data);
         setPokemon(parsedPokemon);
+      } catch (error) {
+        console.error("Failed to load pokemon.txt:", error);
+      }
+    };
+
+    const fetchDefaults = async () => {
+      try {
+        console.log("Attempting to fetch Defaults data from local PBS.");
+        const response = await fetch("/src/assets/PBS/pokemon.txt");
+        const data = await response.text();
+        const parsedPokemon = importPokemon(data);
+        setDefaults(parsedPokemon);
       } catch (error) {
         console.error("Failed to load pokemon.txt:", error);
       }
@@ -81,6 +94,14 @@ export const usePokedex = () => {
       setPokemon(JSON.parse(PBSPokemon));
     } else {
       fetchPokemon();
+    }
+
+    const PBSDefaults = getItem("PBSDefaults");
+    if (PBSDefaults && JSON.parse(PBSDefaults).length > 0) {
+      console.log("Loading Defaults from local storage");
+      setDefaults(JSON.parse(PBSDefaults));
+    } else {
+      fetchDefaults();
     }
 
     const PBSMoves = getItem("PBSMoves");
@@ -170,6 +191,19 @@ export const usePokedex = () => {
     setPokemon((prev) => prev.filter((pokemon) => pokemon.id !== id));
   };
 
+  const setDefault = (id: string) => {
+    const defaultData = defaults.find((p) => p.id === id);
+    if (!defaultData) {
+      console.warn(`No default data found for Pokémon with ID: ${id}`);
+      return;
+    }
+    if (defaultData) {
+      setPokemon((prev) =>
+        prev.map((pokemon) => (pokemon.id === id ? defaultData : pokemon))
+      );
+    }
+  };
+
   return {
     pokemon,
     abilities,
@@ -178,6 +212,7 @@ export const usePokedex = () => {
     addPokemon,
     removePokemon,
     isPokemonInPokedex,
+    setDefault,
     types: PBSData.types,
     genderRatios: PBSData.genderRatios,
     growthRates: PBSData.growthRates,
