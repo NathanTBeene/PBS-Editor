@@ -55,10 +55,6 @@ export const validatePokemon = (mon: Pokemon) => {
 
   if (mon.happiness < 0 || mon.happiness > 255) errors.push("happiness");
 
-  if (mon.abilities.length === 0) errors.push("abilities");
-
-  if (mon.moves.length === 0) errors.push("moves");
-
   if (mon.eggGroups.length === 0) errors.push("eggGroups");
 
   if (mon.hatchSteps < 0) errors.push("hatchSteps");

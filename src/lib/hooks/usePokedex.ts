@@ -15,7 +15,7 @@ import { importMoves } from "../services/importMoves";
 import { importAbilities } from "../services/importAbilities";
 import type { Move } from "../models/Move";
 import type { Ability } from "../models/Ability";
-import type { Pokemon } from "../models/Pokemon";
+import { defaultPokemon, type Pokemon } from "../models/Pokemon";
 
 export const usePokedex = () => {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
@@ -154,11 +154,30 @@ export const usePokedex = () => {
     );
   };
 
+  function isPokemonInPokedex(id: string): boolean {
+    return !!pokemon.find((p) => p.id === id.toUpperCase());
+  }
+
+  const addPokemon = (id: string, baseMon?: Pokemon) => {
+    const data = { ...(baseMon || defaultPokemon) };
+    data.id = id.trim().toUpperCase();
+    data.name = id.trim();
+    data.dexNumber = 0;
+    setPokemon((prev) => [...prev, data]);
+  };
+
+  const removePokemon = (id: string) => {
+    setPokemon((prev) => prev.filter((pokemon) => pokemon.id !== id));
+  };
+
   return {
     pokemon,
     abilities,
     moves,
     setPokemonData,
+    addPokemon,
+    removePokemon,
+    isPokemonInPokedex,
     types: PBSData.types,
     genderRatios: PBSData.genderRatios,
     growthRates: PBSData.growthRates,

@@ -1,7 +1,7 @@
 import { Plus, X } from "lucide-react";
 import CustomSelect from "./CustomSelect";
 import CustomAutocomplete from "./CustomAutocomplete";
-import AbilitySelect from "./AbilitySelect";
+import AbilitySelect from "../Pokemon Page/AbilitySelect";
 
 interface ArrayManagerProps {
   title: string;
@@ -29,7 +29,7 @@ const ArrayManager = ({
   placeholder = "",
   maxItems,
   gridCols = "grid-cols-1 md:grid-cols-3",
-  showRemoveButton = (index, items) => items.length > 1,
+  showRemoveButton = (_index, items) => items.length > 1,
   emptyMessage,
 }: ArrayManagerProps) => {
   const canAddMore = !maxItems || items.length < maxItems;
@@ -84,27 +84,25 @@ const ArrayManager = ({
         {title}
       </label>
       <div className={`grid ${gridCols} gap-2 mb-4`}>
-        {items.length > 0 ? (
-          items.map((item, index) => (
-            <div key={index} className="flex items-center gap-2">
-              {renderInput(item, index)}
-              {type !== "ability" && showRemoveButton(index, items) && (
-                <button
-                  onClick={() => onRemoveItem(index)}
-                  className="p-1 text-rose-300 hover:text-rose-400 cursor-pointer transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              )}
-            </div>
-          ))
-        ) : (
-          emptyMessage && (
-            <p className="text-slate-500 italic col-span-full">
-              {emptyMessage}
-            </p>
-          )
-        )}
+        {items.length > 0
+          ? items.map((item, index) => (
+              <div key={index} className="flex items-center gap-2">
+                {renderInput(item, index)}
+                {type !== "ability" && showRemoveButton(index, items) && (
+                  <button
+                    onClick={() => onRemoveItem(index)}
+                    className="p-1 text-rose-300 hover:text-rose-400 cursor-pointer transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                )}
+              </div>
+            ))
+          : emptyMessage && (
+              <p className="text-slate-500 italic col-span-full">
+                {emptyMessage}
+              </p>
+            )}
       </div>
       {canAddMore && (
         <button

@@ -1,5 +1,3 @@
-import { type Pokemon } from "../lib/models/Pokemon";
-
 interface StatsInputSectionProps {
   title: string;
   stats: Record<string, number>;

@@ -1,6 +1,5 @@
 import { Plus } from "lucide-react";
 import MoveEntry from "./MoveEntry";
-import { type Pokemon } from "../lib/models/Pokemon";
 
 interface MoveSectionProps {
   title: string;
@@ -23,12 +22,14 @@ const MoveSection = ({
   gridCols = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5",
   sortBy = "name",
 }: MoveSectionProps) => {
-  const sortedMoves = moves ? [...moves].sort((a, b) => {
-    if (sortBy === "level") {
-      return (a.level || 0) - (b.level || 0);
-    }
-    return a.name.localeCompare(b.name);
-  }) : [];
+  const sortedMoves = moves
+    ? [...moves].sort((a, b) => {
+        if (sortBy === "level") {
+          return (a.level || 0) - (b.level || 0);
+        }
+        return a.name.localeCompare(b.name);
+      })
+    : [];
 
   return (
     <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
@@ -47,7 +48,9 @@ const MoveSection = ({
         {sortedMoves.length > 0 ? (
           sortedMoves.map((move, index) => (
             <div
-              key={`${sortBy === "level" ? move.level : ""}${move.name}-${index}`}
+              key={`${sortBy === "level" ? move.level : ""}${
+                move.name
+              }-${index}`}
               className="w-full"
             >
               <MoveEntry

@@ -7,6 +7,7 @@ interface CustomSelectProps {
   options: string[];
   placeholder?: string;
   className?: string;
+  name?: string;
 }
 
 // Custom Select Component

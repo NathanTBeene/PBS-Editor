@@ -1,4 +1,4 @@
-import InfoTooltip from "./InfoTooltip";
+import InfoTooltip from "../Base/InfoTooltip";
 
 interface InputFieldProps {
   label: string;
@@ -30,9 +30,14 @@ const InputField = ({
   className = "",
   tooltip,
 }: InputFieldProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     if (type === "number") {
-      const numValue = type === "number" && step ? parseFloat(e.target.value) : parseInt(e.target.value);
+      const numValue =
+        type === "number" && step
+          ? parseFloat(e.target.value)
+          : parseInt(e.target.value);
       onChange(isNaN(numValue) ? 0 : numValue);
     } else {
       onChange(e.target.value);
