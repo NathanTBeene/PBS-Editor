@@ -14,49 +14,15 @@ import {
   defaultPokemon,
 } from "../models/Pokemon";
 
-const PokemonKeys: string[] = [
-  "id",
-  "name",
-  "formname",
-  "types",
-  "basestats",
-  "genderratio",
-  "growthrate",
-  "baseexp",
-  "effortvalues",
-  "catchrate",
-  "happiness",
-  "abilities",
-  "hiddenabilities",
-  "moves",
-  "tutormoves",
-  "eggmoves",
-  "egggroups",
-  "hatchsteps",
-  "incense",
-  "offspring",
-  "height",
-  "weight",
-  "color",
-  "shape",
-  "habitat",
-  "category",
-  "pokedex",
-  "generation",
-  "flags",
-  "wilditemcommon",
-  "wilditemuncommon",
-  "wilditemrare",
-  "evolutions",
-];
-
 export const importPokemon = (data: string) => {
   const sections: string[] = data.split("#-------------------------------");
   const pokemonList: Pokemon[] = [];
 
-  sections.forEach((section) => {
+  sections.forEach((section, index) => {
     const lines = section.split("\n");
     const pokemon: Pokemon = { ...defaultPokemon };
+
+    pokemon.dexNumber = index;
 
     lines.forEach((line) => {
       if (line.trim() === "" || line.startsWith("#")) return;
@@ -79,7 +45,10 @@ export const importPokemon = (data: string) => {
           pokemon.formName = pokemonValue;
           break;
         case "Types":
-          pokemon.types = pokemonValue.split(",").map((type) => type.trim());
+          pokemon.types = pokemonValue
+            .split(",")
+            .map((type) => type.trim())
+            .filter((type) => type !== "");
           break;
         case "BaseStats":
           const [hp, attack, defense, specialAttack, specialDefense, speed] =

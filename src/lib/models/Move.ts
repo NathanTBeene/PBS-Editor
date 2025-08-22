@@ -4,7 +4,7 @@ export interface Move {
   id: string;
   name: string;
   type: PokemonType;
-  category: "Physical" | "Special" | "Status";
+  category: string;
   power: number;
   accuracy: number;
   pp: number;
@@ -19,12 +19,12 @@ export interface Move {
 export const defaultMove = {
   id: "[]",
   name: "Unnamed",
-  type: "NORMAL",
+  type: "NORMAL" as PokemonType,
   category: "Status",
   power: 0,
   accuracy: 100,
   pp: 5,
-  target: "None",
+  target: "None" as MoveTarget,
   priority: 0,
   functionCode: "None",
   flags: [] as string[],

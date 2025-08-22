@@ -10,7 +10,9 @@ export const importMoves = (data: string) => {
     const move = { ...defaultMove };
 
     lines.forEach((line) => {
-      if (line.trim() === "" || line.startsWith("#")) return; // Skip empty lines and comments
+      if (line.trim() === "" || line.startsWith("#")) {
+        return; // Skip empty lines and comments
+      }
 
       // Get id line []
       if (line.startsWith("[") && line.endsWith("]")) {
@@ -58,6 +60,8 @@ export const importMoves = (data: string) => {
           break;
       }
     });
+
+    movesList.push(move);
   });
 
   console.log(`Parsed ${movesList.length} moves from internal PBS.`);

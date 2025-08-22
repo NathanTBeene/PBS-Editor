@@ -30,6 +30,8 @@ export const importAbilities = (data: string) => {
           break;
       }
     });
+
+    abilitiesList.push(ability);
   });
 
   console.log(`Parsed ${abilitiesList.length} abilities from internal PBS.`);

@@ -2,7 +2,7 @@ import { Outlet } from "react-router";
 
 function App() {
   return (
-    <div className="App p-8 w-screen h-screen overflow-hidden bg-gradient-to-br from-slate-700 to-slate-900 flex flex-col gap-2 items-center justify-center text-white">
+    <div className="App p-8 w-screen h-screen overflow-hidden bg-slate-900 flex flex-col gap-2 items-center justify-center text-white">
       <Outlet />
     </div>
   );

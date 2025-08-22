@@ -148,10 +148,17 @@ export const usePokedex = () => {
     });
   };
 
+  const setPokemonData = (data: Pokemon) => {
+    setPokemon((prev) =>
+      prev.map((pokemon) => (pokemon.id === data.id ? data : pokemon))
+    );
+  };
+
   return {
     pokemon,
     abilities,
     moves,
+    setPokemonData,
     types: PBSData.types,
     genderRatios: PBSData.genderRatios,
     growthRates: PBSData.growthRates,

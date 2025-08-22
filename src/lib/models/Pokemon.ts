@@ -6,12 +6,14 @@ import type {
   PokemonHabitat,
   PokemonShape,
   PokemonType,
+  EggGroup,
 } from "./constants";
 
 export interface Pokemon {
   id: string;
+  dexNumber: number;
   name: string;
-  formName: string | null;
+  formName: string;
   types: PokemonType[];
   baseStats: {
     hp: number;
@@ -25,24 +27,24 @@ export interface Pokemon {
   growthRate: GrowthRate;
   baseExp: number;
   effortValues: {
-    hp: number | null;
-    attack: number | null;
-    defense: number | null;
-    specialAttack: number | null;
-    specialDefense: number | null;
-    speed: number | null;
+    hp: number;
+    attack: number;
+    defense: number;
+    specialAttack: number;
+    specialDefense: number;
+    speed: number;
   };
   catchRate: number;
   happiness: number; // Base happiness
   abilities: string[];
-  hiddenAbilities: string[] | null;
+  hiddenAbilities: string[];
   moves: PokemonMove[]; // Level, Moves Learned
   tutorMoves: PokemonMove[];
   eggMoves: PokemonMove[];
-  eggGroups: string[];
+  eggGroups: EggGroup[];
   hatchSteps: number;
   incense: string | null;
-  offspring: string[] | null;
+  offspring: string[];
   height: number;
   weight: number;
   color: PokemonColor;
@@ -51,10 +53,10 @@ export interface Pokemon {
   category: string;
   pokedex: string;
   generation: number;
-  flags: string[] | null;
-  wildItemCommon: string[] | null;
-  wildItemUncommon: string[] | null;
-  wildItemRare: string[] | null;
+  flags: string[];
+  wildItemCommon: string;
+  wildItemUncommon: string | null;
+  wildItemRare: string | null;
   evolutions: PokemonEvolution[] | null;
 }
 
@@ -65,9 +67,10 @@ export interface PokemonMove {
 
 export const defaultPokemon: Pokemon = {
   id: "",
+  dexNumber: 0,
   name: "Unnamed",
-  formName: null,
-  types: ["NORMAL"],
+  formName: "",
+  types: ["NORMAL"] as PokemonType[],
   baseStats: {
     hp: 1,
     attack: 1,
@@ -76,39 +79,39 @@ export const defaultPokemon: Pokemon = {
     specialDefense: 1,
     speed: 1,
   },
-  genderRatio: "Female50Percent",
-  growthRate: "Medium",
+  genderRatio: "Female50Percent" as GenderRatio,
+  growthRate: "Medium" as GrowthRate,
   baseExp: 100,
   effortValues: {
-    hp: null,
-    attack: null,
-    defense: null,
-    specialAttack: null,
-    specialDefense: null,
-    speed: null,
+    hp: 0,
+    attack: 0,
+    defense: 0,
+    specialAttack: 0,
+    specialDefense: 0,
+    speed: 0,
   },
   catchRate: 255,
   happiness: 70,
   abilities: [],
-  hiddenAbilities: null,
-  moves: [],
-  tutorMoves: [],
-  eggMoves: [],
-  eggGroups: ["Undiscovered"],
+  hiddenAbilities: [],
+  moves: [] as PokemonMove[],
+  tutorMoves: [] as PokemonMove[],
+  eggMoves: [] as PokemonMove[],
+  eggGroups: ["Undiscovered"] as EggGroup[],
   hatchSteps: 1,
   incense: null,
-  offspring: null,
+  offspring: [] as string[],
   height: 0.1,
   weight: 0.1,
-  color: "Red",
-  shape: "Head",
-  habitat: "None",
+  color: "Red" as PokemonColor,
+  shape: "Head" as PokemonShape,
+  habitat: "None" as PokemonHabitat,
   category: "???",
   pokedex: "???",
-  generation: 0,
-  flags: null,
-  wildItemCommon: null,
-  wildItemUncommon: null,
-  wildItemRare: null,
+  generation: 1,
+  flags: [],
+  wildItemCommon: "",
+  wildItemUncommon: "",
+  wildItemRare: "",
   evolutions: null,
 };
