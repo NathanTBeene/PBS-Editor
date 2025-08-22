@@ -2,8 +2,6 @@ import { useState, useMemo, useEffect } from "react";
 import { Search, Plus, Save, RotateCcw, X } from "lucide-react";
 import { type Pokemon } from "../lib/models/Pokemon";
 import CustomSelect from "../components/CustomSelect";
-import AbilitySelect from "../components/AbilitySelect";
-import MoveEntry from "../components/MoveEntry";
 import { usePokedexContext } from "../lib/providers/PokedexProvider";
 import {
   PokemonTypes,
@@ -15,9 +13,15 @@ import {
   typeColors,
   type TypeColor,
 } from "../lib/models/constants";
+import { validateSaveData } from "../lib/services/pokemonValidator";
+import StatsInputSection from "../components/StatsInputSection";
+import MoveSection from "../components/MoveSection";
+import ArrayManager from "../components/ArrayManager";
+import FormSection from "../components/FormSection";
+import InputField from "../components/InputField";
+import { useArrayManager } from "../hooks/useArrayManager";
 import InfoTooltip from "../components/InfoTooltip";
 import CustomAutocomplete from "../components/CustomAutocomplete";
-import { validateSaveData } from "../lib/services/pokemonValidator";
 
 const PokemonPage = () => {
   const { pokemon, setPokemonData } = usePokedexContext();
@@ -27,6 +31,11 @@ const PokemonPage = () => {
     pokemon[0] || null
   );
   const [editData, setEditData] = useState<Pokemon | null>(pokemon[0] || null);
+
+  const { handleArrayChange, removeFromArray, addToArray } = useArrayManager({
+    data: editData ?? pokemon[0],
+    setData: setEditData,
+  });
 
   useEffect(() => {
     if (pokemon.length > 0 && !selectedPokemon) {
@@ -100,179 +109,6 @@ const PokemonPage = () => {
           [stat]: value,
         },
       };
-    });
-  }
-
-  function handleArrayChange(
-    field:
-      | "types"
-      | "abilities"
-      | "hiddenAbilities"
-      | "eggGroups"
-      | "offspring"
-      | "flags",
-    index: number,
-    newType: string
-  ): void {
-    if (!editData) return;
-
-    setEditData((prev) => {
-      if (!prev) return null;
-
-      if (field === "types") {
-        return {
-          ...prev,
-          types: prev.types.map((item, i) => (i === index ? newType : item)),
-        };
-      }
-      if (field === "abilities") {
-        return {
-          ...prev,
-          abilities: prev.abilities.map((item, i) =>
-            i === index ? newType : item
-          ),
-        };
-      }
-      if (field === "hiddenAbilities" && prev.hiddenAbilities) {
-        return {
-          ...prev,
-          hiddenAbilities: prev.hiddenAbilities.map((item, i) =>
-            i === index ? newType : item
-          ),
-        };
-      }
-      if (field === "eggGroups") {
-        return {
-          ...prev,
-          eggGroups: prev.eggGroups.map((item, i) =>
-            i === index ? newType : item
-          ),
-        };
-      }
-      if (field === "offspring" && prev.offspring) {
-        return {
-          ...prev,
-          offspring: prev.offspring.map((item, i) =>
-            i === index ? newType : item
-          ),
-        };
-      }
-      if (field === "flags" && prev.flags) {
-        return {
-          ...prev,
-          flags: prev.flags.map((item, i) => (i === index ? newType : item)),
-        };
-      }
-      return prev;
-    });
-  }
-
-  function removeFromArray(
-    field:
-      | "types"
-      | "abilities"
-      | "hiddenAbilities"
-      | "eggGroups"
-      | "offspring"
-      | "flags",
-    index: number
-  ): void {
-    if (!editData) return;
-
-    setEditData((prev) => {
-      if (!prev) return null;
-
-      if (field === "types") {
-        return {
-          ...prev,
-          types: prev.types.filter((_, i) => i !== index),
-        };
-      }
-      if (field === "abilities") {
-        return {
-          ...prev,
-          abilities: prev.abilities.filter((_, i) => i !== index),
-        };
-      }
-      if (field === "hiddenAbilities" && prev.hiddenAbilities) {
-        return {
-          ...prev,
-          hiddenAbilities: prev.hiddenAbilities.filter((_, i) => i !== index),
-        };
-      }
-      if (field === "eggGroups") {
-        return {
-          ...prev,
-          eggGroups: prev.eggGroups.filter((_, i) => i !== index),
-        };
-      }
-      if (field === "offspring" && prev.offspring) {
-        return {
-          ...prev,
-          offspring: prev.offspring.filter((_, i) => i !== index),
-        };
-      }
-      if (field === "flags" && prev.flags) {
-        return {
-          ...prev,
-          flags: prev.flags.filter((_, i) => i !== index),
-        };
-      }
-      return prev;
-    });
-  }
-
-  function addToArray(
-    field:
-      | "types"
-      | "abilities"
-      | "hiddenAbilities"
-      | "eggGroups"
-      | "offspring"
-      | "flags"
-  ): void {
-    if (!editData) return;
-
-    setEditData((prev) => {
-      if (!prev) return null;
-
-      if (field === "types") {
-        return {
-          ...prev,
-          types: [...prev.types, ""],
-        };
-      }
-      if (field === "abilities") {
-        return {
-          ...prev,
-          abilities: [...prev.abilities, ""],
-        };
-      }
-      if (field === "hiddenAbilities" && prev.hiddenAbilities) {
-        return {
-          ...prev,
-          hiddenAbilities: [...prev.hiddenAbilities, ""],
-        };
-      }
-      if (field === "eggGroups") {
-        return {
-          ...prev,
-          eggGroups: [...prev.eggGroups, ""],
-        };
-      }
-      if (field === "offspring") {
-        return {
-          ...prev,
-          offspring: [...prev.offspring, ""],
-        };
-      }
-      if (field === "flags" && prev.flags) {
-        return {
-          ...prev,
-          flags: [...prev.flags, ""],
-        };
-      }
-      return prev;
     });
   }
 
@@ -469,415 +305,166 @@ const PokemonPage = () => {
         {/* Editor Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-slate-800">
           <div className="max-w-4xl mx-auto space-y-8">
-            {/* Basic Information */}
-            <section className="bg-slate-700/40 rounded-lg p-6 shadow-lg">
-              <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
+            <FormSection title="Basic Information">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* ID */}
-                <div>
-                  <label className="flex gap-2 items-center relative text-sm font-medium text-slate-300 mb-2">
-                    ID
-                    <InfoTooltip description="The unique identifier for this Pokémon. Essentials standard is all caps no spaces." />
-                  </label>
-                  <input
-                    type="text"
-                    value={editData.id}
-                    onChange={(e) => handleInputChange("id", e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-                  />
-                </div>
-                {/* Name */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    value={editData.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-                  />
-                </div>
-                {/* Form Name */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Form Name
-                  </label>
-                  <input
-                    type="text"
-                    value={editData.formName || ""}
-                    onChange={(e) =>
-                      handleInputChange("formName", e.target.value || "")
-                    }
-                    className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Category
-                  </label>
-                  <input
-                    type="text"
-                    value={editData.category}
-                    onChange={(e) =>
-                      handleInputChange("category", e.target.value)
-                    }
-                    className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Generation
-                  </label>
-                  <input
-                    type="number"
-                    value={editData.generation}
-                    onChange={(e) =>
-                      handleInputChange("generation", parseInt(e.target.value))
-                    }
-                    className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Dex #
-                  </label>
-                  <input
-                    type="number"
-                    value={editData.dexNumber}
-                    onChange={(e) =>
-                      handleInputChange("dexNumber", parseInt(e.target.value))
-                    }
-                    className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-                  />
-                </div>
-              </div>
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Pokedex Entry
-                </label>
-                <textarea
-                  value={editData.pokedex}
-                  onChange={(e) => handleInputChange("pokedex", e.target.value)}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
+                <InputField
+                  label="ID"
+                  value={editData.id}
+                  onChange={(value) => handleInputChange("id", value)}
+                  tooltip={{
+                    description:
+                      "The unique identifier for this Pokémon. Essentials standard is all caps no spaces.",
+                  }}
+                />
+                <InputField
+                  label="Name"
+                  value={editData.name}
+                  onChange={(value) => handleInputChange("name", value)}
+                />
+                <InputField
+                  label="Form Name"
+                  value={editData.formName || ""}
+                  onChange={(value) => handleInputChange("formName", value)}
+                />
+                <InputField
+                  label="Category"
+                  value={editData.category}
+                  onChange={(value) => handleInputChange("category", value)}
+                />
+                <InputField
+                  label="Generation"
+                  type="number"
+                  value={editData.generation}
+                  onChange={(value) => handleInputChange("generation", value)}
+                />
+                <InputField
+                  label="Dex #"
+                  type="number"
+                  value={editData.dexNumber}
+                  onChange={(value) => handleInputChange("dexNumber", value)}
                 />
               </div>
-            </section>
-
-            {/* Base Stats */}
-            <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
-              <h2 className="text-lg font-semibold mb-4">Base Stats</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {Object.entries(editData.baseStats || {}).map(
-                  ([stat, value]) => (
-                    <div key={stat}>
-                      <label className="block text-sm font-medium text-slate-300 mb-2 capitalize">
-                        {stat.replace(/([A-Z])/g, " $1").trim()}
-                      </label>
-                      <input
-                        type="number"
-                        value={value}
-                        onChange={(e) =>
-                          handleStatChange(
-                            "baseStats",
-                            stat as keyof Pokemon["baseStats"],
-                            parseInt(e.target.value)
-                          )
-                        }
-                        className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-                        min="0"
-                        max="255"
-                      />
-                    </div>
-                  )
-                )}
+              <div className="mt-4">
+                <InputField
+                  label="Pokedex Entry"
+                  type="textarea"
+                  value={editData.pokedex}
+                  onChange={(value) => handleInputChange("pokedex", value)}
+                  rows={3}
+                />
               </div>
-            </section>
+            </FormSection>
 
-            {/* Effort Values */}
-            <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
-              <h2 className="text-lg font-semibold  mb-4">Effort Values</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {Object.entries(editData.effortValues || {}).map(
-                  ([stat, value]) => (
-                    <div key={stat}>
-                      <label className="block text-sm font-medium text-slate-300 mb-2 capitalize">
-                        {stat.replace(/([A-Z])/g, " $1").trim()}
-                      </label>
-                      <input
-                        type="number"
-                        value={value}
-                        onChange={(e) =>
-                          handleStatChange(
-                            "baseStats",
-                            stat as keyof Pokemon["baseStats"],
-                            parseInt(e.target.value)
-                          )
-                        }
-                        className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-                        min="0"
-                        max="255"
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            </section>
+            <StatsInputSection
+              title="Base Stats"
+              stats={editData.baseStats || {}}
+              onStatChange={(stat, value) =>
+                handleStatChange(
+                  "baseStats",
+                  stat as keyof Pokemon["baseStats"],
+                  value
+                )
+              }
+            />
 
-            {/* Types and Abilities */}
-            <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
-              <h2 className="text-lg font-semibold mb-4">
-                Types and Abilities
-              </h2>
+            <StatsInputSection
+              title="Effort Values"
+              stats={editData.effortValues || {}}
+              onStatChange={(stat, value) =>
+                handleStatChange(
+                  "effortValues",
+                  stat as keyof Pokemon["effortValues"],
+                  value
+                )
+              }
+            />
+
+            <FormSection title="Types and Abilities">
               <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Types
-                  </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {editData.types.map((type, index) => (
-                      <div key={index} className="flex items-center">
-                        <CustomSelect
-                          value={type}
-                          onChange={(newType) =>
-                            handleArrayChange("types", index, newType)
-                          }
-                          options={PokemonTypes}
-                          placeholder="Select type..."
-                          className="flex-1"
-                        />
-                        {editData.types.length > 1 && (
-                          <button
-                            onClick={() => removeFromArray("types", index)}
-                            className="p-1 text-rose-300 hover:text-rose-400 cursor-pointer transition-colors"
-                          >
-                            <X className="w-6 h-6" />
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                    {editData.types.length < 2 && (
-                      <button
-                        onClick={() => addToArray("types")}
-                        className="px-3 py-2 border border-slate-500 rounded-md text-slate-500 hover:bg-slate-50 flex items-center gap-2"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Add Type
-                      </button>
-                    )}
-                  </div>
-                </div>
+                <ArrayManager
+                  title="Types"
+                  items={editData.types}
+                  onItemChange={handleArrayChange.bind(null, "types")}
+                  onAddItem={() => addToArray("types")}
+                  onRemoveItem={(index) => removeFromArray("types", index)}
+                  type="select"
+                  options={PokemonTypes}
+                  placeholder="Select type..."
+                  maxItems={2}
+                  gridCols="grid-cols-1 md:grid-cols-2"
+                  showRemoveButton={(_index, items) => items.length > 1}
+                />
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Abilities
-                  </label>
-                  <div className="mb-4 gap-2 grid grid-cols-1 md:grid-cols-3">
-                    {editData.abilities.map((ability, index) => (
-                      <AbilitySelect
-                        key={index}
-                        value={ability}
-                        onChange={(newAbility) =>
-                          handleArrayChange("abilities", index, newAbility)
-                        }
-                        onRemove={() => removeFromArray("abilities", index)}
-                        placeholder="Type to search abilities..."
-                      />
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => addToArray("abilities")}
-                    className="px-3 py-2 border border-slate-500 text-slate-500 rounded-lg shadow-sm flex items-center gap-2 cursor-pointer hover:text-slate-300 hover:bg-slate-500/30 transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Ability
-                  </button>
-                </div>
+                <ArrayManager
+                  title="Abilities"
+                  items={editData.abilities}
+                  onItemChange={handleArrayChange.bind(null, "abilities")}
+                  onAddItem={() => addToArray("abilities")}
+                  onRemoveItem={(index) => removeFromArray("abilities", index)}
+                  type="ability"
+                  placeholder="Type to search abilities..."
+                  gridCols="grid-cols-1 md:grid-cols-3"
+                />
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Hidden Abilities
-                  </label>
-                  <div className="grid gap-2 grid-cols-1 md:grid-cols-3 mb-4">
-                    {editData.hiddenAbilities.length > 0 ? (
-                      editData.hiddenAbilities.map((ability, index) => (
-                        <AbilitySelect
-                          key={index}
-                          value={ability}
-                          onChange={(newAbility) =>
-                            handleArrayChange(
-                              "hiddenAbilities",
-                              index,
-                              newAbility
-                            )
-                          }
-                          onRemove={() =>
-                            removeFromArray("hiddenAbilities", index)
-                          }
-                          placeholder="Type to search hidden abilities..."
-                        />
-                      ))
-                    ) : (
-                      <p className="text-slate-500 italic">
-                        No hidden abilities
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => {
-                      if (!editData.hiddenAbilities) {
-                        setEditData((prev) => {
-                          if (!prev) return null;
-                          return {
-                            ...prev,
-                            hiddenAbilities: [""],
-                          };
-                        });
-                      } else {
-                        addToArray("hiddenAbilities");
-                      }
-                    }}
-                    className="px-3 py-2 border border-slate-500 text-slate-500 rounded-lg shadow-sm flex items-center gap-2 cursor-pointer hover:text-slate-300 hover:bg-slate-500/30 transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Add Hidden Ability
-                  </button>
-                </div>
+                <ArrayManager
+                  title="Hidden Abilities"
+                  items={editData.hiddenAbilities || []}
+                  onItemChange={handleArrayChange.bind(null, "hiddenAbilities")}
+                  onAddItem={() => {
+                    if (!editData.hiddenAbilities) {
+                      setEditData((prev) => {
+                        if (!prev) return null;
+                        return { ...prev, hiddenAbilities: [""] };
+                      });
+                    } else {
+                      addToArray("hiddenAbilities");
+                    }
+                  }}
+                  onRemoveItem={(index) =>
+                    removeFromArray("hiddenAbilities", index)
+                  }
+                  type="ability"
+                  placeholder="Type to search hidden abilities..."
+                  gridCols="grid-cols-1 md:grid-cols-3"
+                  emptyMessage="No hidden abilities"
+                />
               </div>
-            </section>
+            </FormSection>
 
-            {/* Level-up Moves */}
-            <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold ">Level-up Moves</h2>
-                <button
-                  onClick={() => addMove("moves", "")}
-                  className="px-3 py-1 text-sm border border-slate-500 rounded-md text-slate-500 cursor-pointer hover:text-slate-300 hover:bg-slate-500/30 transition-colors flex items-center gap-1"
-                >
-                  <Plus className="w-3 h-3" />
-                  Add Move
-                </button>
-              </div>
+            <MoveSection
+              title="Level-up Moves"
+              moves={editData.moves || []}
+              useLevel={true}
+              onAddMove={() => addMove("moves", "")}
+              onMoveChange={(index, field, value) =>
+                handleMoveChange("moves", index, field, value)
+              }
+              onRemoveMove={(index) => removeMoveFromArray("moves", index)}
+              gridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              sortBy="level"
+            />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-                {editData.moves && editData.moves.length > 0 ? (
-                  editData.moves
-                    .sort((a, b) => (a.level || 0) - (b.level || 0))
-                    .map((move, index) => (
-                      <div
-                        key={`${move.level}-${move.name}-${index}`}
-                        className="w-full"
-                      >
-                        <MoveEntry
-                          move={move}
-                          onMoveChange={(value) =>
-                            handleMoveChange("moves", index, "name", value)
-                          }
-                          onLevelChange={(value) =>
-                            handleMoveChange("moves", index, "level", value)
-                          }
-                          onRemove={() => removeMoveFromArray("moves", index)}
-                          useLevel={true}
-                        />
-                      </div>
-                    ))
-                ) : (
-                  <div className="col-span-full">
-                    <p className="text-slate-500 italic py-4 text-center">
-                      No moves added yet
-                    </p>
-                  </div>
-                )}
-              </div>
-            </section>
+            <MoveSection
+              title="Tutor Moves"
+              moves={editData.tutorMoves || []}
+              useLevel={false}
+              onAddMove={() => addMove("tutorMoves", "")}
+              onMoveChange={(index, field, value) =>
+                handleMoveChange("tutorMoves", index, field, value)
+              }
+              onRemoveMove={(index) => removeMoveFromArray("tutorMoves", index)}
+            />
 
-            {/* Tutor Moves */}
-            <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold ">Tutor Moves</h2>
-                <button
-                  onClick={() => addMove("tutorMoves", "")}
-                  className="px-3 py-1 text-sm border border-slate-500 rounded-md text-slate-500 cursor-pointer hover:text-slate-300 hover:bg-slate-500/30 transition-colors flex items-center gap-1"
-                >
-                  <Plus className="w-3 h-3" />
-                  Add Move
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-                {editData.tutorMoves && editData.tutorMoves.length > 0 ? (
-                  editData.tutorMoves
-                    .sort((a, b) => a.name.localeCompare(b.name))
-                    .map((move, index) => (
-                      <div
-                        key={`tutor-${move.name}-${index}`}
-                        className="w-full"
-                      >
-                        <MoveEntry
-                          move={move}
-                          onMoveChange={(value) =>
-                            handleMoveChange("tutorMoves", index, "name", value)
-                          }
-                          onLevelChange={() => {}} // Not used for tutor moves
-                          onRemove={() =>
-                            removeMoveFromArray("tutorMoves", index)
-                          }
-                          useLevel={false}
-                        />
-                      </div>
-                    ))
-                ) : (
-                  <div className="col-span-full">
-                    <p className="text-slate-500 italic py-4 text-center">
-                      No tutor moves added yet
-                    </p>
-                  </div>
-                )}
-              </div>
-            </section>
-
-            {/* Egg Moves */}
-            <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold ">Egg Moves</h2>
-                <button
-                  onClick={() => addMove("eggMoves", "")}
-                  className="px-3 py-1 text-sm border border-slate-500 rounded-md text-slate-500 cursor-pointer hover:text-slate-300 hover:bg-slate-500/30 transition-colors flex items-center gap-1"
-                >
-                  <Plus className="w-3 h-3" />
-                  Add Move
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-                {editData.eggMoves && editData.eggMoves.length > 0 ? (
-                  editData.eggMoves
-                    .sort((a, b) => a.name.localeCompare(b.name))
-                    .map((move, index) => (
-                      <div key={`egg-${move.name}-${index}`} className="w-full">
-                        <MoveEntry
-                          move={move}
-                          onMoveChange={(value) =>
-                            handleMoveChange("eggMoves", index, "name", value)
-                          }
-                          onLevelChange={() => {}} // Not used for egg moves
-                          onRemove={() =>
-                            removeMoveFromArray("eggMoves", index)
-                          }
-                          useLevel={false}
-                        />
-                      </div>
-                    ))
-                ) : (
-                  <div className="col-span-full">
-                    <p className="text-slate-500 italic py-4 text-center">
-                      No egg moves added yet
-                    </p>
-                  </div>
-                )}
-              </div>
-            </section>
+            <MoveSection
+              title="Egg Moves"
+              moves={editData.eggMoves || []}
+              useLevel={false}
+              onAddMove={() => addMove("eggMoves", "")}
+              onMoveChange={(index, field, value) =>
+                handleMoveChange("eggMoves", index, field, value)
+              }
+              onRemoveMove={(index) => removeMoveFromArray("eggMoves", index)}
+            />
 
             {/* Egg Groups */}
             <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
