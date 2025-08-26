@@ -9,6 +9,8 @@ interface MoveEntryProps {
   onLevelChange: (level: number) => void;
   onRemove: () => void;
   useLevel?: boolean;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 const MoveEntry = ({
@@ -17,6 +19,8 @@ const MoveEntry = ({
   onLevelChange,
   onRemove,
   useLevel = true,
+  onFocus,
+  onBlur,
 }: MoveEntryProps) => {
   const { moves } = usePokedexContext();
 
@@ -48,6 +52,8 @@ const MoveEntry = ({
           placeholder="Move..."
           className="text-xs text-slate-300"
           inputClassName="border-slate-500 rounded-none border-l-0 border-r-0 border-t-0 focus:ring-transparent focus:border-blue-300"
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
       </div>
       <button

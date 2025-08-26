@@ -7,6 +7,9 @@ import { RouterProvider } from "react-router/dom";
 import PokemonPage from "./routes/PokemonPage.tsx";
 import { PokedexProvider } from "./lib/providers/PokedexProvider.tsx";
 import HomePage from "./routes/HomePage.tsx";
+import ConstantsPage from "./routes/ConstantsPage.tsx";
+import AbilitiesPage from "./routes/AbilitiesPage.tsx";
+import MovesPage from "./routes/MovesPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +25,18 @@ const router = createBrowserRouter([
       {
         path: "/pokemon",
         element: <PokemonPage />,
+      },
+      {
+        path: "/constants",
+        element: <ConstantsPage />,
+      },
+      {
+        path: "/moves",
+        element: <MovesPage />,
+      },
+      {
+        path: "/abilities",
+        element: <AbilitiesPage />,
       },
     ],
   },

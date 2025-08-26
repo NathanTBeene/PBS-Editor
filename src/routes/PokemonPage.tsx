@@ -4,14 +4,11 @@ import { type Pokemon } from "../lib/models/Pokemon";
 import CustomSelect from "../components/Base/CustomSelect";
 import { usePokedexContext } from "../lib/providers/PokedexProvider";
 import {
-  PokemonTypes,
   PokemonColors,
   PokemonShapes,
   GenderRatios,
   GrowthRates,
   EggGroups,
-  typeColors,
-  type TypeColor,
 } from "../lib/models/constants";
 import { validateSaveData } from "../lib/services/pokemonValidator";
 import { useArrayManager } from "../lib/hooks/useArrayManager";
@@ -25,14 +22,19 @@ import CustomAutocomplete from "../components/Base/CustomAutocomplete";
 import NewPokemonForm from "../components/Forms/NewPokemonForm";
 import DeleteButton from "../components/Base/DeleteButton";
 import PokemonList from "../components/Pokemon Page/PokemonList";
+import TypeBubble from "../components/TypeBubble";
 
 const PokemonPage = () => {
-  const { pokemon, setPokemonData, removePokemon, setDefault } =
-    usePokedexContext();
+  const {
+    pokemon,
+    types,
+    setPokemonData,
+    removePokemon,
+    setDefault,
+    selectedPokemon,
+    setSelectedPokemon,
+  } = usePokedexContext();
 
-  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(
-    pokemon[0] || null
-  );
   const [editData, setEditData] = useState<Pokemon | null>(pokemon[0] || null);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -216,15 +218,7 @@ const PokemonPage = () => {
                 </p>
                 <div className="flex gap-2 mt-1">
                   {editData.types.map((type) => (
-                    <span
-                      key={type}
-                      style={{
-                        backgroundColor: typeColors[type as TypeColor],
-                      }}
-                      className={`px-2 py-1 rounded text-xs font-medium `}
-                    >
-                      {type}
-                    </span>
+                    <TypeBubble key={type} type={type} />
                   ))}
                 </div>
               </div>
@@ -246,10 +240,15 @@ const PokemonPage = () => {
               </button>
               <DeleteButton
                 onConfirm={() => {
-                  console.log("Confirmed deletion");
-                  removePokemon(selectedPokemon.id);
-                  setSelectedPokemon(pokemon[0]);
-                  setEditData(pokemon[0]);
+                  if (
+                    window.confirm(
+                      "NOTICE: Deleting this Pokemon will not remove it's ID from any other Pokemon. Evolutions, offspring, etc."
+                    )
+                  ) {
+                    removePokemon(selectedPokemon.id);
+                    setSelectedPokemon(pokemon[0]);
+                    setEditData(pokemon[0]);
+                  }
                 }}
               />
               <button
@@ -349,7 +348,7 @@ const PokemonPage = () => {
                   onAddItem={() => addToArray("types")}
                   onRemoveItem={(index) => removeFromArray("types", index)}
                   type="select"
-                  options={PokemonTypes}
+                  options={Object.keys(types)}
                   placeholder="Select type..."
                   maxItems={2}
                   gridCols="grid-cols-1 md:grid-cols-2"

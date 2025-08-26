@@ -1,52 +1,54 @@
 import { useEffect, useRef, useState } from "react";
 import { Search, Plus } from "lucide-react";
-import { type Pokemon } from "../../lib/models/Pokemon";
+import { type Move } from "../../lib/models/Move";
 import TypeBubble from "../TypeBubble";
 
-interface PokemonListProps {
-  pokemon: Pokemon[];
-  selectedPokemon: Pokemon | null;
-  onPokemonSelect: (pokemon: Pokemon) => void;
-  onAddPokemon: () => void;
+interface MoveListProps {
+  moves: Move[];
+  selectedMove: Move | null;
+  onMoveSelect: (move: Move) => void;
+  onAddMove: () => void;
 }
 
-const PokemonList = ({
-  pokemon,
-  selectedPokemon,
-  onPokemonSelect,
-  onAddPokemon,
-}: PokemonListProps) => {
+const MoveList = ({
+  moves,
+  selectedMove,
+  onMoveSelect,
+  onAddMove,
+}: MoveListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [hasScrolledToSelected, setHasScrolledToSelected] = useState(false);
 
-  const filteredPokemon = pokemon.filter(
-    (pokemon) =>
-      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pokemon.id.includes(searchTerm)
+  const filteredMoves = moves.filter(
+    (move) =>
+      move.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      move.id.includes(searchTerm) ||
+      move.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      move.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const pokemonRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const moveRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const listContainerRef = useRef<HTMLDivElement>(null);
 
-  // Initial scroll to selected pokemon when component mounts or selected pokemon changes
+  // Initial scroll to selected move when component mounts or selected move changes
   useEffect(() => {
-    if (selectedPokemon && !hasScrolledToSelected) {
+    if (selectedMove && !hasScrolledToSelected) {
       // Use setTimeout to ensure DOM is fully rendered
       const timer = setTimeout(() => {
-        scrollToPokemon(selectedPokemon.id, false); // false = instant scroll for initial positioning
+        scrollToMove(selectedMove.id, false); // false = instant scroll for initial positioning
         setHasScrolledToSelected(true);
       }, 100);
 
       return () => clearTimeout(timer);
     }
-  }, [selectedPokemon, hasScrolledToSelected]);
+  }, [selectedMove, hasScrolledToSelected]);
 
-  // Smooth scroll when user selects a different pokemon
+  // Smooth scroll when user selects a different move
   useEffect(() => {
-    if (selectedPokemon && hasScrolledToSelected) {
-      scrollToPokemon(selectedPokemon.id, true); // true = smooth scroll for user interactions
+    if (selectedMove && hasScrolledToSelected) {
+      scrollToMove(selectedMove.id, true); // true = smooth scroll for user interactions
     }
-  }, [selectedPokemon, hasScrolledToSelected]);
+  }, [selectedMove, hasScrolledToSelected]);
 
   // Reset scroll flag when search changes
   useEffect(() => {
@@ -55,20 +57,19 @@ const PokemonList = ({
     }
   }, [searchTerm]);
 
-  const scrollToPokemon = (pokemonId: string, smooth: boolean = true) => {
-    const pokemonElement = pokemonRefs.current[pokemonId];
+  const scrollToMove = (moveId: string, smooth: boolean = true) => {
+    const moveElement = moveRefs.current[moveId];
     const containerElement = listContainerRef.current;
 
-    if (pokemonElement && containerElement) {
+    if (moveElement && containerElement) {
       const containerRect = containerElement.getBoundingClientRect();
-      const pokemonRect = pokemonElement.getBoundingClientRect();
+      const moveRect = moveElement.getBoundingClientRect();
 
-      // Calculate the scroll position needed to center the Pokemon in the container
       const scrollTop =
-        pokemonElement.offsetTop -
+        moveElement.offsetTop -
         containerElement.offsetTop -
         containerRect.height / 2 +
-        pokemonRect.height / 2;
+        moveRect.height / 2;
 
       containerElement.scrollTo({
         top: Math.max(0, scrollTop),
@@ -77,8 +78,8 @@ const PokemonList = ({
     }
   };
 
-  const selectAndScrollToPokemon = (pokemon: Pokemon) => {
-    onPokemonSelect(pokemon);
+  const selectAndScrollToMove = (move: Move) => {
+    onMoveSelect(move);
     // Don't manually scroll here - let the useEffect handle it
   };
 
@@ -91,14 +92,14 @@ const PokemonList = ({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" />
             <input
               type="text"
-              placeholder="Search Pokemon..."
+              placeholder="Search Moves..."
               className="w-full pl-10 pr-4 py-2 border border-slate-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300/70 focus:border-transparent"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <button
-            onClick={onAddPokemon}
+            onClick={onAddMove}
             className="p-2 px-3 bg-emerald-600 text-emerald-200 rounded-lg cursor-pointer hover:bg-emerald-500 transition-colors"
           >
             <Plus className="w-5 h-5" />
@@ -106,45 +107,43 @@ const PokemonList = ({
         </div>
       </div>
 
-      {/* Pokemon List */}
+      {/* Move List */}
       <div
         ref={listContainerRef}
         className="flex-1 overflow-y-auto border-r-3 border-slate-700"
       >
-        {filteredPokemon
-          .sort((a, b) => a.dexNumber - b.dexNumber)
-          .map((pokemon) => (
+        {filteredMoves
+          // .sort((a, b) => a.name.localeCompare(b.name))
+          .map((move) => (
             <div
-              key={pokemon.id}
+              key={move.id}
               ref={(el) => {
-                pokemonRefs.current[pokemon.id] = el;
+                moveRefs.current[move.id] = el;
               }}
               className={`p-3 border-b border-slate-500 bg-gradient-to-r from-slate-800/10 to-slate-800 cursor-pointer transition-colors ${
-                selectedPokemon?.id === pokemon.id
+                selectedMove?.id === move.id
                   ? "bg-blue-600/20 border-l-4 border-l-blue-600/40"
                   : "hover:bg-slate-600/40"
               }`}
               onClick={() => {
-                selectAndScrollToPokemon(pokemon);
+                selectAndScrollToMove(move);
               }}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-md font-bold">
-                  #{pokemon.dexNumber}
-                </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">
-                    {pokemon.name}
-                    {pokemon.formName && (
-                      <span className="text-slate-300 text-sm ml-1">
-                        ({pokemon.formName})
-                      </span>
-                    )}
+                  <div className="font-medium truncate text-sm">
+                    {move.name}
                   </div>
-                  <div className="flex gap-1 mt-1">
-                    {pokemon.types.map((type) => (
-                      <TypeBubble key={type} type={type} />
-                    ))}
+                  <div className="flex items-center gap-2 mt-1">
+                    <TypeBubble type={move.type} />
+                    <span className="text-xs text-slate-400">
+                      {move.category}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
+                    <span>Power: {move.power || "—"}</span>
+                    <span>Acc: {move.accuracy}%</span>
+                    <span>PP: {move.pp}</span>
                   </div>
                 </div>
               </div>
@@ -155,4 +154,4 @@ const PokemonList = ({
   );
 };
 
-export default PokemonList;
+export default MoveList;

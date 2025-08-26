@@ -1,5 +1,5 @@
 import type { PokemonType } from "../models/constants";
-import { defaultMove, type Move, type MoveTarget } from "../models/Move";
+import { defaultMove, type Move } from "../models/Move";
 
 export const importMoves = (data: string) => {
   const sections: string[] = data.split("#-------------------------------");
@@ -41,7 +41,7 @@ export const importMoves = (data: string) => {
           move.pp = parseInt(value);
           break;
         case "Target":
-          move.target = value as MoveTarget;
+          move.target = value;
           break;
         case "Priority":
           move.priority = parseInt(value);
@@ -60,6 +60,10 @@ export const importMoves = (data: string) => {
           break;
       }
     });
+
+    if (move.id == "[]" || move.name == "Unnamed") {
+      return;
+    }
 
     movesList.push(move);
   });

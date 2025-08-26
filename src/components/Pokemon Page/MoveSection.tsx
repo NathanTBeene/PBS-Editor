@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import MoveEntry from "./MoveEntry";
 
 interface MoveSectionProps {
@@ -22,14 +23,50 @@ const MoveSection = ({
   gridCols = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5",
   sortBy = "name",
 }: MoveSectionProps) => {
-  const sortedMoves = moves
-    ? [...moves].sort((a, b) => {
-        if (sortBy === "level") {
-          return (a.level || 0) - (b.level || 0);
-        }
-        return a.name.localeCompare(b.name);
-      })
+  // Track which moves are currently being edited (focused)
+  const [editingIndices, setEditingIndices] = useState<Set<number>>(new Set());
+
+  // Create array with original indices to track after sorting
+  const movesWithIndices = moves
+    ? moves.map((move, originalIndex) => ({ ...move, originalIndex }))
     : [];
+
+  // Separate moves into stable (not being edited) and unstable (being edited or empty)
+  const stableMoves = movesWithIndices.filter(
+    (move) =>
+      !editingIndices.has(move.originalIndex) &&
+      move.name &&
+      move.name.trim() !== ""
+  );
+  const unstableMoves = movesWithIndices.filter(
+    (move) =>
+      editingIndices.has(move.originalIndex) ||
+      !move.name ||
+      move.name.trim() === ""
+  );
+
+  // Only sort stable moves
+  const sortedStableMoves = stableMoves.sort((a, b) => {
+    if (sortBy === "level") {
+      return (a.level || 0) - (b.level || 0);
+    }
+    return a.name.localeCompare(b.name);
+  });
+
+  // Combine sorted stable moves with unstable moves at the end
+  const finalMoves = [...sortedStableMoves, ...unstableMoves];
+
+  const handleMoveEditStart = (originalIndex: number) => {
+    setEditingIndices((prev) => new Set([...prev, originalIndex]));
+  };
+
+  const handleMoveEditEnd = (originalIndex: number) => {
+    setEditingIndices((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(originalIndex);
+      return newSet;
+    });
+  };
 
   return (
     <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
@@ -45,24 +82,24 @@ const MoveSection = ({
       </div>
 
       <div className={`grid ${gridCols} gap-2`}>
-        {sortedMoves.length > 0 ? (
-          sortedMoves.map((move, index) => (
-            <div
-              key={`${sortBy === "level" ? move.level : ""}${
-                move.name
-              }-${index}`}
-              className="w-full"
-            >
+        {finalMoves.length > 0 ? (
+          finalMoves.map((move) => (
+            <div key={move.originalIndex} className="w-full">
               <MoveEntry
                 move={move}
-                onMoveChange={(value) => onMoveChange(index, "name", value)}
+                onMoveChange={(value) =>
+                  onMoveChange(move.originalIndex, "name", value)
+                }
                 onLevelChange={
                   useLevel
-                    ? (value) => onMoveChange(index, "level", value)
+                    ? (value) =>
+                        onMoveChange(move.originalIndex, "level", value)
                     : () => {}
                 }
-                onRemove={() => onRemoveMove(index)}
+                onRemove={() => onRemoveMove(move.originalIndex)}
                 useLevel={useLevel}
+                onFocus={() => handleMoveEditStart(move.originalIndex)}
+                onBlur={() => handleMoveEditEnd(move.originalIndex)}
               />
             </div>
           ))

@@ -1,28 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Home,
-  BarChart3,
-  Users,
-  MessageSquare,
-  TrendingUp,
-  FolderOpen,
+  LoaderPinwheel,
+  HandFist,
+  Crown,
+  Database,
   Settings,
   Download,
   Menu,
   X,
 } from "lucide-react";
+import { useNavigate } from "react-router";
 
 function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activeItem, setActiveItem] = useState("home");
+  const [activeItem, setActiveItem] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const navItems = [
     { id: "home", icon: Home, label: "Home" },
-    { id: "dashboard", icon: BarChart3, label: "Dashboard" },
-    { id: "users", icon: Users, label: "Users" },
-    { id: "messages", icon: MessageSquare, label: "Messages" },
-    { id: "analytics", icon: TrendingUp, label: "Analytics" },
-    { id: "files", icon: FolderOpen, label: "Files" },
+    { id: "pokemon", icon: LoaderPinwheel, label: "Pokemon" },
+    { id: "moves", icon: HandFist, label: "Moves" },
+    { id: "abilities", icon: Crown, label: "Abilities" },
+    { id: "constants", icon: Database, label: "Constants" },
   ];
 
   const bottomItems = [
@@ -33,6 +34,25 @@ function Sidebar() {
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const onLinkClicked = (id: string) => {
+    setActiveItem(id);
+    navigate(`/${id === "home" ? "" : id}`);
+  };
+
+  const getActivePage = () => {
+    // Get the current active page based on the URL
+    const path = window.location.pathname;
+    const page = path.split("/").pop();
+    return page;
+  };
+
+  useEffect(() => {
+    const activePage = getActivePage();
+    if (activePage) {
+      setActiveItem(activePage);
+    }
+  }, []);
 
   interface NavItemProps {
     item: {
@@ -72,48 +92,45 @@ function Sidebar() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-900">
-      {/* Sidebar */}
-      <div
-        className={`
+    <div
+      className={`
           fixed left-0 top-0 h-full bg-slate-800 border-r border-slate-700
           transition-all duration-300 ease-in-out z-50 flex flex-col overflow-x-hidden
           ${isExpanded ? "w-60" : "w-16"}
         `}
-      >
-        {/* Hamburger Toggle */}
-        <div className="flex items-center justify-start pl-3 h-16 border-b border-slate-700">
-          <button
-            onClick={toggleSidebar}
-            className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors duration-200"
-          >
-            {isExpanded ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
+    >
+      {/* Hamburger Toggle */}
+      <div className="flex items-center justify-start pl-3 h-16 border-b border-slate-700">
+        <button
+          onClick={toggleSidebar}
+          className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors duration-200"
+        >
+          {isExpanded ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
 
-        {/* Main Navigation Items */}
-        <nav className="flex-1 py-4">
-          {navItems.map((item) => (
-            <NavItem
-              key={item.id}
-              item={item}
-              onClick={setActiveItem}
-              isActive={activeItem === item.id}
-            />
-          ))}
-        </nav>
+      {/* Main Navigation Items */}
+      <nav className="flex-1 py-4">
+        {navItems.map((item) => (
+          <NavItem
+            key={item.id}
+            item={item}
+            onClick={onLinkClicked}
+            isActive={activeItem === item.id}
+          />
+        ))}
+      </nav>
 
-        {/* Bottom Buttons */}
-        <div className="border-t border-slate-700 pb-2">
-          {bottomItems.map((item) => (
-            <NavItem
-              key={item.id}
-              item={item}
-              onClick={setActiveItem}
-              isActive={activeItem === item.id}
-            />
-          ))}
-        </div>
+      {/* Bottom Buttons */}
+      <div className="border-t border-slate-700 pb-2">
+        {bottomItems.map((item) => (
+          <NavItem
+            key={item.id}
+            item={item}
+            onClick={onLinkClicked}
+            isActive={activeItem === item.id}
+          />
+        ))}
       </div>
     </div>
   );

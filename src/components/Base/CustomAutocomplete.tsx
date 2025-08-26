@@ -7,6 +7,8 @@ interface CustomAutocompleteProps {
   placeholder?: string;
   className?: string;
   inputClassName?: string;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 const CustomAutocomplete = ({
@@ -16,6 +18,8 @@ const CustomAutocomplete = ({
   placeholder,
   className = "",
   inputClassName = "",
+  onFocus,
+  onBlur,
 }: CustomAutocompleteProps) => {
   const [inputValue, setInputValue] = useState(value);
   const [isOpen, setIsOpen] = useState(false);
@@ -51,9 +55,13 @@ const CustomAutocomplete = ({
         type="text"
         value={inputValue}
         onChange={handleInputChange}
-        onFocus={() => setIsOpen(true)}
+        onFocus={() => {
+          setIsOpen(true);
+          onFocus?.();
+        }}
         onBlur={() => {
           setTimeout(() => setIsOpen(false), 200);
+          onBlur?.();
         }}
         placeholder={placeholder}
         className={`w-full px-4 py-2 border border-slate-500 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-300/70 ${inputClassName}`}
