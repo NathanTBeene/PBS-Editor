@@ -1,4 +1,4 @@
-import Card from "../components/Base/Card";
+import Card from "../components/ui/Card";
 import { useNavigate } from "react-router";
 
 const HomePage = () => {

@@ -1,7 +1,7 @@
 import { Plus, X } from "lucide-react";
 import CustomSelect from "./CustomSelect";
 import CustomAutocomplete from "./CustomAutocomplete";
-import AbilitySelect from "../Pokemon Page/AbilitySelect";
+import AbilitySelect from "../pokemon/AbilitySelect";
 
 interface ArrayManagerProps {
   title: string;

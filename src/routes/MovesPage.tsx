@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Save, RotateCcw, Plus, X } from "lucide-react";
 import { type Move, moveTargets, MoveFlags } from "../lib/models/Move";
 import { usePokedexContext } from "../lib/providers/PokedexProvider";
-import FormSection from "../components/Pokemon Page/FormSection";
-import InputField from "../components/Base/InputField";
-import CustomSelect from "../components/Base/CustomSelect";
-import InfoTooltip from "../components/Base/InfoTooltip";
-import DeleteButton from "../components/Base/DeleteButton";
+import FormSection from "../components/pokemon/FormSection";
+import InputField from "../components/ui/InputField";
+import CustomSelect from "../components/ui/CustomSelect";
+import InfoTooltip from "../components/ui/InfoTooltip";
+import DeleteButton from "../components/ui/DeleteButton";
 import TypeBubble from "../components/TypeBubble";
-import MoveList from "../components/Pokemon Page/MoveList";
-import NewMoveForm from "../components/Forms/NewMoveForm";
+import MoveList from "../components/pokemon/MoveList";
+import NewMoveForm from "../components/forms/NewMoveForm";
 
 const MovesPage = () => {
   const {

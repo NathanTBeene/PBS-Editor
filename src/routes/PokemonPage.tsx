@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Save, RotateCcw, X, ArrowDownToLine } from "lucide-react";
 import { type Pokemon } from "../lib/models/Pokemon";
-import CustomSelect from "../components/Base/CustomSelect";
+import CustomSelect from "../components/ui/CustomSelect";
 import { usePokedexContext } from "../lib/providers/PokedexProvider";
 import {
   PokemonColors,
@@ -12,17 +12,19 @@ import {
 } from "../lib/models/constants";
 import { validateSaveData } from "../lib/services/pokemonValidator";
 import { useArrayManager } from "../lib/hooks/useArrayManager";
-import FormSection from "../components/Pokemon Page/FormSection";
-import InputField from "../components/Base/InputField";
-import StatsInputSection from "../components/Pokemon Page/StatsInputSection";
-import ArrayManager from "../components/Base/ArrayManager";
-import MoveSection from "../components/Pokemon Page/MoveSection";
-import InfoTooltip from "../components/Base/InfoTooltip";
-import CustomAutocomplete from "../components/Base/CustomAutocomplete";
-import NewPokemonForm from "../components/Forms/NewPokemonForm";
-import DeleteButton from "../components/Base/DeleteButton";
-import PokemonList from "../components/Pokemon Page/PokemonList";
+import FormSection from "../components/pokemon/FormSection";
+import InputField from "../components/ui/InputField";
+import StatsInputSection from "../components/pokemon/StatsInputSection";
+import ArrayManager from "../components/ui/ArrayManager";
+import MoveSection from "../components/pokemon/MoveSection";
+import InfoTooltip from "../components/ui/InfoTooltip";
+import CustomAutocomplete from "../components/ui/CustomAutocomplete";
+import NewPokemonForm from "../components/forms/NewPokemonForm";
+import DeleteButton from "../components/ui/DeleteButton";
+import PokemonList from "../components/pokemon/PokemonList";
 import TypeBubble from "../components/TypeBubble";
+import PokemonHeader from "../components/pokemon/PokemonHeader";
+import PokemonBasicInfo from "../components/pokemon/PokemonBasicInfo";
 
 const PokemonPage = () => {
   const {
@@ -201,120 +203,23 @@ const PokemonPage = () => {
       {/* Main Content - Pokemon Editor */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="p-6 h-25 bg-slate-800 border-b-3 border-slate-700 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">
-                {editData.name}
-                {editData.formName && (
-                  <span className="text-slate-300 ml-2">
-                    ({editData.formName})
-                  </span>
-                )}
-              </h1>
-              <div className="flex">
-                <p className="text-slate-300 mt-1 mr-10">
-                  #{editData.dexNumber} - The {editData.category} Pokemon
-                </p>
-                <div className="flex gap-2 mt-1">
-                  {editData.types.map((type) => (
-                    <TypeBubble key={type} type={type} />
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={setToDefault}
-                className="flex bg-slate-700 items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-600 transition-colors shadow-sm cursor-pointer"
-              >
-                <ArrowDownToLine className="w-4 h-4" />
-                Default
-              </button>
-              <button
-                onClick={resetChanges}
-                className="flex bg-slate-700 items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-600 transition-colors shadow-sm cursor-pointer"
-              >
-                <RotateCcw className="w-4 h-4" />
-                Reset
-              </button>
-              <DeleteButton
-                onConfirm={() => {
-                  if (
-                    window.confirm(
-                      "NOTICE: Deleting this Pokemon will not remove it's ID from any other Pokemon. Evolutions, offspring, etc."
-                    )
-                  ) {
-                    removePokemon(selectedPokemon.id);
-                    setSelectedPokemon(pokemon[0]);
-                    setEditData(pokemon[0]);
-                  }
-                }}
-              />
-              <button
-                onClick={saveChanges}
-                className="flex items-center text-emerald-100 gap-2 px-4 py-2 bg-emerald-600 shadow-sm rounded-lg hover:bg-emerald-700 transition-colors cursor-pointer"
-              >
-                <Save className="w-5 h-5 text-emerald-200" />
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
+        <PokemonHeader
+          pokemon={selectedPokemon}
+          onSave={() => console.log("Save")}
+          onReset={() => console.log("Reset")}
+          onDelete={() => console.log("Delete")}
+          onSetDefault={() => console.log("Set Default")}
+        />
 
         {/* Editor Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-slate-800">
           <div className="max-w-4xl mx-auto space-y-8">
-            <FormSection title="Basic Information">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label="ID"
-                  value={editData.id}
-                  onChange={(value) => handleInputChange("id", value)}
-                  tooltip={{
-                    description:
-                      "The unique identifier for this Pokémon. Essentials standard is all caps no spaces.",
-                  }}
-                />
-                <InputField
-                  label="Name"
-                  value={editData.name}
-                  onChange={(value) => handleInputChange("name", value)}
-                />
-                <InputField
-                  label="Form Name"
-                  value={editData.formName || ""}
-                  onChange={(value) => handleInputChange("formName", value)}
-                />
-                <InputField
-                  label="Category"
-                  value={editData.category}
-                  onChange={(value) => handleInputChange("category", value)}
-                />
-                <InputField
-                  label="Generation"
-                  type="number"
-                  value={editData.generation}
-                  onChange={(value) => handleInputChange("generation", value)}
-                />
-                <InputField
-                  label="Dex #"
-                  type="number"
-                  value={editData.dexNumber}
-                  onChange={(value) => handleInputChange("dexNumber", value)}
-                />
-              </div>
-              <div className="mt-4">
-                <InputField
-                  label="Pokedex Entry"
-                  type="textarea"
-                  value={editData.pokedex}
-                  onChange={(value) => handleInputChange("pokedex", value)}
-                  rows={3}
-                />
-              </div>
-            </FormSection>
+            <PokemonBasicInfo
+              pokemon={editData}
+              handleInputChange={handleInputChange}
+            />
 
+            {/* Base Stats */}
             <StatsInputSection
               title="Base Stats"
               stats={editData.baseStats || {}}
@@ -327,6 +232,7 @@ const PokemonPage = () => {
               }
             />
 
+            {/* Ev Yields */}
             <StatsInputSection
               title="Effort Values"
               stats={editData.effortValues || {}}

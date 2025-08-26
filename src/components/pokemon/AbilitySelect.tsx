@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import CustomAutocomplete from "../Base/CustomAutocomplete";
+import CustomAutocomplete from "../ui/CustomAutocomplete";
 import { usePokedexContext } from "../../lib/providers/PokedexProvider";
 
 interface AbilitySelectProps {

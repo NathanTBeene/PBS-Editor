@@ -1,4 +1,4 @@
-import InfoTooltip from "../Base/InfoTooltip";
+import InfoTooltip from "../ui/InfoTooltip";
 
 interface InputFieldProps {
   label: string;

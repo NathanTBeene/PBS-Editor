@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Modal from "../Base/Modal";
+import Modal from "../ui/Modal";
 import type { Move } from "../../lib/models/Move";
 import { usePokedexContext } from "../../lib/providers/PokedexProvider";
-import InputField from "../Base/InputField";
-import CustomAutocomplete from "../Base/CustomAutocomplete";
+import InputField from "../ui/InputField";
+import CustomAutocomplete from "../ui/CustomAutocomplete";
 
 interface NMFProps {
   onClose: () => void;
