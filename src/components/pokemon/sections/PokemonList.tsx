@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Search, Plus } from "lucide-react";
-import { type Pokemon } from "../../lib/models/Pokemon";
-import TypeBubble from "../TypeBubble";
-import NewPokemonForm from "../forms/NewPokemonForm";
+import { type Pokemon } from "@/lib/models/Pokemon";
+import TypeBubble from "@/components/TypeBubble";
+import NewPokemonForm from "@/components/forms/NewPokemonForm";
 
 interface PokemonListProps {
   pokemon: Pokemon[];

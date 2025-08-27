@@ -1,6 +1,15 @@
 import { useCallback } from "react";
 
-type ArrayField = "types" | "abilities" | "hiddenAbilities" | "eggGroups" | "offspring" | "flags";
+type ArrayField =
+  | "types"
+  | "abilities"
+  | "hiddenAbilities"
+  | "eggGroups"
+  | "offspring"
+  | "flags"
+  | "moves"
+  | "tutorMoves"
+  | "eggMoves";
 
 interface UseArrayManagerProps<T> {
   data: T;
@@ -19,7 +28,9 @@ export function useArrayManager<T extends Record<string, any>>({
         if (!prev) return null;
 
         const currentArray = prev[field] as string[];
-        const newArray = currentArray.map((item, i) => (i === index ? newValue : item));
+        const newArray = currentArray.map((item, i) =>
+          i === index ? newValue : item
+        );
 
         return {
           ...prev,

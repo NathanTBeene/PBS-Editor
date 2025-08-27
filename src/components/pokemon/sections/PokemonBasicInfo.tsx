@@ -1,6 +1,6 @@
-import type { Pokemon } from "../../lib/models/Pokemon";
-import InputField from "../ui/InputField";
-import FormSection from "./FormSection";
+import type { Pokemon } from "@/lib/models/Pokemon";
+import InputField from "@/components/ui/InputField";
+import FormSection from "@/components/pokemon/FormSection";
 
 interface PokemonBasicInfoProps {
   pokemon: Pokemon;

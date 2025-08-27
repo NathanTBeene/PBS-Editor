@@ -1,7 +1,7 @@
-import type { Pokemon } from "../../lib/models/Pokemon";
-import TypeBubble from "../TypeBubble";
-import { theme } from "../../lib/theme/colors";
-import ActionButtons from "../ui/ActionButtons";
+import type { Pokemon } from "@/lib/models/Pokemon";
+import TypeBubble from "@/components/TypeBubble";
+import { theme } from "@/lib/theme/colors";
+import ActionButtons from "@/components/ui/ActionButtons";
 
 interface PokemonHeaderProps {
   pokemon: Pokemon;

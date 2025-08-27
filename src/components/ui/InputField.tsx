@@ -1,10 +1,15 @@
 import InfoTooltip from "../ui/InfoTooltip";
 
 interface InputFieldProps {
-  label: string;
+  label?: string;
   type?: "text" | "number" | "textarea";
   value: string | number;
   onChange: (value: string | number) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+  onKeyDown?: (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   placeholder?: string;
   min?: number;
   max?: number;
@@ -22,6 +27,8 @@ const InputField = ({
   type = "text",
   value,
   onChange,
+  onFocus,
+  onBlur,
   placeholder,
   min,
   max,
@@ -29,6 +36,7 @@ const InputField = ({
   rows = 3,
   className = "",
   tooltip,
+  onKeyDown,
 }: InputFieldProps) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -44,14 +52,16 @@ const InputField = ({
     }
   };
 
-  const inputClassName = `w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70 ${className}`;
+  const inputClassName = `w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70 ${className} relative`;
 
   return (
-    <div>
-      <label className="flex gap-2 items-center text-sm font-medium text-slate-300 mb-2">
-        {label}
-        {tooltip && <InfoTooltip {...tooltip} />}
-      </label>
+    <div onFocus={onFocus}>
+      {label && (
+        <label className="flex gap-2 items-center text-sm font-medium text-slate-300 mb-2">
+          {label}
+          {tooltip && <InfoTooltip {...tooltip} />}
+        </label>
+      )}
       {type === "textarea" ? (
         <textarea
           value={value}
@@ -59,9 +69,12 @@ const InputField = ({
           placeholder={placeholder}
           rows={rows}
           className={inputClassName}
+          onKeyDown={onKeyDown}
         />
       ) : (
         <input
+          onFocus={onFocus}
+          onBlur={onBlur}
           type={type}
           value={value}
           onChange={handleChange}
@@ -70,6 +83,7 @@ const InputField = ({
           max={max}
           step={step}
           className={inputClassName}
+          onKeyDown={onKeyDown}
         />
       )}
     </div>

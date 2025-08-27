@@ -31,6 +31,17 @@ export const importAbilities = (data: string) => {
       }
     });
 
+    if (abilitiesList.some((a) => a.id === ability.id)) {
+      console.warn(`Duplicate ability found: ${ability.name}`);
+      return;
+    }
+
+    // Make sure ID isn't blank
+    if (!ability.id || ability.id.trim() === "[]") {
+      console.warn(`Ability has no ID: ${ability.name}`);
+      return;
+    }
+
     abilitiesList.push(ability);
   });
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Plus, Save, RotateCcw, X, ArrowDownToLine } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { type Pokemon } from "../lib/models/Pokemon";
 import CustomSelect from "../components/ui/CustomSelect";
 import { usePokedexContext } from "../lib/providers/PokedexProvider";
@@ -10,22 +10,16 @@ import {
   GrowthRates,
   EggGroups,
 } from "../lib/models/constants";
-import { validateSaveData } from "../lib/services/pokemonValidator";
-import { useArrayManager } from "../lib/hooks/useArrayManager";
-import FormSection from "../components/pokemon/FormSection";
-import InputField from "../components/ui/InputField";
-import StatsInputSection from "../components/pokemon/StatsInputSection";
-import ArrayManager from "../components/ui/ArrayManager";
-import MoveSection from "../components/pokemon/MoveSection";
-import InfoTooltip from "../components/ui/InfoTooltip";
-import CustomAutocomplete from "../components/ui/CustomAutocomplete";
-import NewPokemonForm from "../components/forms/NewPokemonForm";
-import DeleteButton from "../components/ui/DeleteButton";
-import PokemonList from "../components/pokemon/PokemonList";
-import TypeBubble from "../components/TypeBubble";
-import PokemonHeader from "../components/pokemon/PokemonHeader";
-import PokemonBasicInfo from "../components/pokemon/PokemonBasicInfo";
-import TypesAbilitiesSection from "../components/pokemon/TypesAbilitiesSection";
+import { validateSaveData } from "@/lib/services/pokemonValidator";
+import { useArrayManager } from "@/lib/hooks/useArrayManager";
+import StatsInputSection from "@/components/pokemon/sections/StatsInputSection";
+import MoveSection from "@/components/pokemon/sections/MoveSection";
+import InfoTooltip from "@/components/ui/InfoTooltip";
+import CustomAutocomplete from "@/components/ui/CustomAutocomplete";
+import PokemonList from "@/components/pokemon/sections/PokemonList";
+import PokemonHeader from "@/components/pokemon/sections/PokemonHeader";
+import PokemonBasicInfo from "@/components/pokemon/sections/PokemonBasicInfo";
+import TypesAbilitiesSection from "@/components/pokemon/sections/TypesAbilitiesSection";
 
 const PokemonPage = () => {
   const {
@@ -39,7 +33,6 @@ const PokemonPage = () => {
   } = usePokedexContext();
 
   const [editData, setEditData] = useState<Pokemon | null>(pokemon[0] || null);
-  const [modalOpen, setModalOpen] = useState(false);
 
   const { handleArrayChange, removeFromArray, addToArray } = useArrayManager({
     data: editData ?? pokemon[0],
@@ -198,7 +191,7 @@ const PokemonPage = () => {
           setSelectedPokemon(pokemon);
           setEditData(pokemon);
         }}
-        onAddPokemon={() => setModalOpen(true)}
+        onAddPokemon={() => {}}
       />
 
       {/* Main Content - Pokemon Editor */}
@@ -246,93 +239,30 @@ const PokemonPage = () => {
               }
             />
 
-            <FormSection title="Types and Abilities">
-              <div className="space-y-6">
-                <ArrayManager
-                  title="Types"
-                  items={editData.types}
-                  onItemChange={handleArrayChange.bind(null, "types")}
-                  onAddItem={() => addToArray("types")}
-                  onRemoveItem={(index) => removeFromArray("types", index)}
-                  type="select"
-                  options={Object.keys(types)}
-                  placeholder="Select type..."
-                  maxItems={2}
-                  gridCols="grid-cols-1 md:grid-cols-2"
-                  showRemoveButton={(_index, items) => items.length > 1}
-                />
-
-                <ArrayManager
-                  title="Abilities"
-                  items={editData.abilities}
-                  onItemChange={handleArrayChange.bind(null, "abilities")}
-                  onAddItem={() => addToArray("abilities")}
-                  onRemoveItem={(index) => removeFromArray("abilities", index)}
-                  type="ability"
-                  placeholder="Type to search abilities..."
-                  gridCols="grid-cols-1 md:grid-cols-3"
-                />
-
-                <ArrayManager
-                  title="Hidden Abilities"
-                  items={editData.hiddenAbilities || []}
-                  onItemChange={handleArrayChange.bind(null, "hiddenAbilities")}
-                  onAddItem={() => {
-                    if (!editData.hiddenAbilities) {
-                      setEditData((prev) => {
-                        if (!prev) return null;
-                        return { ...prev, hiddenAbilities: [""] };
-                      });
-                    } else {
-                      addToArray("hiddenAbilities");
-                    }
-                  }}
-                  onRemoveItem={(index) =>
-                    removeFromArray("hiddenAbilities", index)
-                  }
-                  type="ability"
-                  placeholder="Type to search hidden abilities..."
-                  gridCols="grid-cols-1 md:grid-cols-3"
-                  emptyMessage="No hidden abilities"
-                />
-              </div>
-            </FormSection>
-
-            <TypesAbilitiesSection pokemon={editData} />
+            <TypesAbilitiesSection
+              pokemon={editData}
+              setPokemon={setEditData}
+            />
 
             <MoveSection
               title="Level-up Moves"
-              moves={editData.moves || []}
-              useLevel={true}
-              onAddMove={() => addMove("moves", "")}
-              onMoveChange={(index, field, value) =>
-                handleMoveChange("moves", index, field, value)
-              }
-              onRemoveMove={(index) => removeMoveFromArray("moves", index)}
-              gridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-              sortBy="level"
+              pokemon={editData}
+              setPokemon={setEditData}
+              type="moves"
             />
 
             <MoveSection
               title="Tutor Moves"
-              moves={editData.tutorMoves || []}
-              useLevel={false}
-              onAddMove={() => addMove("tutorMoves", "")}
-              onMoveChange={(index, field, value) =>
-                handleMoveChange("tutorMoves", index, field, value)
-              }
-              onRemoveMove={(index) => removeMoveFromArray("tutorMoves", index)}
+              pokemon={editData}
+              setPokemon={setEditData}
+              type="tutor"
             />
 
             <MoveSection
               title="Egg Moves"
-              moves={editData.eggMoves || []}
-              useLevel={false}
-              onAddMove={() => addMove("eggMoves", "")}
-              onMoveChange={(index, field, value) =>
-                handleMoveChange("eggMoves", index, field, value)
-              }
-              onRemoveMove={(index) => removeMoveFromArray("eggMoves", index)}
+              pokemon={editData}
+              setPokemon={setEditData}
+              type="egg"
             />
 
             {/* Egg Groups */}
