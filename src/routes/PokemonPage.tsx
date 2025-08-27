@@ -25,6 +25,7 @@ import PokemonList from "../components/pokemon/PokemonList";
 import TypeBubble from "../components/TypeBubble";
 import PokemonHeader from "../components/pokemon/PokemonHeader";
 import PokemonBasicInfo from "../components/pokemon/PokemonBasicInfo";
+import TypesAbilitiesSection from "../components/pokemon/TypesAbilitiesSection";
 
 const PokemonPage = () => {
   const {
@@ -296,6 +297,8 @@ const PokemonPage = () => {
                 />
               </div>
             </FormSection>
+
+            <TypesAbilitiesSection pokemon={editData} />
 
             <MoveSection
               title="Level-up Moves"
