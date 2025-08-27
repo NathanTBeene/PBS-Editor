@@ -4,26 +4,14 @@ import type { Pokemon } from "../../lib/models/Pokemon";
 import { usePokedexContext } from "../../lib/providers/PokedexProvider";
 import InputField from "../ui/InputField";
 import CustomAutocomplete from "../ui/CustomAutocomplete";
+import { Plus } from "lucide-react";
+import { Dialog } from "radix-ui";
 
-interface NPMProps {
-  onClose: () => void;
-  isOpen?: boolean;
-}
-
-const NewPokemonForm = ({ onClose, isOpen }: NPMProps) => {
-  const [modalOpen, setModalOpen] = useState(false);
+const NewPokemonForm = () => {
   const [name, setName] = useState("");
   const [selectedMon, setSelectedMon] = useState<Pokemon | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { pokemon, isPokemonInPokedex, addPokemon } = usePokedexContext();
-
-  useEffect(() => {
-    if (isOpen) {
-      setModalOpen(true);
-    } else {
-      setModalOpen(false);
-    }
-  }, [isOpen]);
 
   const handleSubmit = () => {
     if (!name.trim()) {
@@ -47,7 +35,6 @@ const NewPokemonForm = ({ onClose, isOpen }: NPMProps) => {
 
     addPokemon(name.trim().toUpperCase(), selectedMon || undefined);
     clearFields();
-    onClose();
   };
 
   const clearFields = () => {
@@ -58,12 +45,23 @@ const NewPokemonForm = ({ onClose, isOpen }: NPMProps) => {
 
   const handleClose = () => {
     clearFields();
-    onClose();
+  };
+
+  const triggerButton = () => {
+    return (
+      <button className="p-2 px-3 bg-emerald-600 text-emerald-200 rounded-lg cursor-pointer hover:bg-emerald-500 transition-colors">
+        <Plus className="w-5 h-5" />
+      </button>
+    );
   };
 
   return (
     <>
-      <Modal isOpen={modalOpen} onClose={handleClose} title="New Pokémon">
+      <Modal
+        triggerElement={triggerButton()}
+        onClose={handleClose}
+        title="New Pokémon"
+      >
         <InputField
           label="Pokémon Identifier"
           type="text"
@@ -92,14 +90,14 @@ const NewPokemonForm = ({ onClose, isOpen }: NPMProps) => {
             />
           </div>
 
-          <div className="flex flex-1 relative h-full items-center justify-center">
+          <Dialog.Close className="flex flex-1 relative h-full items-center justify-center">
             <button
               onClick={handleSubmit}
               className="px-4 w-40 py-2 bg-emerald-600 rounded-lg hover:bg-emerald-500 transition-colors cursor-pointer"
             >
               Submit
             </button>
-          </div>
+          </Dialog.Close>
         </div>
         {error && (
           <div className="text-red-500 text-center max-w-80 m-auto">

@@ -1,17 +1,17 @@
-import CustomSelect from "../components/ui/CustomSelect";
+import { Dialog } from "radix-ui";
+import Alert from "../components/ui/Alert";
+import Modal from "../components/ui/Modal";
 
 const AbilitiesPage = () => {
-  const handleValueChange = (value: string) => {
-    console.log("Selected ability:", value);
-  };
-
   return (
     <div>
-      <CustomSelect
-        value=""
-        onChange={handleValueChange}
-        options={["Ability 1", "Ability 2", "Ability 3"]}
-        placeholder="Select an ability"
+      <Alert
+        triggerText="Open Alert"
+        title="Are you absolutely sure?"
+        description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+        confirmText="Yes, Delete Account"
+        confirmType="gray"
+        onConfirm={() => console.log("Confirmed")}
       />
     </div>
   );

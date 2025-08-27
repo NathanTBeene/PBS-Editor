@@ -680,8 +680,6 @@ const PokemonPage = () => {
           </div>
         </div>
       </div>
-
-      <NewPokemonForm isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 };

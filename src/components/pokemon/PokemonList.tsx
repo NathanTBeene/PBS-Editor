@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Search, Plus } from "lucide-react";
 import { type Pokemon } from "../../lib/models/Pokemon";
 import TypeBubble from "../TypeBubble";
+import NewPokemonForm from "../forms/NewPokemonForm";
 
 interface PokemonListProps {
   pokemon: Pokemon[];
@@ -97,12 +98,7 @@ const PokemonList = ({
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button
-            onClick={onAddPokemon}
-            className="p-2 px-3 bg-emerald-600 text-emerald-200 rounded-lg cursor-pointer hover:bg-emerald-500 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
+          <NewPokemonForm />
         </div>
       </div>
 
