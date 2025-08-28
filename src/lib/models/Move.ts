@@ -20,7 +20,7 @@ export const defaultMove = {
   id: "[]",
   name: "Unnamed",
   type: "NORMAL" as PokemonType,
-  category: "Status",
+  category: "Status" as "Physical" | "Special" | "Status",
   power: 0,
   accuracy: 100,
   pp: 5,
