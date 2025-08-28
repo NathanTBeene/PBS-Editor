@@ -27,7 +27,7 @@ const PokemonPage = () => {
     types,
     setPokemonData,
     removePokemon,
-    setDefault,
+    setPokemonToDefault,
     selectedPokemon,
     setSelectedPokemon,
   } = usePokedexContext();
@@ -42,11 +42,14 @@ const PokemonPage = () => {
   useEffect(() => {
     if (pokemon.length > 0 && !selectedPokemon) {
       setSelectedPokemon(pokemon[0]);
-      setEditData(pokemon[0]);
-    } else {
-      setEditData(pokemon.find((p) => p.id === selectedPokemon?.id) || null);
     }
-  }, [pokemon, selectedPokemon]);
+  }, []);
+
+  useEffect(() => {
+    if (selectedPokemon) {
+      setEditData(selectedPokemon);
+    }
+  }, [selectedPokemon]);
 
   const resetChanges = () => {
     if (selectedPokemon) {
@@ -56,7 +59,7 @@ const PokemonPage = () => {
 
   const setToDefault = () => {
     if (selectedPokemon) {
-      setDefault(selectedPokemon.id);
+      setPokemonToDefault(selectedPokemon.id);
     }
   };
 
@@ -247,23 +250,12 @@ const PokemonPage = () => {
             <MoveSection
               title="Level-up Moves"
               pokemon={editData}
-              setPokemon={setEditData}
-              type="moves"
+              type="level"
             />
 
-            <MoveSection
-              title="Tutor Moves"
-              pokemon={editData}
-              setPokemon={setEditData}
-              type="tutor"
-            />
+            <MoveSection title="Tutor Moves" pokemon={editData} type="tutor" />
 
-            <MoveSection
-              title="Egg Moves"
-              pokemon={editData}
-              setPokemon={setEditData}
-              type="egg"
-            />
+            <MoveSection title="Egg Moves" pokemon={editData} type="egg" />
 
             {/* Egg Groups */}
             <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">

@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Popover } from "radix-ui";
 import InputField from "./InputField";
 
@@ -23,9 +23,6 @@ const Autocomplete = ({
 }: AutocompleteProps) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-  const selectedItemRef = useRef<HTMLDivElement | null>(null);
 
   const filteredOptions = useMemo(() => {
     if (!inputValue) return options;
@@ -37,61 +34,17 @@ const Autocomplete = ({
   const handleInputChange = (e: string | number) => {
     setInputValue(e as string);
     onValueChange(e as string);
-    setSelectedIndex(-1);
   };
 
-  const handleOptionSelect = (option: string) => {
-    setInputValue(option);
-    onValueChange(option);
-    setOpen(false);
-    setSelectedIndex(-1);
-
-    setTimeout(() => {
-      onBlur && onBlur();
-    }, 0);
-  };
-
-  useEffect(() => {
-    if (selectedIndex !== -1 && selectedItemRef.current) {
-      selectedItemRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }
-  }, [selectedIndex]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!open) return;
-
-    switch (e.key) {
-      case "ArrowDown":
-        e.preventDefault();
-        setSelectedIndex((prev) =>
-          Math.min(prev + 1, filteredOptions.length - 1)
-        );
-        break;
-      case "ArrowUp":
-        e.preventDefault();
-        setSelectedIndex((prev) => Math.max(prev - 1, 0));
-        break;
-      case "Enter":
-        e.preventDefault();
-        if (selectedIndex !== -1) {
-          const selectedOption = filteredOptions[selectedIndex];
-          setInputValue(selectedOption);
-          onValueChange(selectedOption);
-          setOpen(false);
-
-          setTimeout(() => {
-            onBlur && onBlur();
-          }, 0);
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      setTimeout(() => {
+        if (!open) {
+          onBlur && onBlur();
         }
-        break;
-      case "Escape":
-        e.preventDefault();
-        setOpen(false);
-        setSelectedIndex(-1);
-        break;
+      }, 0);
+      setOpen(false);
     }
   };
 
@@ -111,11 +64,10 @@ const Autocomplete = ({
                 }
               }, 0);
               setOpen(false);
-              setSelectedIndex(-1);
             }}
             placeholder={placeholder}
             className={inputClass}
-            onKeyDown={handleKeyDown}
+            onKeyDown={onKeyDown}
           />
         </div>
       </Popover.Anchor>
@@ -128,21 +80,19 @@ const Autocomplete = ({
           align="start"
           avoidCollisions={false}
           onOpenAutoFocus={(e) => e.preventDefault()}
-          ref={scrollContainerRef}
         >
           {filteredOptions.length > 0 ? (
             <div className="flex flex-col gap-1">
-              {filteredOptions.map((option, index) => (
+              {filteredOptions.map((option) => (
                 <div
-                  ref={selectedIndex === index ? selectedItemRef : null}
                   key={option}
                   onMouseDown={() => {
-                    handleOptionSelect(option);
+                    setInputValue(option);
+                    onValueChange(option);
+                    setOpen(false);
                   }}
-                  onMouseEnter={() => setSelectedIndex(index)}
-                  className={`px-4 py-2 text-sm text-slate-200 hover:bg-slate-600 cursor-pointer ${
-                    selectedIndex === index ? "bg-slate-600" : ""
-                  }`}
+                  onKeyDown={onKeyDown}
+                  className={`px-4 py-2 text-sm text-slate-200 hover:bg-slate-600 cursor-pointer`}
                 >
                   {option}
                 </div>

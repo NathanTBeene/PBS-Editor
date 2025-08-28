@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 
 interface MoveEntryProps {
   move: PokemonMove;
-  onMoveChange: (move: string) => void;
-  onLevelChange: (level: number) => void;
+  onMoveChange: (move: string | number) => void;
   onRemove: () => void;
   useLevel?: boolean;
   onFocus?: () => void;
@@ -17,7 +16,6 @@ interface MoveEntryProps {
 const MoveEntry = ({
   move,
   onMoveChange,
-  onLevelChange,
   onRemove,
   useLevel = true,
 }: MoveEntryProps) => {
@@ -25,12 +23,13 @@ const MoveEntry = ({
   const [moveName, setMoveName] = useState(move.name);
   const [moveLevel, setMoveLevel] = useState(move.level || 0);
 
-  const handleDoneEditing = () => {
+  const handleDoneEditing = async () => {
     // Logic to handle when editing is done
     console.log("Done editing");
-    console.log(`Move: ${moveName}, Level: ${moveLevel}`);
     onMoveChange(moveName);
-    onLevelChange(moveLevel);
+    if (useLevel) {
+      onMoveChange(moveLevel);
+    }
   };
 
   useEffect(() => {
@@ -56,6 +55,12 @@ const MoveEntry = ({
             max="100"
             placeholder="0"
             onBlur={handleDoneEditing}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                e.currentTarget.blur();
+              }
+            }}
           />
         </div>
       )}
