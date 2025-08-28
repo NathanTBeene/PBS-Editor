@@ -81,6 +81,10 @@ export const usePokemonData = () => {
     setPokemon((prev) => prev.map((p) => (p.id === data.id ? data : p)));
   };
 
+  const setCurrentPokemonData = (data: Pokemon) => {
+    setSelectedPokemon(data);
+  };
+
   // Makes sure a Pokemon exists within the dex.
   // Must be the unique identifier (Ex. BULBASAUR)
   const isPokemonInPokedex = (id: string): boolean => {
@@ -188,6 +192,7 @@ export const usePokemonData = () => {
     pokemon,
     setPokemon,
     setPokemonData,
+    setCurrentPokemonData,
     selectedPokemon,
     setSelectedPokemon,
     isPokemonInPokedex,

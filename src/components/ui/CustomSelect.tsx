@@ -45,7 +45,7 @@ const CustomSelect = ({
             side="bottom"
             sideOffset={10}
             style={{ width: "var(--radix-select-trigger-width)" }}
-            className={`z-10 ${theme.colors.primary.text} ${theme.colors.primary.bgSecondary} rounded-md shadow-lg max-h-48 overflow-hidden`}
+            className={`z-10 ${theme.colors.primary.text} ${theme.colors.primary.bgSecondary} rounded-md shadow-lg max-h-48 overflow-y-auto`}
           >
             <Select.Viewport className="p-2">
               {options.map((option) => (

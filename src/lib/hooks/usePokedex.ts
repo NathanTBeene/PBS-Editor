@@ -15,6 +15,7 @@ export const usePokedex = () => {
     setPokemonData: pokemonData.setPokemonData,
     selectedPokemon: pokemonData.selectedPokemon,
     setSelectedPokemon: pokemonData.setSelectedPokemon,
+    setCurrentPokemonData: pokemonData.setCurrentPokemonData,
     isPokemonInPokedex: pokemonData.isPokemonInPokedex,
     addPokemon: pokemonData.addPokemon,
     removePokemon: pokemonData.removePokemon,

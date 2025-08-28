@@ -20,6 +20,7 @@ import PokemonList from "@/components/pokemon/sections/PokemonList";
 import PokemonHeader from "@/components/pokemon/sections/PokemonHeader";
 import PokemonBasicInfo from "@/components/pokemon/sections/PokemonBasicInfo";
 import TypesAbilitiesSection from "@/components/pokemon/sections/TypesAbilitiesSection";
+import EggGroupSection from "@/components/pokemon/sections/EggGroupSection";
 
 const PokemonPage = () => {
   const {
@@ -258,40 +259,7 @@ const PokemonPage = () => {
             <MoveSection title="Egg Moves" pokemon={editData} type="egg" />
 
             {/* Egg Groups */}
-            <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold ">Egg Groups</h2>
-                <button
-                  onClick={() => addToArray("eggGroups")}
-                  className="px-3 py-1 text-sm border border-slate-500 rounded-md text-slate-500 cursor-pointer hover:text-slate-300 hover:bg-slate-500/30 transition-colors flex items-center gap-1"
-                >
-                  <Plus className="w-3 h-3" />
-                  Add Group
-                </button>
-              </div>
-              <div className="grid grid-cols-5">
-                {editData.eggGroups.map((group, index) => (
-                  <div className="flex py-2 items-center" key={index}>
-                    <CustomSelect
-                      key={index}
-                      options={EggGroups}
-                      value={group}
-                      className="w-30"
-                      onChange={(newGroup) =>
-                        handleArrayChange("eggGroups", index, newGroup)
-                      }
-                      placeholder="Groups..."
-                    />
-                    <button
-                      onClick={() => removeFromArray("eggGroups", index)}
-                      className="px-2 py-1 h-fit text-rose-300 hover:text-rose-400 cursor-pointer rounded"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </section>
+            <EggGroupSection pokemon={editData} />
 
             {/* Offspring */}
             <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
