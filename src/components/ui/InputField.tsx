@@ -1,12 +1,13 @@
+import { useState } from "react";
 import InfoTooltip from "../ui/InfoTooltip";
 
 interface InputFieldProps {
   label?: string;
   type?: "text" | "number" | "textarea";
   value: string | number;
-  onChange: (value: string | number) => void;
+  onChange?: (value: string | number) => void;
+  onFinished?: (value: string | number) => void;
   onFocus?: () => void;
-  onBlur?: () => void;
   onKeyDown?: (
     e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
@@ -28,7 +29,7 @@ const InputField = ({
   value,
   onChange,
   onFocus,
-  onBlur,
+  onFinished,
   placeholder,
   min,
   max,
@@ -38,18 +39,22 @@ const InputField = ({
   tooltip,
   onKeyDown,
 }: InputFieldProps) => {
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  const handleChange = (e: string | number) => {
+    onChange && onChange(e);
+  };
+
+  const handleOnFinish = () => {
+    onFinished && onFinished(value);
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    if (type === "number") {
-      const numValue =
-        type === "number" && step
-          ? parseFloat(e.target.value)
-          : parseInt(e.target.value);
-      onChange(isNaN(numValue) ? 0 : numValue);
-    } else {
-      onChange(e.target.value);
+    if (e.key === "Enter") {
+      handleOnFinish();
     }
+
+    onKeyDown && onKeyDown(e);
   };
 
   const inputClassName = `w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70 ${className} relative`;
@@ -65,25 +70,26 @@ const InputField = ({
       {type === "textarea" ? (
         <textarea
           value={value}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e.target.value)}
           placeholder={placeholder}
           rows={rows}
           className={inputClassName}
-          onKeyDown={onKeyDown}
+          onKeyDown={handleKeyDown}
+          onBlur={handleOnFinish}
         />
       ) : (
         <input
           onFocus={onFocus}
-          onBlur={onBlur}
+          onBlur={handleOnFinish}
           type={type}
           value={value}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e.target.value)}
           placeholder={placeholder}
           min={min}
           max={max}
           step={step}
           className={inputClassName}
-          onKeyDown={onKeyDown}
+          onKeyDown={handleKeyDown}
         />
       )}
     </div>

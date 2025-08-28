@@ -81,10 +81,6 @@ export const usePokemonData = () => {
     setPokemon((prev) => prev.map((p) => (p.id === data.id ? data : p)));
   };
 
-  const setCurrentPokemonData = (data: Pokemon) => {
-    setSelectedPokemon(data);
-  };
-
   // Makes sure a Pokemon exists within the dex.
   // Must be the unique identifier (Ex. BULBASAUR)
   const isPokemonInPokedex = (id: string): boolean => {
@@ -122,77 +118,10 @@ export const usePokemonData = () => {
     }
   };
 
-  const addPokemonMove = (field: "moves" | "tutorMoves" | "eggMoves") => {
-    console.log(`Adding move to ${field}`);
-
-    const move: PokemonMove = {
-      name: "",
-      level: field === "moves" ? 0 : undefined,
-    };
-    setSelectedPokemon((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          [field]: [...(prev[field] || []), move],
-        };
-      }
-      return prev;
-    });
-  };
-
-  const removePokemonMove = (
-    field: "moves" | "tutorMoves" | "eggMoves",
-    index: number
-  ) => {
-    setSelectedPokemon((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          [field]: prev[field].filter((_, i) => i !== index),
-        };
-      }
-      return prev;
-    });
-  };
-
-  const setPokemonMoves = (
-    field: "moves" | "tutorMoves" | "eggMoves",
-    moves: PokemonMove[]
-  ) => {
-    setSelectedPokemon((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          [field]: moves,
-        };
-      }
-      return prev;
-    });
-  };
-
-  const updatePokemonMove = (
-    field: "moves" | "tutorMoves" | "eggMoves",
-    index: number,
-    data: Partial<PokemonMove>
-  ) => {
-    setSelectedPokemon((prev) => {
-      if (prev) {
-        return {
-          ...prev,
-          [field]: prev[field].map((move, i) =>
-            i === index ? { ...move, ...data } : move
-          ),
-        };
-      }
-      return prev;
-    });
-  };
-
   return {
     pokemon,
     setPokemon,
     setPokemonData,
-    setCurrentPokemonData,
     selectedPokemon,
     setSelectedPokemon,
     isPokemonInPokedex,
@@ -200,9 +129,5 @@ export const usePokemonData = () => {
     removePokemon,
     resetPokemonData,
     setPokemonToDefault,
-    addPokemonMove,
-    removePokemonMove,
-    updatePokemonMove,
-    setPokemonMoves,
   };
 };

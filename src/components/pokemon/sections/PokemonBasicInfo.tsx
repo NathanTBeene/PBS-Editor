@@ -1,23 +1,24 @@
 import type { Pokemon } from "@/lib/models/Pokemon";
 import InputField from "@/components/ui/InputField";
 import FormSection from "@/components/pokemon/FormSection";
+import type React from "react";
+import { produce } from "immer";
 
 interface PokemonBasicInfoProps {
   pokemon: Pokemon;
-  handleInputChange: (field: string, value: string | number) => void;
+  setPokemon: React.Dispatch<React.SetStateAction<Pokemon | null>>;
 }
 
-const PokemonBasicInfo = ({
-  pokemon,
-  handleInputChange,
-}: PokemonBasicInfoProps) => {
+const PokemonBasicInfo = ({ pokemon, setPokemon }: PokemonBasicInfoProps) => {
   return (
     <FormSection title="Basic Information">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <InputField
           label="ID"
           value={pokemon.id}
-          onChange={(value) => handleInputChange("id", value)}
+          onFinished={(value) =>
+            setPokemon({ ...pokemon, id: value as string })
+          }
           tooltip={{
             description:
               "The unique identifier for this Pokémon. Essentials standard is all caps no spaces.",
@@ -26,29 +27,43 @@ const PokemonBasicInfo = ({
         <InputField
           label="Name"
           value={pokemon.name}
-          onChange={(value) => handleInputChange("name", value)}
+          onChange={(name) => {
+            setPokemon(
+              produce((draft) => {
+                if (draft) draft.name = name as string;
+              })
+            );
+          }}
         />
         <InputField
           label="Form Name"
           value={pokemon.formName || ""}
-          onChange={(value) => handleInputChange("formName", value)}
+          onChange={(value) =>
+            setPokemon({ ...pokemon, formName: value as string })
+          }
         />
         <InputField
           label="Category"
           value={pokemon.category}
-          onChange={(value) => handleInputChange("category", value)}
+          onChange={(value) =>
+            setPokemon({ ...pokemon, category: value as string })
+          }
         />
         <InputField
           label="Generation"
           type="number"
           value={pokemon.generation}
-          onChange={(value) => handleInputChange("generation", value)}
+          onChange={(value) =>
+            setPokemon({ ...pokemon, generation: value as number })
+          }
         />
         <InputField
           label="Dex #"
           type="number"
           value={pokemon.dexNumber}
-          onChange={(value) => handleInputChange("dexNumber", value)}
+          onChange={(value) =>
+            setPokemon({ ...pokemon, dexNumber: value as number })
+          }
         />
       </div>
       <div className="mt-4">
@@ -56,7 +71,9 @@ const PokemonBasicInfo = ({
           label="Pokedex Entry"
           type="textarea"
           value={pokemon.pokedex}
-          onChange={(value) => handleInputChange("pokedex", value)}
+          onChange={(value) =>
+            setPokemon({ ...pokemon, pokedex: value as string })
+          }
           rows={3}
         />
       </div>

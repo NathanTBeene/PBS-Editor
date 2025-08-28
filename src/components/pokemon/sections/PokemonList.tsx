@@ -1,30 +1,33 @@
-import { useEffect, useRef, useState } from "react";
-import { Search, Plus } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Search } from "lucide-react";
 import { type Pokemon } from "@/lib/models/Pokemon";
 import TypeBubble from "@/components/TypeBubble";
 import NewPokemonForm from "@/components/forms/NewPokemonForm";
+import { usePokedexContext } from "@/lib/providers/PokedexProvider";
+import PokemonListItem from "../PokemonListItem";
 
 interface PokemonListProps {
-  pokemon: Pokemon[];
   selectedPokemon: Pokemon | null;
   onPokemonSelect: (pokemon: Pokemon) => void;
   onAddPokemon: () => void;
 }
 
 const PokemonList = ({
-  pokemon,
   selectedPokemon,
   onPokemonSelect,
-  onAddPokemon,
 }: PokemonListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [hasScrolledToSelected, setHasScrolledToSelected] = useState(false);
 
-  const filteredPokemon = pokemon.filter(
-    (pokemon) =>
-      pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pokemon.id.includes(searchTerm)
-  );
+  const { pokemon } = usePokedexContext();
+
+  const filteredPokemon = useMemo(() => {
+    return pokemon.filter(
+      (pokemon) =>
+        pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        pokemon.id.includes(searchTerm)
+    );
+  }, [pokemon, searchTerm]);
 
   const pokemonRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const listContainerRef = useRef<HTMLDivElement>(null);
@@ -110,41 +113,13 @@ const PokemonList = ({
         {filteredPokemon
           .sort((a, b) => a.dexNumber - b.dexNumber)
           .map((pokemon) => (
-            <div
+            <PokemonListItem
               key={pokemon.id}
-              ref={(el) => {
-                pokemonRefs.current[pokemon.id] = el;
-              }}
-              className={`p-3 border-b border-slate-500 bg-gradient-to-r from-slate-800/10 to-slate-800 cursor-pointer transition-colors ${
-                selectedPokemon?.id === pokemon.id
-                  ? "bg-blue-600/20 border-l-4 border-l-blue-600/40"
-                  : "hover:bg-slate-600/40"
-              }`}
-              onClick={() => {
-                selectAndScrollToPokemon(pokemon);
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-md font-bold">
-                  #{pokemon.dexNumber}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">
-                    {pokemon.name}
-                    {pokemon.formName && (
-                      <span className="text-slate-300 text-sm ml-1">
-                        ({pokemon.formName})
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex gap-1 mt-1">
-                    {pokemon.types.map((type) => (
-                      <TypeBubble key={type} type={type} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+              pokemon={pokemon}
+              selectedPokemon={selectedPokemon}
+              pokemonRefs={pokemonRefs}
+              selectAndScrollToPokemon={selectAndScrollToPokemon}
+            />
           ))}
       </div>
     </div>
