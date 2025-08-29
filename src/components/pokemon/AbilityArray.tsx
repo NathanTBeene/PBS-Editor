@@ -3,6 +3,7 @@ import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import Autocomplete from "../ui/Autocomplete";
 import { useArrayManager } from "@/lib/hooks/useArrayManager";
 import { Plus, X } from "lucide-react";
+import React from "react";
 
 interface AbilityArrayProps {
   pokemon: Pokemon;
@@ -92,4 +93,12 @@ const AbilityArray = ({ pokemon, setPokemon, isHidden }: AbilityArrayProps) => {
   );
 };
 
-export default AbilityArray;
+const areEqual = (
+  prevProps: AbilityArrayProps,
+  nextProps: AbilityArrayProps
+) => {
+  if (prevProps.isHidden !== nextProps.isHidden) return false;
+  return prevProps.pokemon === nextProps.pokemon;
+};
+
+export default React.memo(AbilityArray, areEqual);

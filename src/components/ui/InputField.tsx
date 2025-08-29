@@ -36,13 +36,25 @@ const InputField = ({
   rows = 3,
   className = "",
   tooltip,
-  onKeyDown,
 }: InputFieldProps) => {
   const handleChange = (e: string | number) => {
     onChange && onChange(e);
   };
 
   const handleOnFinish = () => {
+    if (type === "number") {
+      const numValue = Number(value);
+      if (min !== undefined && numValue < min) {
+        onChange && onChange(min);
+        onFinished && onFinished(min);
+        return;
+      } else if (max !== undefined && numValue > max) {
+        onChange && onChange(max);
+        onFinished && onFinished(max);
+        return;
+      }
+    }
+
     onFinished && onFinished(value);
   };
 
@@ -52,14 +64,12 @@ const InputField = ({
     if (e.key === "Enter") {
       handleOnFinish();
     }
-
-    onKeyDown && onKeyDown(e);
   };
 
   const inputClassName = `w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70 ${className} relative`;
 
   return (
-    <div onFocus={onFocus}>
+    <div onFocus={onFocus} className="relative">
       {label && (
         <label className="flex gap-2 items-center text-sm font-medium text-slate-300 mb-2">
           {label}

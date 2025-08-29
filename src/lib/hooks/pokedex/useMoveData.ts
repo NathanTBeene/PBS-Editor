@@ -78,6 +78,8 @@ export const useMoveData = () => {
         console.log("IndexDb Error, falling back to fetch.", error);
         await fetchMoves();
       }
+
+      setIsInit(false);
     };
 
     loadData();

@@ -49,6 +49,7 @@ const PokemonBasicInfo = ({ pokemon, setPokemon }: PokemonBasicInfoProps) => {
           onChange={(value) =>
             setPokemon({ ...pokemon, generation: value as number })
           }
+          min={0}
         />
         <InputField
           label="Dex #"
@@ -57,6 +58,7 @@ const PokemonBasicInfo = ({ pokemon, setPokemon }: PokemonBasicInfoProps) => {
           onChange={(value) =>
             setPokemon({ ...pokemon, dexNumber: value as number })
           }
+          min={0}
         />
       </div>
       <div className="mt-4">

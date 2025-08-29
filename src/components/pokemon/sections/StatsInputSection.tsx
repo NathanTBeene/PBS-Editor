@@ -5,6 +5,7 @@ interface StatsInputSectionProps {
   type: "base" | "effort";
   pokemon: Pokemon;
   setPokemon: React.Dispatch<React.SetStateAction<Pokemon | null>>;
+  minValue?: number;
 }
 
 const StatsInputSection = ({
@@ -12,6 +13,7 @@ const StatsInputSection = ({
   type,
   pokemon,
   setPokemon,
+  minValue,
 }: StatsInputSectionProps) => {
   const handleStatChange = (stat: string, value: string) => {
     if (type === "base") {
@@ -38,8 +40,8 @@ const StatsInputSection = ({
     stat: string
   ) => {
     const value = e.target.value;
-    if (value === "") {
-      handleStatChange(stat, "0");
+    if (value === "" || parseInt(value, 10) < (minValue || 0)) {
+      handleStatChange(stat, minValue ? minValue.toString() : "0");
     }
   };
 

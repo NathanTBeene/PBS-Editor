@@ -82,6 +82,8 @@ export const useAbilityData = () => {
         console.log("IndexDb Error, falling back to fetch.", error);
         await fetchAbilities();
       }
+
+      setIsInit(false);
     };
 
     loadData();

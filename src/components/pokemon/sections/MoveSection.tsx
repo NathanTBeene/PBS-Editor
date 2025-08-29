@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import MoveEntry from "@/components/pokemon/MoveEntry";
 import type { Pokemon, PokemonMove } from "@/lib/models/Pokemon";
 import { useMemo } from "react";
+import React from "react";
 
 interface MoveSectionProps {
   title: string;
@@ -130,4 +131,18 @@ const MoveSection = ({
   );
 };
 
-export default MoveSection;
+const areEqual = (prevProps: MoveSectionProps, nextProps: MoveSectionProps) => {
+  if (prevProps.type !== nextProps.type) return false;
+  switch (nextProps.type) {
+    case "level":
+      return prevProps.pokemon.moves === nextProps.pokemon.moves;
+    case "tutor":
+      return prevProps.pokemon.tutorMoves === nextProps.pokemon.tutorMoves;
+    case "egg":
+      return prevProps.pokemon.eggMoves === nextProps.pokemon.eggMoves;
+    default:
+      return true;
+  }
+};
+
+export default React.memo(MoveSection, areEqual);

@@ -2,6 +2,7 @@ import CustomSelect from "@/components/ui/CustomSelect";
 import FormSection from "../FormSection";
 import type { Pokemon } from "@/lib/models/Pokemon";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
+import InputField from "@/components/ui/InputField";
 
 const PhysicalAttributesSection = ({
   currentPokemon,
@@ -27,30 +28,22 @@ const PhysicalAttributesSection = ({
     <FormSection title="Physical Attributes">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            Height (m)
-          </label>
-          <input
+          <InputField
+            label="Height (m)"
             type="number"
-            step="0.1"
+            min={0}
             value={currentPokemon.height}
-            onChange={(e) =>
-              handleInputChange("height", parseFloat(e.target.value))
-            }
+            onChange={(value) => handleInputChange("height", value as number)}
             className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            Weight (kg)
-          </label>
-          <input
+          <InputField
+            label="Weight (kg)"
             type="number"
-            step="0.1"
+            min={0}
             value={currentPokemon.weight}
-            onChange={(e) =>
-              handleInputChange("weight", parseFloat(e.target.value))
-            }
+            onChange={(value) => handleInputChange("weight", value as number)}
             className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
           />
         </div>

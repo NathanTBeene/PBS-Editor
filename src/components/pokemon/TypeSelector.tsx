@@ -3,6 +3,7 @@ import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import CustomSelect from "@/components/ui/CustomSelect";
 import { Plus, X } from "lucide-react";
 import { useArrayManager } from "@/lib/hooks/useArrayManager";
+import React from "react";
 
 interface TypeSelectorProps {
   pokemon: Pokemon;
@@ -78,4 +79,11 @@ const TypeSelector = ({ pokemon, setPokemon }: TypeSelectorProps) => {
   );
 };
 
-export default TypeSelector;
+const areEqual = (
+  prevProps: TypeSelectorProps,
+  nextProps: TypeSelectorProps
+) => {
+  return prevProps.pokemon === nextProps.pokemon;
+};
+
+export default React.memo(TypeSelector, areEqual);

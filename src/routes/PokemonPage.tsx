@@ -14,6 +14,7 @@ import { useAlertContext } from "@/lib/providers/AlertProvider";
 import GameMechanicsSection from "@/components/pokemon/sections/GameMechanicsSection";
 import WildItemsSection from "@/components/pokemon/sections/WildItemsSection";
 import FlagsSection from "@/components/pokemon/sections/FlagsSection";
+import { validatePokemon } from "@/lib/services/pokemonValidator";
 
 const PokemonPage = () => {
   const {
@@ -29,6 +30,7 @@ const PokemonPage = () => {
   const { showWarning, showError } = useAlertContext();
 
   const [editData, setEditData] = useState<Pokemon | null>(selectedPokemon);
+  const [errors, setErrors] = useState<string[]>([]);
 
   useEffect(() => {
     if (selectedPokemon) {
@@ -38,6 +40,13 @@ const PokemonPage = () => {
 
   const handleSave = async () => {
     if (!selectedPokemon || !editData) return;
+
+    const validationErrors = validatePokemon(editData);
+    if (validationErrors) {
+      console.error("Validation Errors:", validationErrors);
+      setErrors(validationErrors);
+      return;
+    }
 
     if (selectedPokemon.id != editData.id) {
       const response = await showWarning(
@@ -157,6 +166,7 @@ const PokemonPage = () => {
               type="base"
               pokemon={editData}
               setPokemon={setEditData}
+              minValue={1}
             />
 
             {/* Effort Values */}
@@ -165,6 +175,7 @@ const PokemonPage = () => {
               type="effort"
               pokemon={editData}
               setPokemon={setEditData}
+              minValue={0}
             />
 
             {/* Types and Abilities */}

@@ -47,6 +47,10 @@ const EggGroupSection = ({ pokemon, setPokemon }: EggGroupSectionProps) => {
     });
   };
 
+  const shouldShowRemoveButton = () => {
+    return pokemon.eggGroups.length > 1;
+  };
+
   return (
     <ArraySection
       title="Egg Groups"
@@ -64,12 +68,14 @@ const EggGroupSection = ({ pokemon, setPokemon }: EggGroupSectionProps) => {
               onChange={(newGroup) => handleGroupChange(index, newGroup)}
               placeholder="Groups..."
             />
-            <button
-              onClick={() => handleRemoveGroup(index)}
-              className="px-2 py-1 h-fit text-rose-300 hover:text-rose-400 cursor-pointer rounded"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            {shouldShowRemoveButton() && (
+              <button
+                onClick={() => handleRemoveGroup(index)}
+                className="px-2 py-1 h-fit text-rose-300 hover:text-rose-400 cursor-pointer rounded"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
         ))}
       </div>

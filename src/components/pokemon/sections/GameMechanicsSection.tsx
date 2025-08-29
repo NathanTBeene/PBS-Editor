@@ -4,6 +4,7 @@ import InfoTooltip from "@/components/ui/InfoTooltip";
 import type { Pokemon } from "@/lib/models/Pokemon";
 import { GenderRatios, GrowthRates } from "@/lib/models/constants";
 import CustomSelect from "@/components/ui/CustomSelect";
+import InputField from "@/components/ui/InputField";
 
 const GameMechanicsSection = ({
   pokemon,
@@ -21,48 +22,44 @@ const GameMechanicsSection = ({
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {/* Catch Rate */}
         <div>
-          <label className="flex gap-2 items-center relative text-sm font-medium text-slate-300 mb-2">
-            Catch Rate
-            <InfoTooltip description="Number between 0 and 255. The higher the number, the more likely it is to catch. (0 means it can only be caught with a Master Ball)" />
-          </label>
-          <input
+          <InputField
+            label="Catch Rate"
+            tooltip={{
+              description:
+                "Number between 0 and 255. The higher the number, the more likely it is to catch. (0 means it can only be caught with a Master Ball)",
+            }}
             type="number"
             value={pokemon.catchRate}
-            onChange={(e) =>
-              handleFieldChange("catchRate", parseInt(e.target.value))
+            onChange={(value) =>
+              handleFieldChange("catchRate", value as number)
             }
             className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-            min="0"
-            max="255"
+            min={1}
+            max={255}
           />
         </div>
         {/* Base Happiness */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            Base Happiness
-          </label>
-          <input
+          <InputField
+            label="Base Happiness"
             type="number"
             value={pokemon.happiness}
-            onChange={(e) =>
-              handleFieldChange("happiness", parseInt(e.target.value))
+            onChange={(value) =>
+              handleFieldChange("happiness", value as number)
             }
             className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
-            min="0"
-            max="255"
+            min={1}
+            max={255}
           />
         </div>
         {/* Base Experience */}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">
-            Base Experience
-          </label>
-          <input
+          <InputField
+            label="Base Experience"
             type="number"
             value={pokemon.baseExp}
-            onChange={(e) =>
-              handleFieldChange("baseExp", parseInt(e.target.value))
-            }
+            onChange={(value) => handleFieldChange("baseExp", value as Number)}
+            min={0}
             className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
           />
         </div>
@@ -97,16 +94,18 @@ const GameMechanicsSection = ({
         </div>
         {/* Hatch Steps */}
         <div>
-          <label className="flex gap-2 items-center text-sm font-medium text-slate-300 mb-2 relative">
-            Hatch Steps
-            <InfoTooltip description="The number of steps required for this Pokémon to hatch." />
-          </label>
-          <input
+          <InputField
+            label="Hatch Steps"
+            tooltip={{
+              description:
+                "Number of steps required for this Pokémon to hatch.",
+            }}
             type="number"
             value={pokemon.hatchSteps}
-            onChange={(e) =>
-              handleFieldChange("hatchSteps", parseInt(e.target.value))
+            onChange={(value) =>
+              handleFieldChange("hatchSteps", value as number)
             }
+            min={1}
             className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
           />
         </div>
@@ -120,6 +119,12 @@ const GameMechanicsSection = ({
             type="text"
             value={pokemon.incense || ""}
             onChange={(e) => handleFieldChange("incense", e.target.value)}
+            onBlur={() => {
+              handleFieldChange(
+                "incense",
+                pokemon.incense?.replace(/\s+/g, "")
+              );
+            }}
             className="w-full px-3 py-2 border border-slate-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300/70"
           />
         </div>
