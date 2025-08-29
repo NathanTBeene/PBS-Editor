@@ -10,6 +10,7 @@ import HomePage from "./routes/HomePage.tsx";
 import ConstantsPage from "./routes/ConstantsPage.tsx";
 import AbilitiesPage from "./routes/AbilitiesPage.tsx";
 import MovesPage from "./routes/MovesPage.tsx";
+import { AlertProvider } from "./lib/providers/AlertProvider.tsx";
 
 const router = createBrowserRouter([
   {
@@ -43,7 +44,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <PokedexProvider>
-    <RouterProvider router={router} />
-  </PokedexProvider>
+  <AlertProvider>
+    <PokedexProvider>
+      <RouterProvider router={router} />
+    </PokedexProvider>
+  </AlertProvider>
 );

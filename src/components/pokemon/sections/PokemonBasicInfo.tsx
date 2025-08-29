@@ -2,7 +2,6 @@ import type { Pokemon } from "@/lib/models/Pokemon";
 import InputField from "@/components/ui/InputField";
 import FormSection from "@/components/pokemon/FormSection";
 import type React from "react";
-import { produce } from "immer";
 
 interface PokemonBasicInfoProps {
   pokemon: Pokemon;
@@ -16,9 +15,7 @@ const PokemonBasicInfo = ({ pokemon, setPokemon }: PokemonBasicInfoProps) => {
         <InputField
           label="ID"
           value={pokemon.id}
-          onFinished={(value) =>
-            setPokemon({ ...pokemon, id: value as string })
-          }
+          onChange={(value) => setPokemon({ ...pokemon, id: value as string })}
           tooltip={{
             description:
               "The unique identifier for this Pokémon. Essentials standard is all caps no spaces.",
@@ -27,13 +24,9 @@ const PokemonBasicInfo = ({ pokemon, setPokemon }: PokemonBasicInfoProps) => {
         <InputField
           label="Name"
           value={pokemon.name}
-          onChange={(name) => {
-            setPokemon(
-              produce((draft) => {
-                if (draft) draft.name = name as string;
-              })
-            );
-          }}
+          onChange={(value) =>
+            setPokemon({ ...pokemon, name: value as string })
+          }
         />
         <InputField
           label="Form Name"

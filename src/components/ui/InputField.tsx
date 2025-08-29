@@ -1,4 +1,3 @@
-import { useState } from "react";
 import InfoTooltip from "../ui/InfoTooltip";
 
 interface InputFieldProps {

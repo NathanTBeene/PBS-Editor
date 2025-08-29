@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { defaultAbility, type Ability } from "@/lib/models/Ability";
 import { useIndexedDB } from "../useIndexedDB";
 import { importAbilities } from "@/lib/services/importAbilities";
 
 export const useAbilityData = () => {
+  const [isInit, setIsInit] = useState(true);
+  const hasLoadedInitial = useRef(false);
   const [abilities, setAbilities] = useState<Ability[]>([]);
   const [abilityDefaults, setAbilityDefaults] = useState<Ability[]>([]);
   const [selectedAbility, setSelectedAbility] = useState<Ability | null>(null);
@@ -41,6 +43,21 @@ export const useAbilityData = () => {
       }
     };
 
+    const fetchDefaults = async () => {
+      try {
+        console.warn("Ability Defaults were not found. Fetching from PBS.");
+        const response = await fetch("/src/assets/PBS/abilities.txt");
+        const data = await response.text();
+        const parsedAbilities = importAbilities(data);
+        setAbilityDefaults(parsedAbilities);
+
+        // Save to IndexDB
+        await saveAbilityDefaults(parsedAbilities);
+      } catch (error) {
+        console.error("Failed to load abilities.txt:", error);
+      }
+    };
+
     const loadData = async () => {
       try {
         console.log("Attempting to load Ability data from IndexDB.");
@@ -59,7 +76,7 @@ export const useAbilityData = () => {
           console.log("Loaded Ability defaults from IndexDB");
           setAbilityDefaults(storedDefaults);
         } else {
-          setAbilityDefaults(storedAbilities);
+          await fetchDefaults();
         }
       } catch (error) {
         console.log("IndexDb Error, falling back to fetch.", error);
@@ -72,8 +89,12 @@ export const useAbilityData = () => {
 
   // Save to indexedDB whenever Ability change.
   useEffect(() => {
-    saveAbilities(abilities);
-    saveAbilityDefaults(abilityDefaults);
+    if (!isInit) {
+      if (hasLoadedInitial.current) {
+        console.log("Saving Abilities to IndexDB");
+        saveAbilities(abilities);
+      }
+    }
   }, [abilities, abilityDefaults]);
 
   const setAbilityData = (data: Ability) => {

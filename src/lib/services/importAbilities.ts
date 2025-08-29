@@ -42,7 +42,6 @@ export const importAbilities = (data: string) => {
 
     // Make sure ID isn't blank
     if (!ability.id || ability.id.trim() === "[]") {
-      console.warn(`Ability has no ID: ${ability.name} (Line: ${lineNum})`);
       return;
     }
 

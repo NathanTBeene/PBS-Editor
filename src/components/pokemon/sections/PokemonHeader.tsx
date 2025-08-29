@@ -24,7 +24,8 @@ const PokemonHeader = ({
         ${theme.colors.primary.borderDark} ${theme.colors.primary.bg}`}
     >
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex-1">
+          {/* Name and Form Info */}
           <h1 className="text-2xl font-bold">
             {pokemon.name}
             {pokemon.formName && (
@@ -33,11 +34,13 @@ const PokemonHeader = ({
               </span>
             )}
           </h1>
-          <div className="flex">
-            <p className={`mt-1 mr-10 ${theme.colors.primary.textMuted}`}>
+          {/* Pokemon Description */}
+          <div className="flex w-full mt-1">
+            <p className={`flex-1 ${theme.colors.primary.textMuted}`}>
               #{pokemon.dexNumber} - The {pokemon.category} Pokemon
             </p>
-            <div className="flex gap-2 mt-1">
+            {/* Type Buttons */}
+            <div className="flex gap-2 flex-1">
               {pokemon.types.map((type) => (
                 <TypeBubble key={type} type={type} />
               ))}

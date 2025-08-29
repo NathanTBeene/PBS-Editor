@@ -7,6 +7,7 @@ import type {
   PokemonEvolution,
   PokemonHabitat,
   PokemonShape,
+  PokemonType,
 } from "../models/constants";
 import {
   type Pokemon,
@@ -47,8 +48,8 @@ export const importPokemon = (data: string) => {
         case "Types":
           pokemon.types = pokemonValue
             .split(",")
-            .map((type) => type.trim())
-            .filter((type) => type !== "");
+            .filter((type) => type !== "")
+            .map((type) => type.trim() as PokemonType);
           break;
         case "BaseStats":
           const [hp, attack, defense, specialAttack, specialDefense, speed] =
@@ -151,19 +152,13 @@ export const importPokemon = (data: string) => {
           pokemon.flags = pokemonValue.split(",").map((flag) => flag.trim());
           break;
         case "WildItemCommon":
-          pokemon.wildItemCommon = pokemonValue
-            .split(",")
-            .map((item) => item.trim());
+          pokemon.wildItemCommon = pokemonValue.trim();
           break;
         case "WildItemUncommon":
-          pokemon.wildItemUncommon = pokemonValue
-            .split(",")
-            .map((item) => item.trim());
+          pokemon.wildItemUncommon = pokemonValue.trim();
           break;
         case "WildItemRare":
-          pokemon.wildItemRare = pokemonValue
-            .split(",")
-            .map((item) => item.trim());
+          pokemon.wildItemRare = pokemonValue.trim();
           break;
         case "Evolutions":
           pokemon.evolutions = parseEvolutions(pokemonValue);

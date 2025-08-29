@@ -3,19 +3,28 @@ import CustomAutocomplete from "@/components/ui/CustomAutocomplete";
 import type { Pokemon } from "@/lib/models/Pokemon";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import { X } from "lucide-react";
+import type React from "react";
 
-const OffspringSection = ({ currentPokemon }: { currentPokemon: Pokemon }) => {
-  const { pokemon, setCurrentPokemonData } = usePokedexContext();
+interface OffspringSectionProps {
+  currentPokemon: Pokemon;
+  setPokemon: React.Dispatch<React.SetStateAction<Pokemon | null>>;
+}
+
+const OffspringSection = ({
+  currentPokemon,
+  setPokemon,
+}: OffspringSectionProps) => {
+  const { pokemon } = usePokedexContext();
 
   const handleAddOffspring = () => {
-    setCurrentPokemonData({
+    setPokemon({
       ...currentPokemon,
       offspring: [...(currentPokemon.offspring || []), ""],
     });
   };
 
   const handleOffspringChange = (index: number, newPokemon: string) => {
-    setCurrentPokemonData({
+    setPokemon({
       ...currentPokemon,
       offspring: currentPokemon.offspring.map((mon, i) =>
         i === index ? newPokemon : mon
@@ -24,7 +33,7 @@ const OffspringSection = ({ currentPokemon }: { currentPokemon: Pokemon }) => {
   };
 
   const onRemoveOffspring = (index: number) => {
-    setCurrentPokemonData({
+    setPokemon({
       ...currentPokemon,
       offspring: currentPokemon.offspring.filter((_, i) => i !== index),
     });

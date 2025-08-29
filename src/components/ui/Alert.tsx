@@ -1,11 +1,12 @@
 import { AlertDialog } from "radix-ui";
 import "../../lib/theme/Alert.css";
 
-interface AlertProps {
-  triggerText: string;
-  title: string;
-  confirmText: string;
-  confirmType:
+import { useState, useRef, forwardRef, useImperativeHandle } from "react";
+
+export interface AlertProps {
+  title?: string;
+  confirmText?: string;
+  confirmType?:
     | "success"
     | "error"
     | "warning"
@@ -14,7 +15,8 @@ interface AlertProps {
     | "red"
     | "blue"
     | "gray";
-  onConfirm: () => void;
+  cancelText?: string;
+  triggerText?: string;
   description?: string;
   children?: React.ReactNode;
   buttonClass?: string;
@@ -23,19 +25,15 @@ interface AlertProps {
   descriptionClass?: string;
 }
 
-const Alert = ({
-  triggerText,
-  title,
-  onConfirm,
-  confirmText,
-  confirmType,
-  description,
-  children,
-  buttonClass,
-  contentClass,
-  titleClass,
-  descriptionClass,
-}: AlertProps) => {
+export interface AlertHandle {
+  show: (props: AlertProps) => Promise<boolean> | null;
+}
+
+const Alert = forwardRef<AlertHandle, AlertProps>((props, ref) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalProps, setModalProps] = useState<AlertProps>({});
+  const resolver = useRef<(value: boolean) => void | undefined>(undefined);
+
   const colorClasses = {
     success: "bg-emerald-900 text-emerald-200/70 hover:bg-emerald-800",
     error: "bg-rose-900 text-rose-200/70 hover:bg-rose-800",
@@ -47,13 +45,51 @@ const Alert = ({
     blue: "bg-blue-900 text-blue-200/70 hover:bg-blue-800",
   };
 
+  useImperativeHandle(ref, () => ({
+    show: (customProps: AlertProps = {}) => {
+      setModalProps(customProps);
+      setIsOpen(true);
+      return new Promise<boolean>((resolve) => {
+        resolver.current = resolve;
+      });
+    },
+  }));
+
+  const handleConfirm = () => {
+    setIsOpen(false);
+    resolver.current?.(true);
+  };
+
+  const handleCancel = () => {
+    setIsOpen(false);
+    resolver.current?.(false);
+  };
+
+  const {
+    triggerText,
+    title,
+    confirmText = "OK",
+    confirmType = "info",
+    cancelText = "Cancel",
+    description,
+    children,
+    buttonClass,
+    contentClass,
+    titleClass,
+    descriptionClass,
+  } = { ...props, ...modalProps };
+
   const colorClass = colorClasses[confirmType];
 
   return (
-    <AlertDialog.Root>
-      <AlertDialog.Trigger asChild>
-        <button className={buttonClass}>{triggerText}</button>
-      </AlertDialog.Trigger>
+    <AlertDialog.Root open={isOpen} onOpenChange={setIsOpen}>
+      {triggerText && (
+        <AlertDialog.Trigger asChild>
+          <button onClick={() => setIsOpen(true)} className={buttonClass}>
+            {triggerText}
+          </button>
+        </AlertDialog.Trigger>
+      )}
       <AlertDialog.Portal>
         <AlertDialog.Overlay className="AlertDialogOverlay bg-black/30" />
         <AlertDialog.Content
@@ -69,15 +105,18 @@ const Alert = ({
           </AlertDialog.Description>
           {children}
           <div className="w-full flex justify-end items-center mt-4 gap-10">
-            <AlertDialog.Cancel className="font-semibold text-md cursor-pointer">
-              Cancel
+            <AlertDialog.Cancel
+              className="font-semibold text-md cursor-pointer"
+              onClick={handleCancel}
+            >
+              {cancelText}
             </AlertDialog.Cancel>
             <AlertDialog.Action
               className={
                 colorClass +
                 " font-bold px-3 py-1 rounded cursor-pointer transition-colors"
               }
-              onClick={onConfirm}
+              onClick={handleConfirm}
             >
               {confirmText}
             </AlertDialog.Action>
@@ -86,6 +125,6 @@ const Alert = ({
       </AlertDialog.Portal>
     </AlertDialog.Root>
   );
-};
+});
 
 export default Alert;

@@ -55,8 +55,8 @@ export interface Pokemon {
   generation: number;
   flags: string[];
   wildItemCommon: string;
-  wildItemUncommon: string | null;
-  wildItemRare: string | null;
+  wildItemUncommon: string;
+  wildItemRare: string;
   evolutions: PokemonEvolution[] | null;
 }
 

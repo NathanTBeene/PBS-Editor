@@ -30,7 +30,10 @@ const AbilityArray = ({ pokemon, setPokemon, isHidden }: AbilityArrayProps) => {
     removeFromArray(isHidden ? "hiddenAbilities" : "abilities", index);
   };
 
-  const showRemoveButton = () => pokemon.abilities.length > 1;
+  const showRemoveButton = () =>
+    isHidden
+      ? pokemon.hiddenAbilities.length > 1
+      : pokemon.abilities.length > 1;
 
   const abilitiesArray = pokemon.abilities.map((ability, index) => (
     <div key={index} className="flex items-center gap-2 flex-1">

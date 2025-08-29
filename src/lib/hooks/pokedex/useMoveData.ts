@@ -1,9 +1,11 @@
 import { defaultMove, type Move } from "@/lib/models/Move";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { importMoves } from "@/lib/services/importMoves";
 import { useIndexedDB } from "../useIndexedDB";
 
 export const useMoveData = () => {
+  const [isInit, setIsInit] = useState(true);
+  const hasLoadedInitial = useRef(false);
   const [moves, setMoves] = useState<Move[]>([]);
   const [moveDefaults, setMoveDefaults] = useState<Move[]>([]);
   const [selectedMove, setSelectedMove] = useState<Move | null>(null);
@@ -37,6 +39,21 @@ export const useMoveData = () => {
       }
     };
 
+    const fetchDefaults = async () => {
+      try {
+        console.warn("Move Defaults were not found. Fetching from PBS.");
+        const response = await fetch("/src/assets/PBS/moves.txt");
+        const data = await response.text();
+        const parsedMoves = importMoves(data);
+        setMoveDefaults(parsedMoves);
+
+        // Save to IndexDB
+        await saveMoveDefaults(parsedMoves);
+      } catch (error) {
+        console.error("Failed to load moves.txt:", error);
+      }
+    };
+
     const loadData = async () => {
       try {
         console.log("Attempting to load Move data from IndexDB.");
@@ -55,7 +72,7 @@ export const useMoveData = () => {
           console.log("Loaded Move defaults from IndexDB");
           setMoveDefaults(storedDefaults);
         } else {
-          setMoveDefaults(storedMoves);
+          await fetchDefaults();
         }
       } catch (error) {
         console.log("IndexDb Error, falling back to fetch.", error);
@@ -68,8 +85,12 @@ export const useMoveData = () => {
 
   // Save to indexedDB whenever Moves change.
   useEffect(() => {
-    saveMoves(moves);
-    saveMoveDefaults(moveDefaults);
+    if (!isInit) {
+      if (hasLoadedInitial.current) {
+        console.log("Saving Moves to IndexDB");
+        saveMoves(moves);
+      }
+    }
   }, [moves, moveDefaults]);
 
   const setMoveData = (data: Move) => {

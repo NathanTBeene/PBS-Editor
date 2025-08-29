@@ -5,16 +5,21 @@ import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 
 const PhysicalAttributesSection = ({
   currentPokemon,
+  setPokemon,
 }: {
   currentPokemon: Pokemon;
+  setPokemon: React.Dispatch<React.SetStateAction<Pokemon | null>>;
 }) => {
-  const { colors, shapes, setCurrentPokemonData } = usePokedexContext();
+  const { colors, shapes } = usePokedexContext();
 
   const handleInputChange = (field: string, value: string | number) => {
     // Update the current Pokemon's attributes
-    setCurrentPokemonData({
-      ...currentPokemon,
-      [field]: value,
+    setPokemon((prev) => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        [field]: value,
+      };
     });
   };
 

@@ -5,7 +5,7 @@ import AbilityArray from "../AbilityArray";
 
 interface TypesAbilitiesSectionProps {
   pokemon: Pokemon;
-  setPokemon: (updater: (prev: Pokemon | null) => Pokemon | null) => void;
+  setPokemon: React.Dispatch<React.SetStateAction<Pokemon | null>>;
 }
 
 const TypesAbilitiesSection = ({

@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-import {
-  type Pokemon,
-  type PokemonMove,
-  defaultPokemon,
-} from "@/lib/models/Pokemon";
+import { useEffect, useRef, useState } from "react";
+import { type Pokemon, defaultPokemon } from "@/lib/models/Pokemon";
 import { importPokemon } from "@/lib/services/importPokemon";
 import { useIndexedDB } from "../useIndexedDB";
 
 export const usePokemonData = () => {
+  const [isInit, setIsInit] = useState(true);
+  const hasLoadedInitial = useRef(false);
   const [pokemon, setPokemon] = useState<Pokemon[]>([]); // Set shouldn't be exported
   const [pokemonDefaults, setPokemonDefaults] = useState<Pokemon[]>([]); // Shouldn't be exported.
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
@@ -18,7 +16,9 @@ export const usePokemonData = () => {
   // If no Pokemon is selected, select the first one
   useEffect(() => {
     if (pokemon.length > 0 && !selectedPokemon) {
-      setSelectedPokemon(pokemon.find((p) => p.id === "BULBASAUR") || null);
+      setSelectedPokemon(
+        pokemon.find((p) => p.id === "BULBASAUR") || pokemon[0]
+      );
     }
   }, [pokemon, selectedPokemon]);
 
@@ -29,12 +29,31 @@ export const usePokemonData = () => {
         console.log("Attempting to fetch Pokémon data from local PBS.");
         const response = await fetch("/src/assets/PBS/pokemon.txt");
         const data = await response.text();
-        const parsedPokemon = importPokemon(data);
+        const parsedPokemon = importPokemon(data).sort(
+          (a, b) => a.dexNumber - b.dexNumber
+        );
         setPokemon(parsedPokemon);
         setPokemonDefaults(parsedPokemon);
 
         // Save to IndexDB
         await savePokemon(parsedPokemon);
+        await savePokemonDefaults(parsedPokemon);
+      } catch (error) {
+        console.error("Failed to load pokemon.txt:", error);
+      }
+    };
+
+    const fetchDefaults = async () => {
+      try {
+        console.warn("Pokemon Defaults were not found. Fetching from PBS.");
+        const response = await fetch("/src/assets/PBS/pokemon.txt");
+        const data = await response.text();
+        const parsedPokemon = importPokemon(data).sort(
+          (a, b) => a.dexNumber - b.dexNumber
+        );
+        setPokemonDefaults(parsedPokemon);
+
+        // Save to IndexDB
         await savePokemonDefaults(parsedPokemon);
       } catch (error) {
         console.error("Failed to load pokemon.txt:", error);
@@ -50,7 +69,7 @@ export const usePokemonData = () => {
 
         if (storedPokemon && storedPokemon.length > 0) {
           console.log("Loaded Pokémon from IndexDB");
-          setPokemon(storedPokemon);
+          setPokemon(storedPokemon.sort((a, b) => a.dexNumber - b.dexNumber));
         } else {
           await fetchPokemon();
         }
@@ -59,12 +78,14 @@ export const usePokemonData = () => {
           console.log("Loaded Pokémon defaults from IndexDB");
           setPokemonDefaults(storedDefaults);
         } else {
-          setPokemonDefaults(storedPokemon);
+          fetchDefaults();
         }
       } catch (error) {
         console.log("IndexDb Error, falling back to fetch.", error);
         await fetchPokemon();
       }
+
+      setIsInit(false);
     };
 
     loadData();
@@ -72,13 +93,25 @@ export const usePokemonData = () => {
 
   // Save to indexedDB whenever Pokémon change.
   useEffect(() => {
-    savePokemon(pokemon);
-    savePokemonDefaults(pokemonDefaults);
-  }, [pokemon, pokemonDefaults]);
+    if (!isInit) {
+      if (hasLoadedInitial.current) {
+        console.log("Saving Pokémon to IndexDB");
+        savePokemon(pokemon);
+      }
+    }
+  }, [pokemon, isInit]);
 
   // For updating existing Pokémon data
+  // This overrides all data at with the
+  // specified unique ID.
   const setPokemonData = (data: Pokemon) => {
     setPokemon((prev) => prev.map((p) => (p.id === data.id ? data : p)));
+  };
+
+  const overridePokemonData = (id: string, data: Partial<Pokemon>) => {
+    setPokemon((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, ...data } : p))
+    );
   };
 
   // Makes sure a Pokemon exists within the dex.
@@ -111,10 +144,16 @@ export const usePokemonData = () => {
   };
 
   // Sets a particular pokemon back to default.
-  const setPokemonToDefault = (id: string) => {
+  const setPokemonToDefault = (id: string): boolean => {
     const defaultData = pokemonDefaults.find((p) => p.id === id);
     if (defaultData) {
+      console.log(`Default data found for ${id}`);
+      console.log(defaultData);
       setPokemon((prev) => prev.map((p) => (p.id === id ? defaultData : p)));
+      return true;
+    } else {
+      console.log(`No default data found for ${id}`);
+      return false;
     }
   };
 
@@ -122,6 +161,7 @@ export const usePokemonData = () => {
     pokemon,
     setPokemon,
     setPokemonData,
+    overridePokemonData,
     selectedPokemon,
     setSelectedPokemon,
     isPokemonInPokedex,

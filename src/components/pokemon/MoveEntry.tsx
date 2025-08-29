@@ -2,11 +2,11 @@ import { X } from "lucide-react";
 import type { PokemonMove } from "../../lib/models/Pokemon";
 import { usePokedexContext } from "../../lib/providers/PokedexProvider";
 import Autocomplete from "../ui/Autocomplete";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 interface MoveEntryProps {
   move: PokemonMove;
-  onMoveChange: (move: string | number) => void;
+  onMoveChange: (move: PokemonMove) => void;
   onRemove: () => void;
   useLevel?: boolean;
   onFocus?: () => void;
@@ -20,21 +20,12 @@ const MoveEntry = ({
   useLevel = true,
 }: MoveEntryProps) => {
   const { moves } = usePokedexContext();
-  const [moveName, setMoveName] = useState(move.name);
-  const [moveLevel, setMoveLevel] = useState(move.level || 0);
-
-  const handleDoneEditing = async () => {
-    // Logic to handle when editing is done
-    console.log("Done editing");
-    onMoveChange(moveName);
-    if (useLevel) {
-      onMoveChange(moveLevel);
-    }
-  };
+  const [moveName, setMoveName] = useState<string>(move.name);
+  const [moveLevel, setMoveLevel] = useState<string>(String(move.level));
 
   useEffect(() => {
     setMoveName(move.name);
-    setMoveLevel(move.level || 0);
+    setMoveLevel(String(move.level));
   }, [move]);
 
   return (
@@ -46,15 +37,15 @@ const MoveEntry = ({
         <div className="w-10 flex-shrink-0">
           <input
             type="number"
-            value={moveLevel || ""}
+            value={moveLevel}
             onChange={(e) => {
-              setMoveLevel(parseInt(e.target.value) || 0);
+              setMoveLevel(e.target.value);
             }}
             className="w-full px-1 py-2.5 border-b border-slate-500 text-xs focus:outline-none text-center focus:ring-transparent focus:border-blue-300"
             min="0"
             max="100"
             placeholder="0"
-            onBlur={handleDoneEditing}
+            onBlur={() => onMoveChange({ ...move, level: parseInt(moveLevel) })}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -71,7 +62,7 @@ const MoveEntry = ({
           options={moves.map((m) => m.id)}
           placeholder="Enter move..."
           inputClass="rounded-none border-b border-t-0 border-l-0 border-r-0 focus:ring-transparent focus:border-blue-300"
-          onBlur={handleDoneEditing}
+          onBlur={() => onMoveChange({ ...move, name: moveName })}
         />
       </div>
       <button

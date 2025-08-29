@@ -57,12 +57,8 @@ const Autocomplete = ({
             value={inputValue}
             onChange={handleInputChange}
             onFocus={() => setOpen(true)}
-            onBlur={() => {
-              setTimeout(() => {
-                if (!open) {
-                  onBlur && onBlur();
-                }
-              }, 0);
+            onFinished={() => {
+              onBlur && onBlur();
               setOpen(false);
             }}
             placeholder={placeholder}

@@ -6,34 +6,44 @@ import { X } from "lucide-react";
 
 interface EggGroupSectionProps {
   pokemon: Pokemon;
+  setPokemon: React.Dispatch<React.SetStateAction<Pokemon | null>>;
 }
 
-const EggGroupSection = ({ pokemon }: EggGroupSectionProps) => {
-  const { setCurrentPokemonData, eggGroups } = usePokedexContext();
+const EggGroupSection = ({ pokemon, setPokemon }: EggGroupSectionProps) => {
+  const { eggGroups } = usePokedexContext();
 
   const handleAddGroup = () => {
     // Logic to add a new egg group
     const newGroup = eggGroups[0]; // Default to the first group
-    setCurrentPokemonData({
-      ...pokemon,
-      eggGroups: [...pokemon.eggGroups, newGroup],
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        eggGroups: [...prev.eggGroups, newGroup],
+      };
     });
   };
 
   const handleRemoveGroup = (index: number) => {
     // Logic to remove an egg group
-    setCurrentPokemonData({
-      ...pokemon,
-      eggGroups: pokemon.eggGroups.filter((_, i) => i !== index),
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        eggGroups: prev.eggGroups.filter((_, i) => i !== index),
+      };
     });
   };
 
   const handleGroupChange = (index: number, newGroup: string) => {
-    setCurrentPokemonData({
-      ...pokemon,
-      eggGroups: pokemon.eggGroups.map((group, i) =>
-        i === index ? newGroup : group
-      ),
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        eggGroups: prev.eggGroups.map((group, i) =>
+          i === index ? newGroup : group
+        ),
+      };
     });
   };
 

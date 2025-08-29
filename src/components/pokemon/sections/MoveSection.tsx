@@ -1,84 +1,90 @@
 import { Plus } from "lucide-react";
 import MoveEntry from "@/components/pokemon/MoveEntry";
 import type { Pokemon, PokemonMove } from "@/lib/models/Pokemon";
-import { usePokedexContext } from "@/lib/providers/PokedexProvider";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 interface MoveSectionProps {
   title: string;
   pokemon: Pokemon;
+  setPokemon: React.Dispatch<React.SetStateAction<Pokemon | null>>;
   type: "level" | "tutor" | "egg";
 }
 
-const MoveSection = ({ title, pokemon, type }: MoveSectionProps) => {
-  const { addPokemonMove, removePokemonMove, updatePokemonMove } =
-    usePokedexContext();
+const MoveSection = ({
+  title,
+  pokemon,
+  setPokemon,
+  type,
+}: MoveSectionProps) => {
+  let field: string = "";
 
-  const [moves, setMoves] = useState<PokemonMove[]>([]);
+  switch (type) {
+    case "level":
+      field = "moves";
+      break;
+    case "tutor":
+      field = "tutorMoves";
+      break;
+    case "egg":
+      field = "eggMoves";
+      break;
+  }
 
-  useEffect(() => {
+  const moves = useMemo(() => {
     switch (type) {
       case "level":
-        setMoves(pokemon.moves.sort((a, b) => (a.level || 0) - (b.level || 0)));
-        break;
+        return pokemon.moves.sort((a, b) => (a.level || 0) - (b.level || 0));
       case "tutor":
-        setMoves(
-          pokemon.tutorMoves.sort((a, b) => a.name.localeCompare(b.name))
-        );
-        break;
+        return pokemon.tutorMoves.sort((a, b) => a.name.localeCompare(b.name));
       case "egg":
-        setMoves(pokemon.eggMoves.sort((a, b) => a.name.localeCompare(b.name)));
-        break;
+        return pokemon.eggMoves.sort((a, b) => a.name.localeCompare(b.name));
+      default:
+        return [];
     }
   }, [pokemon.moves, pokemon.tutorMoves, pokemon.eggMoves, type]);
 
   const handleAddMove = () => {
-    switch (type) {
-      case "level":
-        addPokemonMove("moves");
-        break;
-      case "tutor":
-        addPokemonMove("tutorMoves");
-        break;
-      case "egg":
-        addPokemonMove("eggMoves");
-        break;
-    }
+    const newMove: PokemonMove = {
+      name: "",
+      level: type === "level" ? 0 : undefined,
+    };
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        [field]: [...(prev as any)[field], newMove],
+      };
+    });
   };
 
   const handleRemoveMove = (index: number) => {
-    switch (type) {
-      case "level":
-        removePokemonMove("moves", index);
-        break;
-      case "tutor":
-        removePokemonMove("tutorMoves", index);
-        break;
-      case "egg":
-        removePokemonMove("eggMoves", index);
-        break;
-    }
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        [field]: (prev as any)[field].filter(
+          (_: PokemonMove, i: number) => i !== index
+        ),
+      };
+    });
   };
 
-  const handleChangeMove = (index: number, value: string | number) => {
-    const newMove: Partial<PokemonMove> = {};
+  const handleChangeMove = (index: number, move: PokemonMove) => {
+    console.log(
+      `Setting move at index ${index} for type ${type} to ${JSON.stringify(
+        move
+      )}`
+    );
 
-    if (typeof value === "string") {
-      newMove.name = value;
-    } else {
-      newMove.level = value;
-    }
-
-    switch (type) {
-      case "level":
-        updatePokemonMove("moves", index, newMove);
-        break;
-      case "tutor":
-        updatePokemonMove("tutorMoves", index, newMove);
-        break;
-      case "egg":
-        updatePokemonMove("eggMoves", index, newMove);
-    }
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        [field]: (prev as any)[field].map((m: PokemonMove, i: number) =>
+          i === index ? { ...m, ...move } : m
+        ),
+      };
+    });
   };
 
   const movesExport =
@@ -90,7 +96,7 @@ const MoveSection = ({ title, pokemon, type }: MoveSectionProps) => {
         >
           <MoveEntry
             move={move}
-            onMoveChange={(value) => handleChangeMove(index, value)}
+            onMoveChange={(move) => handleChangeMove(index, move)}
             onRemove={() => handleRemoveMove(index)}
             useLevel={type == "level" ? true : false}
           />
@@ -99,60 +105,10 @@ const MoveSection = ({ title, pokemon, type }: MoveSectionProps) => {
     ) : (
       <div className="col-span-full">
         <p className="text-slate-500 italic py-4 text-center">
-          No level-up moves added yet
+          No {type} moves added yet
         </p>
       </div>
     );
-
-  // const tutorMoves =
-  //   moves.length > 0 ? (
-  //     moves.map((move, index) => (
-  //       <div
-  //         key={`tutor-move-${move.name}-${move.level}-${index}`}
-  //         className="w-full"
-  //       >
-  //         <MoveEntry
-  //           move={move}
-  //           onMoveChange={(value) => handleChangeMove(index, value)}
-  //           onLevelChange={() => {}}
-  //           onRemove={() => handleRemoveMove(index)}
-  //           useLevel={false}
-  //           onBlur={handleOnBlur}
-  //         />
-  //       </div>
-  //     ))
-  //   ) : (
-  //     <div className="col-span-full">
-  //       <p className="text-slate-500 italic py-4 text-center">
-  //         No tutor moves added yet
-  //       </p>
-  //     </div>
-  //   );
-
-  // const eggMoves =
-  //   pokemon.eggMoves.length > 0 ? (
-  //     pokemon.eggMoves.map((move, index) => (
-  //       <div
-  //         key={`egg-move-${move.name}-${move.level}-${index}`}
-  //         className="w-full"
-  //       >
-  //         <MoveEntry
-  //           move={move}
-  //           onMoveChange={(value) => handleChangeMove(index, value)}
-  //           onLevelChange={() => {}}
-  //           onRemove={() => handleRemoveMove(index)}
-  //           useLevel={false}
-  //           onBlur={handleOnBlur}
-  //         />
-  //       </div>
-  //     ))
-  //   ) : (
-  //     <div className="col-span-full">
-  //       <p className="text-slate-500 italic py-4 text-center">
-  //         No egg moves added yet
-  //       </p>
-  //     </div>
-  //   );
 
   return (
     <section className="bg-slate-700/40 rounded-lg shadow-lg p-6">
@@ -168,7 +124,6 @@ const MoveSection = ({ title, pokemon, type }: MoveSectionProps) => {
       </div>
 
       <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2`}>
-        {/* {type === "tutor" ? tutorMoves : type === "egg" ? eggMoves : levelMoves} */}
         {movesExport}
       </div>
     </section>

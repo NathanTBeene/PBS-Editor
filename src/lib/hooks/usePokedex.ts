@@ -20,6 +20,7 @@ export const usePokedex = () => {
     removePokemon: pokemonData.removePokemon,
     resetPokemonData: pokemonData.resetPokemonData,
     setPokemonToDefault: pokemonData.setPokemonToDefault,
+    overridePokemonData: pokemonData.overridePokemonData,
 
     // Move data
     moves: moveData.moves,

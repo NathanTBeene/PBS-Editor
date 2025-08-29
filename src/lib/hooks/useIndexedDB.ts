@@ -44,12 +44,32 @@ export const useIndexedDB = () => {
     });
   };
 
+  const clearDatabase = async () => {
+    const db = await openDB();
+    const tx = db.transaction(
+      ["pokemon", "moves", "abilities", "constants", "defaults"],
+      "readwrite"
+    );
+    const promises = [
+      tx.objectStore("pokemon").clear(),
+      tx.objectStore("moves").clear(),
+      tx.objectStore("abilities").clear(),
+      tx.objectStore("constants").clear(),
+      tx.objectStore("defaults").clear(),
+    ];
+    await Promise.all(promises);
+  };
+
   /* 
   --- MARK: SAVE FUNCTIONS ---
-    These use the put method since it will add
-    any new records and overwrite any existing records.
-    This is easier on the computer than clearing
-    and reputting each entry every time.
+    These save functions will grab all the keys
+    and compare that with the keys being provided
+    to check if there are any discrepancies.
+
+    Those are then deleted from the store. For
+    example, if you delete BULBASAUR, it still
+    exists in the IndexedDB database, so we need
+    to check for those discrepancies when we save.
   */
 
   const savePokemon = async (pokemon: Pokemon[]) => {
@@ -57,8 +77,24 @@ export const useIndexedDB = () => {
     const tx = db.transaction(["pokemon"], "readwrite");
     const store = tx.objectStore("pokemon");
 
-    const promises = pokemon.map((p) => store.put(p));
-    await Promise.all(promises);
+    // Get all existing keys
+    const existingRequest = store.getAllKeys();
+    const existingKeys: IDBValidKey[] = await new Promise((resolve, reject) => {
+      existingRequest.onsuccess = () => resolve(existingRequest.result);
+      existingRequest.onerror = () => reject(existingRequest.error);
+    });
+
+    // Find keys to delete
+    const newIds = new Set(pokemon.map((p) => p.id));
+    const keysToDelete = existingKeys.filter(
+      (key) => !newIds.has(key as string)
+    );
+
+    // Delete the removed keys
+    await Promise.all(keysToDelete.map((key) => store.delete(key)));
+
+    // Save/Update the current keys
+    await Promise.all(pokemon.map((p) => store.put(p)));
   };
 
   const savePokemonDefaults = async (pokemon: Pokemon[]) => {
@@ -215,5 +251,6 @@ export const useIndexedDB = () => {
     loadAbilities,
     loadAbilityDefaults,
     loadConstants,
+    clearDatabase,
   };
 };
