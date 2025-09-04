@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Trash2, Plus, Save, X, Palette, ArrowDownToLine } from "lucide-react";
 import { usePokedexContext } from "../lib/providers/PokedexProvider";
+import { useAlertContext } from "@/lib/providers/AlertProvider";
 const ConstantsScreen = () => {
   const {
     types,
@@ -22,6 +23,8 @@ const ConstantsScreen = () => {
   const [newItemName, setNewItemName] = useState("");
   const [editingType, setEditingType] = useState<string | null>(null);
   const [editingColor, setEditingColor] = useState<string>("");
+
+  const { showWarning } = useAlertContext();
 
   const sections = [
     { key: "types", label: "Types", data: types },
@@ -45,8 +48,13 @@ const ConstantsScreen = () => {
     }
   };
 
-  const handleRemoveItem = (item: string) => {
-    if (window.confirm(`Are you sure you want to remove "${item}"?`)) {
+  const handleRemoveItem = async (item: string) => {
+    if (
+      await showWarning(
+        "Remove Constant",
+        `Are you sure you want to remove "${item}" from "${activeSection}"? This action cannot be undone.`
+      )
+    ) {
       removeConstant(activeSection, item);
     }
   };
@@ -69,10 +77,11 @@ const ConstantsScreen = () => {
     setEditingColor("");
   };
 
-  const resetToDefault = () => {
+  const resetToDefault = async () => {
     if (
-      window.confirm(
-        `Are you sure you want to reset "${activeSection}" to default?`
+      await showWarning(
+        "Reset to Default",
+        `Are you sure you want to reset "${activeSection}" to its default values? This action cannot be undone.`
       )
     ) {
       resetConstants(activeSection);

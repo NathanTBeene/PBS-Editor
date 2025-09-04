@@ -11,8 +11,11 @@ import {
 } from "@/lib/models/constants";
 import { useEffect, useState } from "react";
 import { useIndexedDB } from "../useIndexedDB";
+import _ from "lodash";
 
 export const usePBSConstants = () => {
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   // PBSData state dictionary
   const [PBSData, setPBSData] = useState({
     types: { ...PokemonTypes },
@@ -39,9 +42,11 @@ export const usePBSConstants = () => {
     } catch (error) {
       console.log("IndexDb Error, using default constants.", error);
     }
+    setIsInitialLoad(false);
   };
 
   useEffect(() => {
+    if (isInitialLoad) return;
     saveConstants(PBSData);
   }, [PBSData]);
 

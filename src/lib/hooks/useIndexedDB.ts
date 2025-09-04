@@ -1,6 +1,7 @@
 import type { Ability } from "../models/Ability";
 import type { Move } from "../models/Move";
 import type { Pokemon } from "../models/Pokemon";
+import { isEqual } from "lodash";
 
 export const useIndexedDB = () => {
   const dbName = "PBS-Editor";
@@ -172,6 +173,7 @@ export const useIndexedDB = () => {
   };
 
   const saveConstants = async (constantsData: any) => {
+    console.log("Saving constants to IndexedDB...", constantsData);
     const db = await openDB();
     const tx = db.transaction(["constants"], "readwrite");
     const store = tx.objectStore("constants");

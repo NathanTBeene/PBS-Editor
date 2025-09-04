@@ -24,8 +24,9 @@
 .DialogOverlay {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 100;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
 }
 
 .DialogContent {
@@ -35,13 +36,15 @@
   transform: translate(-50%, -50%);
   width: 90vw;
   max-height: 85vh;
-  overflow-y: hidden;
+  overflow-y: visible;
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1001;
+  pointer-events: auto;
 }
 
 .DialogContent:focus {
   outline: none;
+  pointer-events: auto;
 }
 
 .DialogTitle {

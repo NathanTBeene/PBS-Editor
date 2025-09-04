@@ -49,7 +49,7 @@ const Autocomplete = ({
   };
 
   return (
-    <Popover.Root open={open}>
+    <Popover.Root open={open} modal={false}>
       <Popover.Anchor asChild>
         <div tabIndex={-1}>
           <InputField
@@ -68,39 +68,37 @@ const Autocomplete = ({
         </div>
       </Popover.Anchor>
 
-      <Popover.Portal>
-        <Popover.Content
-          className="w-[var(--radix-popover-trigger-width)] bg-slate-700 rounded-md shadow-lg max-h-48 overflow-y-auto z-[10000] border border-slate-600"
-          side="bottom"
-          sideOffset={6}
-          align="start"
-          avoidCollisions={true}
-          onOpenAutoFocus={(e) => e.preventDefault()}
-        >
-          {filteredOptions.length > 0 ? (
-            <div className="flex flex-col gap-1">
-              {filteredOptions.map((option) => (
-                <div
-                  key={option}
-                  onMouseDown={() => {
-                    setInputValue(option);
-                    onValueChange(option);
-                    setOpen(false);
-                  }}
-                  onKeyDown={onKeyDown}
-                  className={`px-4 py-2 text-sm text-slate-200 hover:bg-slate-600 cursor-pointer`}
-                >
-                  {option}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="px-4 py-2 text-sm text-slate-400">
-              No results found
-            </div>
-          )}
-        </Popover.Content>
-      </Popover.Portal>
+      <Popover.Content
+        className="w-[var(--radix-popover-trigger-width)] min-w-40 bg-slate-700 rounded-md shadow-lg max-h-48 overflow-y-auto z-[1200] border border-slate-600"
+        side="bottom"
+        sideOffset={6}
+        align="start"
+        avoidCollisions={true}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        {filteredOptions.length > 0 ? (
+          <div className="flex flex-col gap-1">
+            {filteredOptions.map((option) => (
+              <div
+                key={option}
+                onMouseDown={() => {
+                  setInputValue(option);
+                  onValueChange(option);
+                  setOpen(false);
+                }}
+                onKeyDown={onKeyDown}
+                className={`px-4 py-2 text-sm text-slate-200 hover:bg-slate-600 cursor-pointer`}
+              >
+                {option}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="px-4 py-2 text-sm text-slate-400">
+            No results found
+          </div>
+        )}
+      </Popover.Content>
     </Popover.Root>
   );
 };
