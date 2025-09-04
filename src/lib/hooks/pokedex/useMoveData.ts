@@ -91,6 +91,10 @@ export const useMoveData = () => {
     setMoves((prev) => prev.map((m) => (m.id === data.id ? data : m)));
   };
 
+  const overrideMoveData = (id: string, data: Move) => {
+    setMoves((prev) => prev.map((m) => (m.id === id ? data : m)));
+  };
+
   const isMoveInPokedex = (id: string) => {
     return !!moves.find((m) => m.id === id);
   };
@@ -106,6 +110,9 @@ export const useMoveData = () => {
 
   const removeMove = (id: string) => {
     setMoves((prev) => prev.filter((m) => m.id !== id));
+    if (selectedMove?.id === id) {
+      setSelectedMove(moves[0]);
+    }
   };
 
   const resetMoveData = () => {
@@ -130,5 +137,6 @@ export const useMoveData = () => {
     removeMove,
     resetMoveData,
     setMoveToDefault,
+    overrideMoveData,
   };
 };

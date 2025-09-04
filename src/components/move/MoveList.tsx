@@ -1,34 +1,37 @@
-import { useEffect, useRef, useState } from "react";
-import { Search, Plus } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Search } from "lucide-react";
 import { type Move } from "../../lib/models/Move";
-import TypeBubble from "../TypeBubble";
+import { usePokedexContext } from "@/lib/providers/PokedexProvider";
+import NewMoveForm from "../forms/NewMoveForm";
+import MoveListItem from "../move/MoveListItem";
 
 interface MoveListProps {
-  moves: Move[];
   selectedMove: Move | null;
   onMoveSelect: (move: Move) => void;
-  onAddMove: () => void;
 }
 
-const MoveList = ({
-  moves,
-  selectedMove,
-  onMoveSelect,
-  onAddMove,
-}: MoveListProps) => {
+const MoveList = ({ selectedMove, onMoveSelect }: MoveListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [hasScrolledToSelected, setHasScrolledToSelected] = useState(false);
 
-  const filteredMoves = moves.filter(
-    (move) =>
-      move.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      move.id.includes(searchTerm) ||
-      move.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      move.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const { moves } = usePokedexContext();
+
+  const filteredMoves = useMemo(() => {
+    return moves.filter(
+      (move) =>
+        move.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        move.id.includes(searchTerm)
+    );
+  }, [moves, searchTerm]);
 
   const moveRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const listContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (selectedMove) {
+      scrollToMove(selectedMove?.id || "", false);
+    }
+  }, [moves]);
 
   // Initial scroll to selected move when component mounts or selected move changes
   useEffect(() => {
@@ -64,17 +67,23 @@ const MoveList = ({
     if (moveElement && containerElement) {
       const containerRect = containerElement.getBoundingClientRect();
       const moveRect = moveElement.getBoundingClientRect();
-
-      const scrollTop =
-        moveElement.offsetTop -
-        containerElement.offsetTop -
-        containerRect.height / 2 +
-        moveRect.height / 2;
-
-      containerElement.scrollTo({
-        top: Math.max(0, scrollTop),
-        behavior: smooth ? "smooth" : "instant",
-      });
+      
+      // Calculate if element is already visible
+      const isVisible = moveRect.top >= containerRect.top && moveRect.bottom <= containerRect.bottom;
+      
+      if (!isVisible) {
+        // Calculate scroll position to center the element
+        const elementTop = moveElement.offsetTop;
+        const elementHeight = moveElement.offsetHeight;
+        const containerHeight = containerElement.clientHeight;
+        
+        const scrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2);
+        
+        containerElement.scrollTo({
+          top: Math.max(0, scrollTop),
+          behavior: smooth ? "smooth" : "instant",
+        });
+      }
     }
   };
 
@@ -98,12 +107,7 @@ const MoveList = ({
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button
-            onClick={onAddMove}
-            className="p-2 px-3 bg-emerald-600 text-emerald-200 rounded-lg cursor-pointer hover:bg-emerald-500 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
+          <NewMoveForm />
         </div>
       </div>
 
@@ -113,41 +117,15 @@ const MoveList = ({
         className="flex-1 overflow-y-auto border-r-3 border-slate-700"
       >
         {filteredMoves
-          // .sort((a, b) => a.name.localeCompare(b.name))
+          .sort((a, b) => a.name.localeCompare(b.name))
           .map((move) => (
-            <div
+            <MoveListItem
               key={move.id}
-              ref={(el) => {
-                moveRefs.current[move.id] = el;
-              }}
-              className={`p-3 border-b border-slate-500 bg-gradient-to-r from-slate-800/10 to-slate-800 cursor-pointer transition-colors ${
-                selectedMove?.id === move.id
-                  ? "bg-blue-600/20 border-l-4 border-l-blue-600/40"
-                  : "hover:bg-slate-600/40"
-              }`}
-              onClick={() => {
-                selectAndScrollToMove(move);
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate text-sm">
-                    {move.name}
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <TypeBubble type={move.type} />
-                    <span className="text-xs text-slate-400">
-                      {move.category}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4 mt-1 text-xs text-slate-500">
-                    <span>Power: {move.power || "—"}</span>
-                    <span>Acc: {move.accuracy}%</span>
-                    <span>PP: {move.pp}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+              move={move}
+              selectedMove={selectedMove}
+              moveRefs={moveRefs}
+              selectAndScrollToMove={selectAndScrollToMove}
+            />
           ))}
       </div>
     </div>

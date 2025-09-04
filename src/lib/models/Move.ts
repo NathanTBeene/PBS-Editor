@@ -27,7 +27,7 @@ export const defaultMove = {
   target: "None" as MoveTarget,
   priority: 0,
   functionCode: "None",
-  flags: [] as MoveFlag[],
+  flags: ["CanProtect", "CanMirrorMove"] as MoveFlag[],
   effectChance: 0,
   description: "???",
 };
@@ -55,7 +55,7 @@ export const moveTargets: string[] = [
 
 type MoveTarget = string;
 
-export const MoveFlags = [
+export const moveFlags: string[] = [
   "Contact", // The move makes physical contact with the target.
   "CanProtect", // The target can use Protect or Detect to protect itself from the move.
   "CanMirrorMove", // The move can be copied by Mirror Move.
@@ -70,6 +70,6 @@ export const MoveFlags = [
   "Dance", // The move is a dance move (repeated by the ability Dancer).
   "CannotMetronome", // This move cannot be used by the move Metronome.
   "TramplesMinimize", // This move deals double damage to Pokémon that used Minimize.
-] as const;
+];
 
 export type MoveFlag = string;

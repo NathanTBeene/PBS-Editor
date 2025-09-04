@@ -30,7 +30,6 @@ const PokemonPage = () => {
   const { showWarning, showError } = useAlertContext();
 
   const [editData, setEditData] = useState<Pokemon | null>(selectedPokemon);
-  const [errors, setErrors] = useState<string[]>([]);
 
   useEffect(() => {
     if (selectedPokemon) {
@@ -44,7 +43,6 @@ const PokemonPage = () => {
     const validationErrors = validatePokemon(editData);
     if (validationErrors) {
       console.error("Validation Errors:", validationErrors);
-      setErrors(validationErrors);
       showError(
         "Validation Errors",
         `The following fields have an invalid input or have been left blank:\n\n ${validationErrors.join(
@@ -125,11 +123,9 @@ const PokemonPage = () => {
       <PokemonList
         selectedPokemon={selectedPokemon}
         onPokemonSelect={(pokemon) => {
-          console.log("Selected Pokemon:", pokemon);
           setSelectedPokemon(pokemon);
           setEditData(pokemon);
         }}
-        onAddPokemon={() => {}}
       />
     );
   }, [pokemon, selectedPokemon]);

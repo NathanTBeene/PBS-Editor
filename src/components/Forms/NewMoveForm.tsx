@@ -1,34 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Modal from "../ui/Modal";
 import type { Move } from "../../lib/models/Move";
 import { usePokedexContext } from "../../lib/providers/PokedexProvider";
 import InputField from "../ui/InputField";
 import CustomAutocomplete from "../ui/CustomAutocomplete";
+import { useAlertContext } from "@/lib/providers/AlertProvider";
+import { Plus } from "lucide-react";
+import { Dialog } from "radix-ui";
 
-interface NMFProps {
-  onClose: () => void;
-  isOpen?: boolean;
-  onSubmit: (newMove: Move) => void;
-}
-
-const NewMoveForm = ({ onClose, isOpen, onSubmit }: NMFProps) => {
-  const [modalOpen, setModalOpen] = useState(false);
+const NewMoveForm = () => {
   const [name, setName] = useState("");
   const [selectedMove, setSelectedMove] = useState<Move | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { moves, isMoveInPokedex, addMove } = usePokedexContext();
 
-  useEffect(() => {
-    if (isOpen) {
-      setModalOpen(true);
-    } else {
-      setModalOpen(false);
-    }
-  }, [isOpen]);
+  const { showError } = useAlertContext();
 
   const handleSubmit = () => {
     if (!name.trim()) {
       setError("Please enter a valid Move identifier.");
+      showError("Invalid Identifier", "Please enter a valid Move identifier.");
       setSelectedMove(null);
       return;
     }
@@ -46,13 +37,10 @@ const NewMoveForm = ({ onClose, isOpen, onSubmit }: NMFProps) => {
       return;
     }
 
-    const newMove = addMove(
-      name.trim().toUpperCase(),
-      selectedMove || undefined
-    );
-    onSubmit(newMove);
+    addMove(name.trim().toUpperCase(), selectedMove || undefined);
+    const index = moves.findIndex((m) => m.id === name.trim().toUpperCase());
+    setSelectedMove(moves[index]);
     clearFields();
-    onClose();
   };
 
   const clearFields = () => {
@@ -63,18 +51,29 @@ const NewMoveForm = ({ onClose, isOpen, onSubmit }: NMFProps) => {
 
   const handleClose = () => {
     clearFields();
-    onClose();
+  };
+
+  const triggerButton = () => {
+    return (
+      <div className="p-2 px-3 bg-emerald-600 text-emerald-200 rounded-lg flex items-center justify-center cursor-pointer hover:bg-emerald-500 transition-colors">
+        <Plus className="w-5 h-5" />
+      </div>
+    );
   };
 
   return (
     <>
-      <Modal isOpen={modalOpen} onClose={handleClose} title="New Move">
+      <Modal
+        triggerElement={triggerButton()}
+        onClose={handleClose}
+        title="New Move"
+      >
         <InputField
           label="Move Identifier"
           type="text"
           value={name}
           onChange={(e) => setName(e as string)}
-          placeholder="Ex. TACKLE"
+          placeholder="Ex. FLAMETHROWER"
           tooltip={{
             description:
               "This must be unique. Spaces will be removed and everything converted to uppercase.",
@@ -97,14 +96,14 @@ const NewMoveForm = ({ onClose, isOpen, onSubmit }: NMFProps) => {
             />
           </div>
 
-          <div className="flex flex-1 relative h-full items-center justify-center">
-            <button
+          <Dialog.Close className="flex flex-1 relative h-full items-center justify-center">
+            <div
               onClick={handleSubmit}
               className="px-4 w-40 py-2 bg-emerald-600 rounded-lg hover:bg-emerald-500 transition-colors cursor-pointer"
             >
               Submit
-            </button>
-          </div>
+            </div>
+          </Dialog.Close>
         </div>
         {error && (
           <div className="text-red-500 text-center max-w-80 m-auto">

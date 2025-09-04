@@ -8,7 +8,6 @@ import PokemonListItem from "../PokemonListItem";
 interface PokemonListProps {
   selectedPokemon: Pokemon | null;
   onPokemonSelect: (pokemon: Pokemon) => void;
-  onAddPokemon: () => void;
 }
 
 const PokemonList = ({

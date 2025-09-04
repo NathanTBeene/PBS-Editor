@@ -45,6 +45,7 @@ export const usePokedex = () => {
     removeMove: moveData.removeMove,
     resetMoveData: moveData.resetMoveData,
     setMoveToDefault: moveData.setMoveToDefault,
+    overrideMoveData: moveData.overrideMoveData,
 
     // Ability data
     abilities: abilityData.abilities,
