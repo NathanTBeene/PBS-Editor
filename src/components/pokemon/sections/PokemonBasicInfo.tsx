@@ -1,6 +1,6 @@
 import type { Pokemon } from "@/lib/models/Pokemon";
 import InputField from "@/components/ui/InputField";
-import FormSection from "@/components/pokemon/FormSection";
+import FormSection from "@/components/layout/FormSection";
 import type React from "react";
 
 interface PokemonBasicInfoProps {

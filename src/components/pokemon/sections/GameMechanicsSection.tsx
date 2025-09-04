@@ -1,5 +1,5 @@
 import React from "react";
-import FormSection from "../FormSection";
+import FormSection from "../../layout/FormSection";
 import InfoTooltip from "@/components/ui/InfoTooltip";
 import type { Pokemon } from "@/lib/models/Pokemon";
 import { GenderRatios, GrowthRates } from "@/lib/models/constants";

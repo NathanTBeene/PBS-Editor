@@ -3,10 +3,10 @@ import Modal from "../ui/Modal";
 import type { Move } from "../../lib/models/Move";
 import { usePokedexContext } from "../../lib/providers/PokedexProvider";
 import InputField from "../ui/InputField";
-import CustomAutocomplete from "../ui/CustomAutocomplete";
 import { useAlertContext } from "@/lib/providers/AlertProvider";
 import { Plus } from "lucide-react";
 import { Dialog } from "radix-ui";
+import Autocomplete from "../ui/Autocomplete";
 
 const NewMoveForm = () => {
   const [name, setName] = useState("");
@@ -85,11 +85,11 @@ const NewMoveForm = () => {
             <p className=" text-slate-300 font-semibold text-sm absolute -top-6">
               Base Move (Optional)
             </p>
-            <CustomAutocomplete
-              className="max-w-45"
+            <Autocomplete
+              inputClass="max-w-45"
               options={moves.map((move) => move.id)}
               value={selectedMove?.id || ""}
-              onChange={(value) => {
+              onValueChange={(value) => {
                 const selected = moves.find((move) => move.id === value);
                 setSelectedMove(selected || null);
               }}

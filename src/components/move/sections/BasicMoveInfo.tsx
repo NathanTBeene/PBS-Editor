@@ -1,4 +1,4 @@
-import FormSection from "@/components/pokemon/FormSection";
+import FormSection from "@/components/layout/FormSection";
 import CustomSelect from "@/components/ui/CustomSelect";
 import InputField from "@/components/ui/InputField";
 import type { Move } from "@/lib/models/Move";

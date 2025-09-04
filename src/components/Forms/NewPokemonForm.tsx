@@ -3,10 +3,10 @@ import Modal from "../ui/Modal";
 import type { Pokemon } from "../../lib/models/Pokemon";
 import { usePokedexContext } from "../../lib/providers/PokedexProvider";
 import InputField from "../ui/InputField";
-import CustomAutocomplete from "../ui/CustomAutocomplete";
 import { Plus } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { useAlertContext } from "@/lib/providers/AlertProvider";
+import Autocomplete from "../ui/Autocomplete";
 
 const NewPokemonForm = () => {
   const [name, setName] = useState("");
@@ -86,11 +86,11 @@ const NewPokemonForm = () => {
             <p className=" text-slate-300 font-semibold text-sm absolute -top-6">
               Base Pokemon (Optional)
             </p>
-            <CustomAutocomplete
-              className="max-w-45"
+            <Autocomplete
+              inputClass="max-w-45"
               options={pokemon.map((mon) => mon.id)}
               value={selectedMon?.id || ""}
-              onChange={(value) => {
+              onValueChange={(value) => {
                 const selected = pokemon.find((mon) => mon.id === value);
                 setSelectedMon(selected || null);
               }}

@@ -1,5 +1,5 @@
 import type { Pokemon } from "@/lib/models/Pokemon";
-import FormSection from "../FormSection";
+import FormSection from "../../layout/FormSection";
 import TypeSelector from "../TypeSelector";
 import AbilityArray from "../AbilityArray";
 

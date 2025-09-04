@@ -1,5 +1,5 @@
 import CustomSelect from "@/components/ui/CustomSelect";
-import FormSection from "../FormSection";
+import FormSection from "../../layout/FormSection";
 import type { Pokemon } from "@/lib/models/Pokemon";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import InputField from "@/components/ui/InputField";

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { type Move } from "../lib/models/Move";
+import { type Move } from "@/lib/models/Move";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import MoveList from "@/components/move/MoveList";
 import MoveHeader from "@/components/move/sections/MoveHeader";

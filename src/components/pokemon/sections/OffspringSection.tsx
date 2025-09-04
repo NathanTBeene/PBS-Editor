@@ -1,5 +1,5 @@
 import ArraySection from "@/components/layout/ArraySection";
-import CustomAutocomplete from "@/components/ui/CustomAutocomplete";
+import Autocomplete from "@/components/ui/Autocomplete";
 import type { Pokemon } from "@/lib/models/Pokemon";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import { X } from "lucide-react";
@@ -49,12 +49,12 @@ const OffspringSection = ({
         {currentPokemon.offspring &&
           currentPokemon.offspring.map((mon, index) => (
             <div className="flex py-2 items-center" key={index}>
-              <CustomAutocomplete
+              <Autocomplete
                 key={index}
                 options={pokemon.map((p) => p.id)}
                 value={mon}
-                className="w-full"
-                onChange={(newPokemon) =>
+                inputClass="w-full"
+                onValueChange={(newPokemon) =>
                   handleOffspringChange(index, newPokemon)
                 }
                 placeholder="Select Pokémon..."
