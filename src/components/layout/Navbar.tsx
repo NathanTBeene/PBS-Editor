@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router";
+import ExportModal from "../export/ExportModal";
 
 function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,7 +29,7 @@ function Sidebar() {
 
   const bottomItems = [
     { id: "export", icon: Download, label: "Export" },
-    { id: "settings", icon: Settings, label: "Settings" },
+    // { id: "settings", icon: Settings, label: "Settings" },
   ];
 
   const toggleSidebar = () => {
@@ -122,15 +123,17 @@ function Sidebar() {
       </nav>
 
       {/* Bottom Buttons */}
-      <div className="border-t border-slate-700 pb-2">
-        {bottomItems.map((item) => (
-          <NavItem
-            key={item.id}
-            item={item}
-            onClick={onLinkClicked}
-            isActive={activeItem === item.id}
-          />
-        ))}
+      <div className="border-t border-slate-700 cursor-pointer">
+        <ExportModal
+          triggerElement={
+            <NavItem
+              key={bottomItems[0].id}
+              item={bottomItems[0]}
+              onClick={() => {}}
+              isActive={false}
+            />
+          }
+        />
       </div>
     </div>
   );
