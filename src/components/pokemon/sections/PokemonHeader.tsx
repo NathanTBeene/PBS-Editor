@@ -1,5 +1,5 @@
 import type { Pokemon } from "@/lib/models/Pokemon";
-import TypeBubble from "@/components/TypeBubble";
+import TypeBubble from "@/components/ui/TypeBubble";
 import { theme } from "@/lib/theme/colors";
 import ActionButtons from "@/components/ui/ActionButtons";
 

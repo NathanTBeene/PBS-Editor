@@ -29,7 +29,7 @@ const PokemonPage = () => {
 
   const { showWarning, showError } = useAlertContext();
 
-  const [editData, setEditData] = useState<Pokemon | null>(selectedPokemon);
+  const [editData, setEditData] = useState<Pokemon | null>(pokemon[0] || null);
 
   useEffect(() => {
     if (selectedPokemon) {
@@ -86,15 +86,8 @@ const PokemonPage = () => {
       )
     ) {
       // On Confirm, reset selected pokemon to its default values.
-      const success = setPokemonToDefault(selectedPokemon.id);
-      if (success) {
-        setEditData(selectedPokemon);
-      } else {
-        showError(
-          `ID Not Found`,
-          `There was no default data found for a Pokemon with the unique ID [${selectedPokemon.id}]. This is most likely a custom pokemon, or the ID does not correctly match an existing Pokemon.`
-        );
-      }
+      setPokemonToDefault(selectedPokemon.id);
+      setEditData((prev) => (prev ? { ...prev, ...selectedPokemon } : null));
     }
 
     // On Cancel do nothing.
@@ -116,16 +109,18 @@ const PokemonPage = () => {
     setSelectedPokemon(null);
   };
 
+  const handleSelectPokemon = async (pokemon: Pokemon) => {
+    setSelectedPokemon(pokemon);
+    setEditData(pokemon);
+  };
+
   // Only want to change the list when
   // pokemon list itself changes.
   const memoPokemonList = useMemo(() => {
     return (
       <PokemonList
         selectedPokemon={selectedPokemon}
-        onPokemonSelect={(pokemon) => {
-          setSelectedPokemon(pokemon);
-          setEditData(pokemon);
-        }}
+        onPokemonSelect={handleSelectPokemon}
       />
     );
   }, [pokemon, selectedPokemon]);

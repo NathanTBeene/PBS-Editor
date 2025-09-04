@@ -1,4 +1,4 @@
-import { usePokedexContext } from "../lib/providers/PokedexProvider";
+import { usePokedexContext } from "../../lib/providers/PokedexProvider";
 
 const TypeBubble = ({ type }: { type: string }) => {
   const { getTypeColor } = usePokedexContext();

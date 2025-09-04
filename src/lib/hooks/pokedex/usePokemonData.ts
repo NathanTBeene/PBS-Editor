@@ -141,17 +141,12 @@ export const usePokemonData = () => {
   };
 
   // Sets a particular pokemon back to default.
-  const setPokemonToDefault = (id: string): boolean => {
+  const setPokemonToDefault = (id: string) => {
     const defaultData = pokemonDefaults.find((p) => p.id === id);
     if (defaultData) {
-      console.log(`Default data found for ${id}`);
-      console.log(defaultData);
       setPokemon((prev) => prev.map((p) => (p.id === id ? defaultData : p)));
-      return true;
-    } else {
-      console.log(`No default data found for ${id}`);
-      return false;
     }
+    setSelectedPokemon(defaultData || null);
   };
 
   return {

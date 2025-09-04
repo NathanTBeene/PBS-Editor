@@ -123,6 +123,7 @@ export const useMoveData = () => {
     const defaultData = moveDefaults.find((m) => m.id === id);
     if (defaultData) {
       setMoves((prev) => prev.map((m) => (m.id === id ? defaultData : m)));
+      setSelectedMove(defaultData || null);
     }
   };
 

@@ -1,6 +1,6 @@
 import type { Pokemon } from "@/lib/models/Pokemon";
 import React from "react";
-import TypeBubble from "../TypeBubble";
+import TypeBubble from "../ui/TypeBubble";
 
 interface PokemonListItemProps {
   pokemon: Pokemon;

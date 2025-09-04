@@ -1,6 +1,6 @@
 import type { Move } from "@/lib/models/Move";
 import React from "react";
-import TypeBubble from "../TypeBubble";
+import TypeBubble from "../ui/TypeBubble";
 
 interface MoveListItemProps {
   move: Move;
