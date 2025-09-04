@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAbilityData } from "./pokedex/useAbilityData";
 import { useMoveData } from "./pokedex/useMoveData";
 import { usePBSConstants } from "./pokedex/usePBSConstants";
@@ -8,6 +9,18 @@ export const usePokedex = () => {
   const moveData = useMoveData();
   const abilityData = useAbilityData();
   const constantsData = usePBSConstants();
+
+  useEffect(() => {
+    // Load Initial Data
+    const loadData = async () => {
+      await constantsData.loadPBSConstants();
+      await pokemonData.loadPokemonData();
+      await moveData.loadMoveData();
+      await abilityData.loadAbilityData();
+    };
+
+    loadData();
+  }, []);
 
   return {
     // Pokemon data

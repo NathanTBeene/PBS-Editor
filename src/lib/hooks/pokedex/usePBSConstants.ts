@@ -27,15 +27,19 @@ export const usePBSConstants = () => {
 
   const { saveConstants, loadConstants } = useIndexedDB();
 
-  useEffect(() => {
-    console.log("Attempting to load PBS Data from IndexedDB");
-    loadConstants().then((data) => {
-      if (data) {
-        console.log("Loaded PBS Data from IndexedDB");
-        setPBSData(data);
+  const loadPBSConstants = async () => {
+    try {
+      const storedConstants = await loadConstants();
+      if (storedConstants) {
+        console.log("Loaded PBS Constants from IndexDB");
+        setPBSData(storedConstants);
+      } else {
+        console.log("No PBS Constants found in IndexDB, using defaults.");
       }
-    });
-  }, []);
+    } catch (error) {
+      console.log("IndexDb Error, using default constants.", error);
+    }
+  };
 
   useEffect(() => {
     saveConstants(PBSData);
@@ -200,6 +204,7 @@ export const usePBSConstants = () => {
   };
 
   return {
+    loadPBSConstants,
     types: PBSData.types,
     genderRatios: PBSData.genderRatios,
     growthRates: PBSData.growthRates,

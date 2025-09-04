@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { type Pokemon, defaultPokemon } from "@/lib/models/Pokemon";
 import { importPokemon } from "@/lib/services/importPokemon";
 import { useIndexedDB } from "../useIndexedDB";
 
 export const usePokemonData = () => {
-  const [isInit, setIsInit] = useState(true);
-  const hasLoadedInitial = useRef(false);
+  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [pokemon, setPokemon] = useState<Pokemon[]>([]); // Set shouldn't be exported
   const [pokemonDefaults, setPokemonDefaults] = useState<Pokemon[]>([]); // Shouldn't be exported.
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
@@ -22,84 +22,80 @@ export const usePokemonData = () => {
     }
   }, [pokemon, selectedPokemon]);
 
-  useEffect(() => {
-    // Fetch and set initial Pokémon data
-    const fetchPokemon = async () => {
-      try {
-        console.log("Attempting to fetch Pokémon data from local PBS.");
-        const response = await fetch("/src/assets/PBS/pokemon.txt");
-        const data = await response.text();
-        const parsedPokemon = importPokemon(data).sort(
-          (a, b) => a.dexNumber - b.dexNumber
-        );
-        setPokemon(parsedPokemon);
-        setPokemonDefaults(parsedPokemon);
+  // Fetch and set initial Pokémon data
+  const fetchPokemon = async () => {
+    try {
+      console.log("Pokemon not found. Fetching from PBS.");
+      const response = await fetch("/src/assets/PBS/pokemon.txt");
+      const data = await response.text();
+      const parsedPokemon = importPokemon(data).sort(
+        (a, b) => a.dexNumber - b.dexNumber
+      );
+      setPokemon(parsedPokemon);
+      setPokemonDefaults(parsedPokemon);
 
-        // Save to IndexDB
-        await savePokemon(parsedPokemon);
-        await savePokemonDefaults(parsedPokemon);
-      } catch (error) {
-        console.error("Failed to load pokemon.txt:", error);
-      }
-    };
+      // Save to IndexDB
+      await savePokemon(parsedPokemon);
+      await savePokemonDefaults(parsedPokemon);
+    } catch (error) {
+      console.error("Failed to load pokemon.txt:", error);
+    }
+  };
 
-    const fetchDefaults = async () => {
-      try {
-        console.warn("Pokemon Defaults were not found. Fetching from PBS.");
-        const response = await fetch("/src/assets/PBS/pokemon.txt");
-        const data = await response.text();
-        const parsedPokemon = importPokemon(data).sort(
-          (a, b) => a.dexNumber - b.dexNumber
-        );
-        setPokemonDefaults(parsedPokemon);
+  const fetchPokemonDefaults = async () => {
+    try {
+      console.warn("Pokemon Defaults were not found. Fetching from PBS.");
+      const response = await fetch("/src/assets/PBS/pokemon.txt");
+      const data = await response.text();
+      const parsedPokemon = importPokemon(data).sort(
+        (a, b) => a.dexNumber - b.dexNumber
+      );
+      setPokemonDefaults(parsedPokemon);
 
-        // Save to IndexDB
-        await savePokemonDefaults(parsedPokemon);
-      } catch (error) {
-        console.error("Failed to load pokemon.txt:", error);
-      }
-    };
+      // Save to IndexDB
+      await savePokemonDefaults(parsedPokemon);
+    } catch (error) {
+      console.error("Failed to load pokemon.txt:", error);
+    }
+  };
 
-    const loadData = async () => {
-      try {
-        console.log("Attempting to load Pokémon data from IndexDB.");
-        // Try loading from IndexDB First
-        const storedPokemon = await loadPokemon();
-        const storedDefaults = await loadPokemonDefaults();
+  const loadPokemonData = async () => {
+    setIsLoading(true);
+    try {
+      // Try loading from IndexDB First
+      const storedPokemon = await loadPokemon();
+      const storedDefaults = await loadPokemonDefaults();
 
-        if (storedPokemon && storedPokemon.length > 0) {
-          console.log("Loaded Pokémon from IndexDB");
-          setPokemon(storedPokemon.sort((a, b) => a.dexNumber - b.dexNumber));
-        } else {
-          await fetchPokemon();
-        }
-
-        if (storedDefaults && storedDefaults.length > 0) {
-          console.log("Loaded Pokémon defaults from IndexDB");
-          setPokemonDefaults(storedDefaults);
-        } else {
-          fetchDefaults();
-        }
-      } catch (error) {
-        console.log("IndexDb Error, falling back to fetch.", error);
+      if (storedPokemon && storedPokemon.length > 0) {
+        console.log("Loaded Pokémon from IndexDB");
+        setPokemon(storedPokemon.sort((a, b) => a.dexNumber - b.dexNumber));
+      } else {
         await fetchPokemon();
       }
 
-      setIsInit(false);
-    };
-
-    loadData();
-  }, []);
-
-  // Save to indexedDB whenever Pokémon change.
-  useEffect(() => {
-    if (!isInit) {
-      if (hasLoadedInitial.current) {
-        console.log("Saving Pokémon to IndexDB");
-        savePokemon(pokemon);
+      if (storedDefaults && storedDefaults.length > 0) {
+        console.log("Loaded Pokémon defaults from IndexDB");
+        setPokemonDefaults(storedDefaults);
+      } else {
+        fetchPokemonDefaults();
       }
+    } catch (error) {
+      console.log("IndexDb Error, falling back to fetch.", error);
+      await fetchPokemon();
     }
-  }, [pokemon, isInit]);
+
+    setIsLoading(false);
+    setIsInitialLoadComplete(true);
+    console.log("Finished loading Pokémon data.");
+  };
+
+  // Save to indexedDB whenever Pokémon change (after initial load).
+  useEffect(() => {
+    if (isInitialLoadComplete && !isLoading) {
+      console.log("Saving Pokémon to IndexDB");
+      savePokemon(pokemon);
+    }
+  }, [pokemon, isInitialLoadComplete, isLoading]);
 
   // For updating existing Pokémon data
   // This overrides all data at with the
@@ -130,6 +126,7 @@ export const usePokemonData = () => {
     data.name = id.trim();
     data.dexNumber = 0;
     setPokemon((prev) => [...prev, data]);
+    setSelectedPokemon(data);
     return data;
   };
 
@@ -158,6 +155,7 @@ export const usePokemonData = () => {
   };
 
   return {
+    loadPokemonData,
     pokemon,
     setPokemon,
     setPokemonData,

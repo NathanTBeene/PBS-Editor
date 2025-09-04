@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { defaultAbility, type Ability } from "@/lib/models/Ability";
 import { useIndexedDB } from "../useIndexedDB";
 import { importAbilities } from "@/lib/services/importAbilities";
 
 export const useAbilityData = () => {
-  const [isInit, setIsInit] = useState(true);
-  const hasLoadedInitial = useRef(false);
+  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
   const [abilities, setAbilities] = useState<Ability[]>([]);
   const [abilityDefaults, setAbilityDefaults] = useState<Ability[]>([]);
   const [selectedAbility, setSelectedAbility] = useState<Ability | null>(null);
@@ -24,80 +23,74 @@ export const useAbilityData = () => {
     }
   }, [abilities, selectedAbility]);
 
-  useEffect(() => {
-    // Fetch and set initial Ability data
-    const fetchAbilities = async () => {
-      try {
-        console.log("Attempting to fetch Ability data from local PBS.");
-        const response = await fetch("/src/assets/PBS/abilities.txt");
-        const data = await response.text();
-        const parsedAbilities = importAbilities(data);
-        setAbilities(parsedAbilities);
-        setAbilityDefaults(parsedAbilities);
+  // Fetch and set initial Ability data
+  const fetchAbilities = async () => {
+    try {
+      console.log("Abilities not found. Fetching from PBS.");
+      const response = await fetch("/src/assets/PBS/abilities.txt");
+      const data = await response.text();
+      const parsedAbilities = importAbilities(data);
+      setAbilities(parsedAbilities);
+      setAbilityDefaults(parsedAbilities);
 
-        // Save to IndexDB
-        await saveAbilities(parsedAbilities);
-        await saveAbilityDefaults(parsedAbilities);
-      } catch (error) {
-        console.error("Failed to load abilities.txt:", error);
-      }
-    };
+      // Save to IndexDB
+      await saveAbilities(parsedAbilities);
+      await saveAbilityDefaults(parsedAbilities);
+    } catch (error) {
+      console.error("Failed to load abilities.txt:", error);
+    }
+  };
 
-    const fetchDefaults = async () => {
-      try {
-        console.warn("Ability Defaults were not found. Fetching from PBS.");
-        const response = await fetch("/src/assets/PBS/abilities.txt");
-        const data = await response.text();
-        const parsedAbilities = importAbilities(data);
-        setAbilityDefaults(parsedAbilities);
+  const fetchDefaults = async () => {
+    try {
+      console.warn("Ability Defaults were not found. Fetching from PBS.");
+      const response = await fetch("/src/assets/PBS/abilities.txt");
+      const data = await response.text();
+      const parsedAbilities = importAbilities(data);
+      setAbilityDefaults(parsedAbilities);
 
-        // Save to IndexDB
-        await saveAbilityDefaults(parsedAbilities);
-      } catch (error) {
-        console.error("Failed to load abilities.txt:", error);
-      }
-    };
+      // Save to IndexDB
+      await saveAbilityDefaults(parsedAbilities);
+    } catch (error) {
+      console.error("Failed to load abilities.txt:", error);
+    }
+  };
 
-    const loadData = async () => {
-      try {
-        console.log("Attempting to load Ability data from IndexDB.");
-        // Try loading from IndexDB First
-        const storedAbilities = await loadAbilities();
-        const storedDefaults = await loadAbilityDefaults();
+  const loadAbilityData = async () => {
+    try {
+      // Try loading from IndexDB First
+      const storedAbilities = await loadAbilities();
+      const storedDefaults = await loadAbilityDefaults();
 
-        if (storedAbilities && storedAbilities.length > 0) {
-          console.log("Loaded Abilities from IndexDB");
-          setAbilities(storedAbilities);
-        } else {
-          await fetchAbilities();
-        }
-
-        if (storedDefaults && storedDefaults.length > 0) {
-          console.log("Loaded Ability defaults from IndexDB");
-          setAbilityDefaults(storedDefaults);
-        } else {
-          await fetchDefaults();
-        }
-      } catch (error) {
-        console.log("IndexDb Error, falling back to fetch.", error);
+      if (storedAbilities && storedAbilities.length > 0) {
+        console.log("Loaded Abilities from IndexDB");
+        setAbilities(storedAbilities);
+      } else {
         await fetchAbilities();
       }
 
-      setIsInit(false);
-    };
-
-    loadData();
-  }, []);
-
-  // Save to indexedDB whenever Ability change.
-  useEffect(() => {
-    if (!isInit) {
-      if (hasLoadedInitial.current) {
-        console.log("Saving Abilities to IndexDB");
-        saveAbilities(abilities);
+      if (storedDefaults && storedDefaults.length > 0) {
+        console.log("Loaded Ability defaults from IndexDB");
+        setAbilityDefaults(storedDefaults);
+      } else {
+        await fetchDefaults();
       }
+    } catch (error) {
+      console.log("IndexDb Error, falling back to fetch.", error);
+      await fetchAbilities();
     }
-  }, [abilities, abilityDefaults]);
+
+    setIsInitialLoadComplete(true);
+    console.log("Finished loading Ability data.");
+  };
+
+  // Save to indexedDB whenever Abilities change (after initial load).
+  useEffect(() => {
+    if (isInitialLoadComplete) {
+      console.log("Saving Abilities to IndexDB");
+      saveAbilities(abilities);
+    }
+  }, [abilities]);
 
   const setAbilityData = (data: Ability) => {
     setAbilities((prev) => prev.map((a) => (a.id === data.id ? data : a)));
@@ -132,6 +125,7 @@ export const useAbilityData = () => {
   };
 
   return {
+    loadAbilityData,
     abilities,
     setAbilityData,
     selectedAbility,

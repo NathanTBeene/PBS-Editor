@@ -18,9 +18,14 @@ const DeleteButton = ({ onConfirm }: DeleteButtonProps) => {
     }
   };
 
+  const handleMouseLeave = () => {
+    setCount(0);
+  };
+
   return (
     <button
       onClick={handleClick}
+      onMouseLeave={handleMouseLeave}
       className={`flex w-25 items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors shadow-sm cursor-pointer
         ${count > 0 ? theme.colors.button.warn : theme.colors.button.delete}`}
     >

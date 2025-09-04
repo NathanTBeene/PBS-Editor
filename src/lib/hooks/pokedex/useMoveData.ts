@@ -1,11 +1,10 @@
 import { defaultMove, type Move } from "@/lib/models/Move";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { importMoves } from "@/lib/services/importMoves";
 import { useIndexedDB } from "../useIndexedDB";
 
 export const useMoveData = () => {
-  const [isInit, setIsInit] = useState(true);
-  const hasLoadedInitial = useRef(false);
+  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
   const [moves, setMoves] = useState<Move[]>([]);
   const [moveDefaults, setMoveDefaults] = useState<Move[]>([]);
   const [selectedMove, setSelectedMove] = useState<Move | null>(null);
@@ -20,80 +19,73 @@ export const useMoveData = () => {
     }
   }, [moves, selectedMove]);
 
-  useEffect(() => {
-    // Fetch and set initial Move data
-    const fetchMoves = async () => {
-      try {
-        console.log("Attempting to fetch Move data from local PBS.");
-        const response = await fetch("/src/assets/PBS/moves.txt");
-        const data = await response.text();
-        const parsedMoves = importMoves(data);
-        setMoves(parsedMoves);
-        setMoveDefaults(parsedMoves);
+  // Fetch and set initial Move data
+  const fetchMoves = async () => {
+    try {
+      console.log("Moves were not found. Fetching from PBS.");
+      const response = await fetch("/src/assets/PBS/moves.txt");
+      const data = await response.text();
+      const parsedMoves = importMoves(data);
+      setMoves(parsedMoves);
+      setMoveDefaults(parsedMoves);
 
-        // Save to IndexDB
-        await saveMoves(parsedMoves);
-        await saveMoveDefaults(parsedMoves);
-      } catch (error) {
-        console.error("Failed to load moves.txt:", error);
-      }
-    };
+      // Save to IndexDB
+      await saveMoves(parsedMoves);
+      await saveMoveDefaults(parsedMoves);
+    } catch (error) {
+      console.error("Failed to load moves.txt:", error);
+    }
+  };
 
-    const fetchDefaults = async () => {
-      try {
-        console.warn("Move Defaults were not found. Fetching from PBS.");
-        const response = await fetch("/src/assets/PBS/moves.txt");
-        const data = await response.text();
-        const parsedMoves = importMoves(data);
-        setMoveDefaults(parsedMoves);
+  const fetchDefaults = async () => {
+    try {
+      console.warn("Move Defaults were not found. Fetching from PBS.");
+      const response = await fetch("/src/assets/PBS/moves.txt");
+      const data = await response.text();
+      const parsedMoves = importMoves(data);
+      setMoveDefaults(parsedMoves);
 
-        // Save to IndexDB
-        await saveMoveDefaults(parsedMoves);
-      } catch (error) {
-        console.error("Failed to load moves.txt:", error);
-      }
-    };
+      // Save to IndexDB
+      await saveMoveDefaults(parsedMoves);
+    } catch (error) {
+      console.error("Failed to load moves.txt:", error);
+    }
+  };
 
-    const loadData = async () => {
-      try {
-        console.log("Attempting to load Move data from IndexDB.");
-        // Try loading from IndexDB First
-        const storedMoves = await loadMoves();
-        const storedDefaults = await loadMoveDefaults();
+  const loadMoveData = async () => {
+    try {
+      // Try loading from IndexDB First
+      const storedMoves = await loadMoves();
+      const storedDefaults = await loadMoveDefaults();
 
-        if (storedMoves && storedMoves.length > 0) {
-          console.log("Loaded Moves from IndexDB");
-          setMoves(storedMoves);
-        } else {
-          await fetchMoves();
-        }
-
-        if (storedDefaults && storedDefaults.length > 0) {
-          console.log("Loaded Move defaults from IndexDB");
-          setMoveDefaults(storedDefaults);
-        } else {
-          await fetchDefaults();
-        }
-      } catch (error) {
-        console.log("IndexDb Error, falling back to fetch.", error);
+      if (storedMoves && storedMoves.length > 0) {
+        console.log("Loaded Moves from IndexDB");
+        setMoves(storedMoves);
+      } else {
         await fetchMoves();
       }
 
-      setIsInit(false);
-    };
-
-    loadData();
-  }, []);
-
-  // Save to indexedDB whenever Moves change.
-  useEffect(() => {
-    if (!isInit) {
-      if (hasLoadedInitial.current) {
-        console.log("Saving Moves to IndexDB");
-        saveMoves(moves);
+      if (storedDefaults && storedDefaults.length > 0) {
+        console.log("Loaded Move defaults from IndexDB");
+        setMoveDefaults(storedDefaults);
+      } else {
+        await fetchDefaults();
       }
+    } catch (error) {
+      console.log("IndexDb Error, falling back to fetch.", error);
+      await fetchMoves();
     }
-  }, [moves, moveDefaults]);
+
+    setIsInitialLoadComplete(true);
+  };
+
+  // Save to indexedDB whenever Moves change (after initial load).
+  useEffect(() => {
+    if (isInitialLoadComplete) {
+      console.log("Saving Moves to IndexDB");
+      saveMoves(moves);
+    }
+  }, [moves]);
 
   const setMoveData = (data: Move) => {
     setMoves((prev) => prev.map((m) => (m.id === data.id ? data : m)));
@@ -128,6 +120,7 @@ export const useMoveData = () => {
   };
 
   return {
+    loadMoveData,
     moves,
     setMoveData,
     selectedMove,

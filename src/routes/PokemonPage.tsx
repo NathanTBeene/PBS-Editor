@@ -45,6 +45,12 @@ const PokemonPage = () => {
     if (validationErrors) {
       console.error("Validation Errors:", validationErrors);
       setErrors(validationErrors);
+      showError(
+        "Validation Errors",
+        `The following fields have an invalid input or have been left blank:\n\n ${validationErrors.join(
+          "\n"
+        )}`
+      );
       return;
     }
 
@@ -62,10 +68,12 @@ const PokemonPage = () => {
       }
 
       // ON Confirm, override.
+      console.log("Overriding Pokemon ID", selectedPokemon.id, editData.id);
       overridePokemonData(selectedPokemon.id, editData);
       return;
     }
 
+    console.log("Saving Pokemon Data", editData);
     setPokemonData(editData);
   };
 
