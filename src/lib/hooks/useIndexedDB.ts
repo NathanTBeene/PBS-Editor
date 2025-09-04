@@ -110,8 +110,24 @@ export const useIndexedDB = () => {
     const tx = db.transaction(["moves"], "readwrite");
     const store = tx.objectStore("moves");
 
-    const promises = moves.map((m) => store.put(m));
-    await Promise.all(promises);
+    // Get all existing keys
+    const existingRequest = store.getAllKeys();
+    const existingKeys: IDBValidKey[] = await new Promise((resolve, reject) => {
+      existingRequest.onsuccess = () => resolve(existingRequest.result);
+      existingRequest.onerror = () => reject(existingRequest.error);
+    });
+
+    // Find keys to delete
+    const newIds = new Set(moves.map((m) => m.id));
+    const keysToDelete = existingKeys.filter(
+      (key) => !newIds.has(key as string)
+    );
+
+    // Delete the removed keys
+    await Promise.all(keysToDelete.map((key) => store.delete(key)));
+
+    // Save/Update the current keys
+    await Promise.all(moves.map((m) => store.put(m)));
   };
 
   const saveMoveDefaults = async (moves: Move[]) => {
@@ -127,8 +143,24 @@ export const useIndexedDB = () => {
     const tx = db.transaction(["abilities"], "readwrite");
     const store = tx.objectStore("abilities");
 
-    const promises = abilities.map((a) => store.put(a));
-    await Promise.all(promises);
+    // Get all existing keys
+    const existingRequest = store.getAllKeys();
+    const existingKeys: IDBValidKey[] = await new Promise((resolve, reject) => {
+      existingRequest.onsuccess = () => resolve(existingRequest.result);
+      existingRequest.onerror = () => reject(existingRequest.error);
+    });
+
+    // Find keys to delete
+    const newIds = new Set(abilities.map((a) => a.id));
+    const keysToDelete = existingKeys.filter(
+      (key) => !newIds.has(key as string)
+    );
+
+    // Delete the removed keys
+    await Promise.all(keysToDelete.map((key) => store.delete(key)));
+
+    // Save/Update the current keys
+    await Promise.all(abilities.map((a) => store.put(a)));
   };
 
   const saveAbilityDefaults = async (abilities: Ability[]) => {
@@ -144,6 +176,23 @@ export const useIndexedDB = () => {
     const tx = db.transaction(["constants"], "readwrite");
     const store = tx.objectStore("constants");
 
+    // Get all existing keys
+    const existingRequest = store.getAllKeys();
+    const existingKeys: IDBValidKey[] = await new Promise((resolve, reject) => {
+      existingRequest.onsuccess = () => resolve(existingRequest.result);
+      existingRequest.onerror = () => reject(existingRequest.error);
+    });
+
+    // Find keys to delete (constants should only have one entry with id "constants")
+    const newIds = new Set(["constants"]);
+    const keysToDelete = existingKeys.filter(
+      (key) => !newIds.has(key as string)
+    );
+
+    // Delete the removed keys
+    await Promise.all(keysToDelete.map((key) => store.delete(key)));
+
+    // Save/Update the current data
     await store.put({ id: "constants", data: constantsData });
   };
 
