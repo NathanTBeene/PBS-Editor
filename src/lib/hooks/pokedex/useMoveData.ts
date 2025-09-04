@@ -105,6 +105,7 @@ export const useMoveData = () => {
     data.id = id.trim().toUpperCase();
     data.name = id.trim();
     setMoves((prev) => [...prev, data]);
+    setSelectedMove(data);
     return data;
   };
 

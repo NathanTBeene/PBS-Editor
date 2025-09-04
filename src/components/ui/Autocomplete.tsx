@@ -70,11 +70,11 @@ const Autocomplete = ({
 
       <Popover.Portal>
         <Popover.Content
-          className="w-[var(--radix-popover-trigger-width)] bg-slate-700 rounded-md shadow-lg max-h-48 overflow-y-auto z-[9999] border border-slate-600"
+          className="w-[var(--radix-popover-trigger-width)] bg-slate-700 rounded-md shadow-lg max-h-48 overflow-y-auto z-[10000] border border-slate-600"
           side="bottom"
           sideOffset={6}
           align="start"
-          avoidCollisions={false}
+          avoidCollisions={true}
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           {filteredOptions.length > 0 ? (

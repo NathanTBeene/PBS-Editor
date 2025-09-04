@@ -100,12 +100,13 @@ export const useAbilityData = () => {
     return !!abilities.find((a) => a.id === id);
   };
 
-  const addAbility = (id: string, baseAbility?: Ability) => {
+  const addAbility = async (id: string, baseAbility?: Ability) => {
     const data = { ...(baseAbility || defaultAbility) };
 
     data.id = id.trim().toUpperCase();
     data.name = id.trim();
     setAbilities((prev) => [...prev, data]);
+    setSelectedAbility(data);
     return data;
   };
 

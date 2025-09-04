@@ -16,7 +16,7 @@ const HomePage = () => {
           className="w-30 h-30 flex items-center justify-center hover:w-35"
           onClick={() => navigate("/pokemon")}
         >
-          <h2 className="text-xl text-center pointer-events-none">Pokemon</h2>
+          <h2 className="text-xl text-center">Pokemon</h2>
         </Card>
         <Card
           className="w-30 h-30 flex items-center justify-center hover:w-35"

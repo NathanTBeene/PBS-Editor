@@ -34,9 +34,12 @@ const Modal = ({
           className={`DialogOverlay bg-black/30 ${overlayClass}`}
         />
         <Dialog.Content
-          aria-describedby="modal-description"
+          aria-description="Modal Content"
           className={`DialogContent ${maxWidth} text-white bg-slate-800 p-6 rounded-md shadow-xl border-1 border-slate-700 ${contentClass}`}
         >
+          <Dialog.Description style={{ display: "none" }}>
+            {title ? `Modal: ${title}` : "Modal"}
+          </Dialog.Description>
           {title && (
             <Dialog.Title className={`${titleClass} font-bold text-lg mb-3`}>
               {title}

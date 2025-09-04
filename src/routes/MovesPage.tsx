@@ -137,7 +137,7 @@ const MovesPage = () => {
 
         {/* Editor Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-slate-800">
-          <div className="max-w-4xl mx-auto space-y-8">
+          <div className="max-w-4xl mx-auto space-y-8 mb-60">
             {/* Basic Info */}
             <BasicMoveInfo move={editData} setMove={setEditData} />
 

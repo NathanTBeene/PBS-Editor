@@ -1,49 +1,60 @@
 import { useState } from "react";
 import Modal from "../ui/Modal";
-import type { Move } from "../../lib/models/Move";
 import { usePokedexContext } from "../../lib/providers/PokedexProvider";
 import InputField from "../ui/InputField";
 import { useAlertContext } from "@/lib/providers/AlertProvider";
 import { Plus } from "lucide-react";
 import { Dialog } from "radix-ui";
 import Autocomplete from "../ui/Autocomplete";
+import type { Ability } from "@/lib/models/Ability";
 
-const NewMoveForm = () => {
+const NewAbilityForm = ({
+  onAbilityAdded,
+}: {
+  onAbilityAdded: (ability: Ability) => void;
+}) => {
   const [name, setName] = useState("");
-  const [selectedMove, setSelectedMove] = useState<Move | null>(null);
+  const [selectedAbility, setSelectedAbility] = useState<Ability | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { moves, isMoveInPokedex, addMove } = usePokedexContext();
+  const { abilities, isAbilityInPokedex, addAbility } = usePokedexContext();
 
   const { showError } = useAlertContext();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name.trim()) {
-      setError("Please enter a valid Move identifier.");
-      showError("Invalid Identifier", "Please enter a valid Move identifier.");
-      setSelectedMove(null);
+      setError("Please enter a valid Ability identifier.");
+      showError(
+        "Invalid Identifier",
+        "Please enter a valid Ability identifier."
+      );
+      setSelectedAbility(null);
       return;
     }
 
-    if (isMoveInPokedex(name.trim().toUpperCase())) {
+    if (isAbilityInPokedex(name.trim().toUpperCase())) {
       setError(
-        "This Move identifier is already in the Pokédex. Please choose another Identifier."
+        "This Ability identifier is already in the Pokédex. Please choose another Identifier."
       );
       return;
     }
 
-    if (selectedMove && !isMoveInPokedex(selectedMove.id)) {
-      setError("Could not find the Base Move.");
-      setSelectedMove(null);
+    if (selectedAbility && !isAbilityInPokedex(selectedAbility.id)) {
+      setError("Could not find the Base Ability.");
+      setSelectedAbility(null);
       return;
     }
 
-    const newMove = addMove(name.trim().toUpperCase(), selectedMove || undefined);
+    const newAbility = await addAbility(
+      name.trim().toUpperCase(),
+      selectedAbility || undefined
+    );
+    onAbilityAdded(newAbility);
     clearFields();
   };
 
   const clearFields = () => {
     setName("");
-    setSelectedMove(null);
+    setSelectedAbility(null);
     setError(null);
   };
 
@@ -64,14 +75,14 @@ const NewMoveForm = () => {
       <Modal
         triggerElement={triggerButton()}
         onClose={handleClose}
-        title="New Move"
+        title="New Ability"
       >
         <InputField
-          label="Move Identifier"
+          label="Ability Identifier"
           type="text"
           value={name}
           onChange={(e) => setName(e as string)}
-          placeholder="Ex. FLAMETHROWER"
+          placeholder="Ex. OVERGROW"
           tooltip={{
             description:
               "This must be unique. Spaces will be removed and everything converted to uppercase.",
@@ -81,15 +92,17 @@ const NewMoveForm = () => {
         <div className="flex items-center gap-2 mt-4 h-20">
           <div className="flex-1 relative">
             <p className=" text-slate-300 font-semibold text-sm absolute -top-6">
-              Base Move (Optional)
+              Base Ability (Optional)
             </p>
             <Autocomplete
               inputClass="max-w-45"
-              options={moves.map((move) => move.id)}
-              value={selectedMove?.id || ""}
+              options={abilities.map((ability) => ability.id)}
+              value={selectedAbility?.id || ""}
               onValueChange={(value) => {
-                const selected = moves.find((move) => move.id === value);
-                setSelectedMove(selected || null);
+                const selected = abilities.find(
+                  (ability) => ability.id === value
+                );
+                setSelectedAbility(selected || null);
               }}
             />
           </div>
@@ -113,4 +126,4 @@ const NewMoveForm = () => {
   );
 };
 
-export default NewMoveForm;
+export default NewAbilityForm;
