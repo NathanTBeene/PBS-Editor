@@ -104,6 +104,29 @@ export const usePokemonData = () => {
     setPokemon((prev) => prev.map((p) => (p.id === data.id ? data : p)));
   };
 
+  // Import and merge entire Pokémon data.
+  const importMerge = (imported: Pokemon[]) => {
+    setPokemon((prev) => {
+      const merged = [...prev];
+      imported.forEach((newPokemon) => {
+        const index = merged.findIndex((p) => p.id === newPokemon.id);
+        if (index !== -1) {
+          // If it exists, merge the data
+          merged[index] = { ...merged[index], ...newPokemon };
+        } else {
+          // If it doesn't exist, add it
+          merged.push(newPokemon);
+        }
+      });
+      return merged;
+    });
+  };
+
+  // Import and override entire Pokémon data.
+  const importOverride = (imported: Pokemon[]) => {
+    setPokemon(imported);
+  };
+
   const overridePokemonData = (id: string, data: Partial<Pokemon>) => {
     setPokemon((prev) =>
       prev.map((p) => (p.id === id ? { ...p, ...data } : p))
@@ -162,5 +185,7 @@ export const usePokemonData = () => {
     removePokemon,
     resetPokemonData,
     setPokemonToDefault,
+    importMerge,
+    importOverride,
   };
 };

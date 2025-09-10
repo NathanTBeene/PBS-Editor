@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "../ui/Modal";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import {
@@ -8,26 +8,133 @@ import {
 } from "@/lib/services/exportFormatter";
 import { FolderUp, FileDown } from "lucide-react";
 import { useToastNotifications } from "@/lib/hooks/useToast";
+import { importPokemon } from "@/lib/services/importPokemon";
+import { Switch } from "radix-ui";
+import { importMoves } from "@/lib/services/importMoves";
+import { importAbilities } from "@/lib/services/importAbilities";
 
 interface ExportModalProps {
   triggerElement: React.ReactNode;
 }
 
 const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
-  const { pokemon, moves, abilities } = usePokedexContext();
+  const {
+    pokemon,
+    moves,
+    abilities,
+    importPokemonMerge,
+    importPokemonOverride,
+    importMovesMerge,
+    importMovesOverride,
+    importAbilitiesMerge,
+    importAbilitiesOverride,
+  } = usePokedexContext();
+
+  const [importMode, setImportMode] = useState<"Override" | "Merge">(
+    "Override"
+  );
+  const [importChecked, setImportChecked] = useState(false);
 
   const toast = useToastNotifications();
 
   const handleImportPokemon = () => {
-    // openFileDialog(".txt", (file) => {
-    //   // Handle the imported file
-    //   console.log("Imported file:", file);
-    // });
+    openFileDialog(".txt", (file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+
+        try {
+          const importedPokemon = importPokemon(content);
+          toast.showSuccess(
+            `Successfully imported ${importedPokemon.length} Pokemon.`,
+            "Import Successful"
+          );
+          if (importMode === "Merge") {
+            importPokemonMerge(importedPokemon);
+            toast.showSuccess(
+              `Successfully merged imported data with existing Pokemon.`,
+              "Merge Successful"
+            );
+          } else {
+            importPokemonOverride(importedPokemon);
+            toast.showSuccess(
+              `Successfully overridden existing Pokemon data.`,
+              "Override Successful"
+            );
+          }
+        } catch (error: any) {
+          toast.showError(error.message, "Import Failed");
+        }
+      };
+      reader.readAsText(file);
+    });
   };
 
-  const handleImportMoves = () => {};
+  const handleImportMoves = () => {
+    openFileDialog(".txt", (file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
 
-  const handleImportAbilities = () => {};
+        try {
+          const importedMoves = importMoves(content);
+          toast.showSuccess(
+            `Successfully imported ${importedMoves.length} Moves.`,
+            "Import Successful"
+          );
+          if (importMode === "Merge") {
+            importMovesMerge(importedMoves);
+            toast.showSuccess(
+              `Successfully merged imported data with existing Moves.`,
+              "Merge Successful"
+            );
+          } else {
+            importMovesOverride(importedMoves);
+            toast.showSuccess(
+              `Successfully overridden existing Moves data.`,
+              "Override Successful"
+            );
+          }
+        } catch (error: any) {
+          toast.showError(error.message, "Import Failed");
+        }
+      };
+      reader.readAsText(file);
+    });
+  };
+
+  const handleImportAbilities = () => {
+    openFileDialog(".txt", (file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+
+        try {
+          const importedAbilities = importAbilities(content);
+          toast.showSuccess(
+            `Successfully imported ${importedAbilities.length} Abilities.`,
+            "Import Successful"
+          );
+          if (importMode === "Merge") {
+            importAbilitiesMerge(importedAbilities);
+            toast.showSuccess(
+              `Successfully merged imported data with existing Abilities.`,
+              "Merge Successful"
+            );
+          } else {
+            importAbilitiesOverride(importedAbilities);
+            toast.showSuccess(
+              `Successfully overridden existing Abilities data.`,
+              "Override Successful"
+            );
+          }
+        } catch (error: any) {
+          toast.showError(error.message, "Import Failed");
+        }
+      };
+      reader.readAsText(file);
+    });
+  };
 
   const openFileDialog = (accept: string, callback: (file: File) => void) => {
     // Open a dialog to choose a txt file
@@ -66,11 +173,32 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
     >
       {/* Import */}
       <div>
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold mb-1">Import</h2>
-          <p className="text-slate-400 text-sm">
-            Import your data from an existing PBS file.
-          </p>
+        <div className="mb-4 flex justify-between items-center">
+          <div>
+            <h2 className="text-lg font-semibold mb-1">Import</h2>
+            <p className="text-slate-400 text-sm">
+              Import your data from an existing PBS file.
+            </p>
+          </div>
+
+          {/* Import Mode Switch */}
+          <div className="flex flex-col items-end">
+            <p className="text-slate-300">Import Mode</p>
+            <div className="flex items-end space-x-3">
+              <p className="text-sm text-slate-400">{importMode}</p>
+              <Switch.Root
+                className="w-12 h-6 bg-slate-700 rounded-full relative shadow-inner mt-2 focus:outline-none"
+                checked={importChecked}
+                onCheckedChange={(checked) => {
+                  setImportChecked(checked);
+                  setImportMode(checked ? "Merge" : "Override");
+                }}
+                aria-label="Import Mode"
+              >
+                <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ease-in-out translate-x-0 data-[state=checked]:translate-x-6" />
+              </Switch.Root>
+            </div>
+          </div>
         </div>
         <div className="flex gap-4 justify-between px-10 h-full">
           <button

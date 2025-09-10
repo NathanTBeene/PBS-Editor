@@ -16,6 +16,12 @@ import {
 } from "../models/Pokemon";
 
 export const importPokemon = (data: string) => {
+  // Check for a required pokemon field to make
+  // sure it's a pokemon PBS and not another type
+  if (!data.includes("GenderRatio")) {
+    throw new Error("Invalid PBS file format.");
+  }
+
   const sections: string[] = data.split("#-------------------------------");
   const pokemonList: Pokemon[] = [];
 
@@ -28,8 +34,8 @@ export const importPokemon = (data: string) => {
     lines.forEach((line) => {
       if (line.trim() === "" || line.startsWith("#")) return;
 
+      line = line.trim();
       if (line.includes("[") && line.includes("]")) {
-        line = line.trim();
         pokemon.id = line.slice(1, -1);
         return;
       }

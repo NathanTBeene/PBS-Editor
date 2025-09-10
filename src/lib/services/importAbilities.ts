@@ -4,6 +4,10 @@ export const importAbilities = (data: string) => {
   const sections: string[] = data.split("#-------------------------------");
   const abilitiesList: Ability[] = [];
 
+  if (data.includes("Pokedex") || data.includes("TotalPP")) {
+    throw new Error("Invalid Abilities data format.");
+  }
+
   let lineNum: number = 0;
 
   sections.forEach((section) => {
@@ -13,9 +17,11 @@ export const importAbilities = (data: string) => {
     lines.forEach((line) => {
       if (line.trim() === "" || line.startsWith("#")) return; // Skip empty lines and comments
 
+      line = line.trim();
       // Get id line []
       if (line.startsWith("[") && line.endsWith("]")) {
         ability.id = line.slice(1, -1);
+        return;
       }
 
       const [key, value] = line.split("=").map((s) => s.trim());

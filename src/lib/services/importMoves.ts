@@ -5,6 +5,10 @@ export const importMoves = (data: string) => {
   const sections: string[] = data.split("#-------------------------------");
   const movesList: Move[] = [];
 
+  if (!data.includes("TotalPP")) {
+    throw new Error("Invalid Moves data format.");
+  }
+
   sections.forEach((section) => {
     const lines = section.split("\n");
     const move = { ...defaultMove };
@@ -13,10 +17,12 @@ export const importMoves = (data: string) => {
       if (line.trim() === "" || line.startsWith("#")) {
         return; // Skip empty lines and comments
       }
+      line = line.trim();
 
       // Get id line []
       if (line.startsWith("[") && line.endsWith("]")) {
         move.id = line.slice(1, -1);
+        return;
       }
 
       const [key, value] = line.split("=").map((s) => s.trim());

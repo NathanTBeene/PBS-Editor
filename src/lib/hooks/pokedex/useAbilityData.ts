@@ -96,6 +96,25 @@ export const useAbilityData = () => {
     setAbilities((prev) => prev.map((a) => (a.id === data.id ? data : a)));
   };
 
+  const importMerge = (importedAbilities: Ability[]) => {
+    setAbilities((prev) => {
+      const merged = [...prev];
+      importedAbilities.forEach((imported) => {
+        const existing = merged.find((a) => a.id === imported.id);
+        if (existing) {
+          Object.assign(existing, imported);
+        } else {
+          merged.push(imported);
+        }
+      });
+      return merged;
+    });
+  };
+
+  const importOverride = (importedAbilities: Ability[]) => {
+    setAbilities(importedAbilities);
+  };
+
   const isAbilityInPokedex = (id: string) => {
     return !!abilities.find((a) => a.id === id);
   };
@@ -136,5 +155,7 @@ export const useAbilityData = () => {
     removeAbility,
     resetAbilityData,
     setAbilityToDefault,
+    importMerge,
+    importOverride,
   };
 };

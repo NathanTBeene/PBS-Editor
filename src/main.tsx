@@ -11,6 +11,7 @@ import MovesPage from "./routes/MovesPage.tsx";
 import { AlertProvider } from "./lib/providers/AlertProvider.tsx";
 import HomePage from "./routes/HomePage.tsx";
 import ToastProvider from "./lib/providers/ToastProvider.tsx";
+import { Tooltip } from "radix-ui";
 
 const router = createBrowserRouter(
   [
@@ -44,16 +45,18 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: "/PBS-Editor",
+    basename: "/PBS-Editor/",
   }
 );
 
 createRoot(document.getElementById("root")!).render(
   <ToastProvider>
-    <AlertProvider>
-      <PokedexProvider>
-        <RouterProvider router={router} />
-      </PokedexProvider>
-    </AlertProvider>
+    <Tooltip.Provider>
+      <AlertProvider>
+        <PokedexProvider>
+          <RouterProvider router={router} />
+        </PokedexProvider>
+      </AlertProvider>
+    </Tooltip.Provider>
   </ToastProvider>
 );

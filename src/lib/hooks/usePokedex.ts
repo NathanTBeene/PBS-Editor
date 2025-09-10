@@ -34,6 +34,8 @@ export const usePokedex = () => {
     resetPokemonData: pokemonData.resetPokemonData,
     setPokemonToDefault: pokemonData.setPokemonToDefault,
     overridePokemonData: pokemonData.overridePokemonData,
+    importPokemonMerge: pokemonData.importMerge,
+    importPokemonOverride: pokemonData.importOverride,
 
     // Move data
     moves: moveData.moves,
@@ -46,6 +48,8 @@ export const usePokedex = () => {
     resetMoveData: moveData.resetMoveData,
     setMoveToDefault: moveData.setMoveToDefault,
     overrideMoveData: moveData.overrideMoveData,
+    importMovesMerge: moveData.importMerge,
+    importMovesOverride: moveData.importOverride,
 
     // Ability data
     abilities: abilityData.abilities,
@@ -57,6 +61,8 @@ export const usePokedex = () => {
     removeAbility: abilityData.removeAbility,
     resetAbilityData: abilityData.resetAbilityData,
     setAbilityToDefault: abilityData.setAbilityToDefault,
+    importAbilitiesMerge: abilityData.importMerge,
+    importAbilitiesOverride: abilityData.importOverride,
 
     // Constants data
     types: constantsData.types,

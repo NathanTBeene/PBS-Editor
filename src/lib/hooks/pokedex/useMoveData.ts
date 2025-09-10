@@ -26,6 +26,7 @@ export const useMoveData = () => {
       const response = await fetch("./PBS/moves.txt");
       const data = await response.text();
       const parsedMoves = importMoves(data);
+
       setMoves(parsedMoves);
       setMoveDefaults(parsedMoves);
 
@@ -91,6 +92,25 @@ export const useMoveData = () => {
     setMoves((prev) => prev.map((m) => (m.id === data.id ? data : m)));
   };
 
+  const importMerge = (importedMoves: Move[]) => {
+    setMoves((prev) => {
+      const merged = [...prev];
+      importedMoves.forEach((imported) => {
+        const existing = merged.find((m) => m.id === imported.id);
+        if (existing) {
+          Object.assign(existing, imported);
+        } else {
+          merged.push(imported);
+        }
+      });
+      return merged;
+    });
+  };
+
+  const importOverride = (importedMoves: Move[]) => {
+    setMoves(importedMoves);
+  };
+
   const overrideMoveData = (id: string, data: Move) => {
     setMoves((prev) => prev.map((m) => (m.id === id ? data : m)));
   };
@@ -140,5 +160,7 @@ export const useMoveData = () => {
     resetMoveData,
     setMoveToDefault,
     overrideMoveData,
+    importMerge,
+    importOverride,
   };
 };

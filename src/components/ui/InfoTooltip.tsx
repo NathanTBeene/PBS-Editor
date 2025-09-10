@@ -1,5 +1,6 @@
 import { Info } from "lucide-react";
 import { useState } from "react";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 interface TooltipData {
   title?: string;
@@ -8,31 +9,40 @@ interface TooltipData {
 }
 
 const InfoTooltip = ({ title, description, link }: TooltipData) => {
-  const [hovered, setHovered] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative">
-      <Info
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        className={`w-4 h-4 text-slate-300 ${link ? "cursor-pointer" : ""}`}
-        onClick={() => {
-          if (link) {
-            window.open(link, "_blank");
-          }
-        }}
-      />
-      {hovered && (
-        <div className="absolute top-0 -translate-y-[50%] left-full ml-2 z-10 w-55 p-4 text-sm text-white bg-slate-700 rounded-md shadow-lg">
+    <Tooltip.Root open={open} onOpenChange={setOpen} delayDuration={100}>
+      <Tooltip.Trigger>
+        <Info
+          onClick={() => {
+            if (link) {
+              window.open(link, "_blank");
+            }
+          }}
+          className={`${link ? "cursor-pointer" : ""}`}
+          width={16}
+          height={16}
+        />
+      </Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Content
+          className="z-50 TooltipContent"
+          align="start"
+          sideOffset={5}
+          alignOffset={10}
+        >
           {title && (
-            <div className="font-bold mb-1">{title || "InfoTooltip"}</div>
+            <div className="mb-1 border-b border-slate-700 pb-1 text-sm font-semibold text-slate-200">
+              {title}
+            </div>
           )}
-          <div className="">
-            {description || "Additional information goes here."}
+          <div className="max-w-xs rounded-md border border-slate-700 bg-slate-800 p-3 text-sm text-slate-300 shadow-lg">
+            {description}
           </div>
-        </div>
-      )}
-    </div>
+        </Tooltip.Content>
+      </Tooltip.Portal>
+    </Tooltip.Root>
   );
 };
 
