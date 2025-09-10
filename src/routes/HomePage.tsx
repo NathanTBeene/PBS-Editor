@@ -125,7 +125,7 @@ const HomePage = () => {
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <button className="group relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
               <span className="relative z-10 flex items-center space-x-2">
-                <span>Get Started</span>
+                <span>Start Editing</span>
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
