@@ -12,36 +12,41 @@ import MovesPage from "./routes/MovesPage.tsx";
 import { AlertProvider } from "./lib/providers/AlertProvider.tsx";
 import HomePage from "./routes/HomePage.tsx";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      errorElement: <div>Page not found</div>,
+      children: [
+        {
+          path: "/",
+          index: true,
+          element: <HomePage />,
+        },
+        {
+          path: "/pokemon",
+          element: <PokemonPage />,
+        },
+        {
+          path: "/constants",
+          element: <ConstantsPage />,
+        },
+        {
+          path: "/moves",
+          element: <MovesPage />,
+        },
+        {
+          path: "/abilities",
+          element: <AbilitiesPage />,
+        },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <App />,
-    errorElement: <div>Page not found</div>,
-    children: [
-      {
-        path: "/",
-        index: true,
-        element: <HomePage />,
-      },
-      {
-        path: "/pokemon",
-        element: <PokemonPage />,
-      },
-      {
-        path: "/constants",
-        element: <ConstantsPage />,
-      },
-      {
-        path: "/moves",
-        element: <MovesPage />,
-      },
-      {
-        path: "/abilities",
-        element: <AbilitiesPage />,
-      },
-    ],
-  },
-]);
+    basename: "/PBS-Editor",
+  }
+);
 
 createRoot(document.getElementById("root")!).render(
   <AlertProvider>
