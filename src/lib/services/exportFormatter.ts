@@ -1,10 +1,9 @@
+import type { Ability } from "../models/Ability";
 import type { PokemonEvolution } from "../models/constants";
+import type { Move } from "../models/Move";
 import type { Pokemon } from "../models/Pokemon";
 
-const downloadPokemonAsTxt = (
-  filename: string = "pokemon.txt",
-  content: string
-) => {
+const downloadAsTxt = (filename: string = "pokemon.txt", content: string) => {
   const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -30,8 +29,48 @@ export const exportPokemonToPBS = (pokemonList: Pokemon[]) => {
   }
 
   const content = lines.join("\n");
-  downloadPokemonAsTxt("pokemon.txt", content);
+  downloadAsTxt("pokemon.txt", content);
 };
+
+export const exportMovesToPBS = (moveList: Move[]) => {
+  const lines: string[] = [];
+  const header =
+    "# See the documentation on the wiki to learn how to edit this file.";
+  const separator = "#-------------------------------";
+  lines.push(header);
+  lines.push(separator);
+  moveList.forEach((move) => {
+    lines.push(formatMoveForExport(move));
+    lines.push(separator);
+  });
+  // Remove the last separator for cleaner formatting
+  if (lines[lines.length - 1] === separator) {
+    lines.pop();
+  }
+  const content = lines.join("\n");
+  downloadAsTxt("moves.txt", content);
+};
+
+export const exportAbilitiesToPBS = (abilities: Ability[]) => {
+  const lines: string[] = [];
+  const header =
+    "# See the documentation on the wiki to learn how to edit this file.";
+  const separator = "#-------------------------------";
+  lines.push(header);
+  lines.push(separator);
+  abilities.forEach((ability) => {
+    lines.push(formatAbilityForExport(ability));
+    lines.push(separator);
+  });
+  // Remove the last separator for cleaner formatting
+  if (lines[lines.length - 1] === separator) {
+    lines.pop();
+  }
+  const content = lines.join("\n");
+  downloadAsTxt("abilities.txt", content);
+};
+
+// Pokemon Formatting
 
 const formatPokemonforExport = (pokemon: Pokemon): string => {
   const lines = [];
@@ -117,4 +156,35 @@ const formatEvolutions = (evolutions: PokemonEvolution[]): string => {
     evoParts.push(part);
   });
   return evoParts.join(",");
+};
+
+// Move Formatting
+const formatMoveForExport = (move: Move): string => {
+  const lines = [];
+  lines.push(`[${move.id}]`);
+  lines.push(`Name = ${move.name}`);
+  lines.push(`Type = ${move.type}`);
+  lines.push(`Category = ${move.category}`);
+  lines.push(`Power = ${move.power}`);
+  lines.push(`Accuracy = ${move.accuracy}`);
+  lines.push(`TotalPP = ${move.pp}`);
+  lines.push(`Target = ${move.target}`);
+  if (move.priority !== 0) lines.push(`Priority = ${move.priority}`);
+  lines.push(`FunctionCode = ${move.functionCode}`);
+  if (move.flags.length > 0) lines.push(`Flags = ${move.flags.join(",")}`);
+  if (move.effectChance > 0) lines.push(`EffectChance = ${move.effectChance}`);
+  lines.push(`Description = ${move.description}`);
+
+  return lines.join("\n");
+};
+
+// Ability Formatting
+const formatAbilityForExport = (ability: Ability): string => {
+  const lines = [];
+  lines.push(`[${ability.id}]`);
+  lines.push(`Name = ${ability.name}`);
+  lines.push(`Description = ${ability.description}`);
+  if (ability.flags.length > 0)
+    lines.push(`Flags = ${ability.flags.join(",")}`);
+  return lines.join("\n");
 };

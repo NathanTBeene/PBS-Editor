@@ -1,7 +1,11 @@
 import React from "react";
 import Modal from "../ui/Modal";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
-import { exportPokemonToPBS } from "@/lib/services/exportPokemon";
+import {
+  exportAbilitiesToPBS,
+  exportMovesToPBS,
+  exportPokemonToPBS,
+} from "@/lib/services/exportFormatter";
 
 interface ExportModalProps {
   triggerElement: React.ReactNode;
@@ -14,9 +18,13 @@ const ExportModal = ({ triggerElement }: ExportModalProps) => {
     exportPokemonToPBS(pokemon);
   };
 
-  const handleExportMoves = () => {};
+  const handleExportMoves = () => {
+    exportMovesToPBS(moves);
+  };
 
-  const handleExportAbilities = () => {};
+  const handleExportAbilities = () => {
+    exportAbilitiesToPBS(abilities);
+  };
 
   return (
     <Modal
@@ -37,10 +45,16 @@ const ExportModal = ({ triggerElement }: ExportModalProps) => {
         >
           Pokemon
         </button>
-        <button className="bg-slate-600 w-50 px-10 py-6 rounded-lg hover:bg-amber-600 transition-all cursor-pointer">
+        <button
+          className="bg-slate-600 w-50 px-10 py-6 rounded-lg hover:bg-amber-600 transition-all cursor-pointer"
+          onClick={handleExportMoves}
+        >
           Moves
         </button>
-        <button className="bg-slate-600 w-50 px-10 py-6 rounded-lg hover:bg-emerald-600 transition-all cursor-pointer">
+        <button
+          className="bg-slate-600 w-50 px-10 py-6 rounded-lg hover:bg-emerald-600 transition-all cursor-pointer"
+          onClick={handleExportAbilities}
+        >
           Abilities
         </button>
       </div>

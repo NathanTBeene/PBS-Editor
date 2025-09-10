@@ -6,11 +6,11 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import PokemonPage from "./routes/PokemonPage.tsx";
 import { PokedexProvider } from "./lib/providers/PokedexProvider.tsx";
-import HomePage from "./routes/HomePage.tsx";
 import ConstantsPage from "./routes/ConstantsPage.tsx";
 import AbilitiesPage from "./routes/AbilitiesPage.tsx";
 import MovesPage from "./routes/MovesPage.tsx";
 import { AlertProvider } from "./lib/providers/AlertProvider.tsx";
+import HomePage from "./routes/HomePage.tsx";
 
 const router = createBrowserRouter([
   {

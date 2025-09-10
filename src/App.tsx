@@ -7,7 +7,7 @@ function App() {
   const { alertRef } = useAlertContext();
 
   return (
-    <div className="App p-8 w-screen h-screen overflow-hidden bg-slate-900 flex flex-col gap-2 items-center justify-center text-white">
+    <div className="App w-screen h-screen overflow-hidden bg-slate-900 flex items-center justify-center text-white pl-[60px]">
       <Navbar />
       <Outlet />
       <Alert ref={alertRef} />

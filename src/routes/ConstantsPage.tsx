@@ -185,7 +185,7 @@ const ConstantsScreen = () => {
   const activeData = sections.find((s) => s.key === activeSection)?.data;
 
   return (
-    <div className="max-w-[70vw] h-[90vh] rounded-xl shadow-xl mx-auto my-auto p-8 bg-slate-800">
+    <div className="w-full h-full rounded-xl shadow-xl mx-auto my-auto p-8 bg-slate-800">
       <div className="mb-5">
         <h1 className="text-3xl font-bold mb-2">PBS Constants Editor</h1>
         <p className="text-gray-300">

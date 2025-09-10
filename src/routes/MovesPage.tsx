@@ -120,7 +120,7 @@ const MovesPage = () => {
   }
 
   return (
-    <div className="flex h-screen text-slate-200 shadow-xl">
+    <div className="flex w-full h-screen text-slate-200 shadow-xl">
       {/* Left Sidebar - Move List */}
       {memoMovesList}
 

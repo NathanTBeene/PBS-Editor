@@ -5,12 +5,11 @@ import {
   HandFist,
   Crown,
   Database,
-  Settings,
   Download,
   Menu,
   X,
 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import ExportModal from "../export/ExportModal";
 
 function Sidebar() {
@@ -18,6 +17,7 @@ function Sidebar() {
   const [activeItem, setActiveItem] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const navItems = [
     { id: "home", icon: Home, label: "Home" },
@@ -45,6 +45,7 @@ function Sidebar() {
     // Get the current active page based on the URL
     const path = window.location.pathname;
     const page = path.split("/").pop();
+    if (!page) return "home";
     return page;
   };
 
@@ -53,7 +54,7 @@ function Sidebar() {
     if (activePage) {
       setActiveItem(activePage);
     }
-  }, []);
+  }, [location.pathname]);
 
   interface NavItemProps {
     item: {
@@ -72,7 +73,7 @@ function Sidebar() {
       <button
         onClick={() => onClick(item.id)}
         className={`
-          w-full flex items-center h-12 text-left transition-colors duration-200 relative
+          w-full flex items-center h-12 text-left transition-colors duration-200 relative cursor-pointer
           ${
             isActive
               ? "bg-blue-600 text-white"
@@ -104,7 +105,7 @@ function Sidebar() {
       <div className="flex items-center justify-start pl-3 h-16 border-b border-slate-700">
         <button
           onClick={toggleSidebar}
-          className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors duration-200"
+          className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors cursor-pointer duration-200"
         >
           {isExpanded ? <X size={20} /> : <Menu size={20} />}
         </button>

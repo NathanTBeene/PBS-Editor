@@ -121,7 +121,7 @@ const AbilityList = ({
         </div>
       </div>
 
-      {/* Move List */}
+      {/* Ability List */}
       <div
         ref={listContainerRef}
         className="flex-1 overflow-y-auto border-r-3 border-slate-700"

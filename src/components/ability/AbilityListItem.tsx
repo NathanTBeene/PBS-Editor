@@ -31,7 +31,9 @@ const AbilityListItem = ({
     >
       <div className="flex items-center gap-3 my-2">
         <div className="flex-1 min-w-0">
-          <div className="font-medium truncate text-medium">{ability.name}</div>
+          <div className="pl-3 font-medium truncate text-medium">
+            {ability.name}
+          </div>
         </div>
       </div>
     </div>

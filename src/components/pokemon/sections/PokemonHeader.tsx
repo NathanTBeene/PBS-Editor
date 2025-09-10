@@ -36,11 +36,11 @@ const PokemonHeader = ({
           </h1>
           {/* Pokemon Description */}
           <div className="flex w-full mt-1">
-            <p className={`flex-1 ${theme.colors.primary.textMuted}`}>
+            <p className={`mr-10 ${theme.colors.primary.textMuted}`}>
               #{pokemon.dexNumber} - The {pokemon.category} Pokemon
             </p>
             {/* Type Buttons */}
-            <div className="flex gap-2 flex-1">
+            <div className="flex gap-2">
               {pokemon.types.map((type) => (
                 <TypeBubble key={type} type={type} />
               ))}

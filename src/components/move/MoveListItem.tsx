@@ -21,7 +21,7 @@ const MoveListItem = ({
       ref={(el) => {
         moveRefs.current[move.id] = el;
       }}
-      className={`p-3 border-b border-slate-500 bg-gradient-to-r from-slate-800/10 to-slate-800 cursor-pointer transition-colors ${
+      className={`p-3 pl-5 border-b border-slate-500 bg-gradient-to-r from-slate-800/10 to-slate-800 cursor-pointer transition-colors ${
         selectedMove?.id === move.id
           ? "bg-blue-600/20 border-l-4 border-l-blue-600/40"
           : "hover:bg-slate-600/40"

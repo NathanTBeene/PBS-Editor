@@ -29,7 +29,7 @@ export const importMoves = (data: string) => {
           move.type = value as PokemonType;
           break;
         case "Category":
-          move.category = value;
+          move.category = value as "Physical" | "Special" | "Status";
           break;
         case "Power":
           move.power = parseInt(value);
@@ -46,7 +46,7 @@ export const importMoves = (data: string) => {
         case "Priority":
           move.priority = parseInt(value);
           break;
-        case "Function":
+        case "FunctionCode":
           move.functionCode = value;
           break;
         case "Flags":
