@@ -2,6 +2,8 @@
 
 A modern React application for editing Pokemon Essentials PBS (Pokemon Battle System) data files with a user-friendly interface, eliminating the need to manually edit raw text files.
 
+[Link to the Live Page](https://nathantbeene.github.io/PBS-Editor/)
+
 ## Overview
 
 > [!NOTE]
