@@ -1,0 +1,37 @@
+@import 'tailwindcss';
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+/* Light mode scrollbar styles */
+::-webkit-scrollbar {
+  width: 0.5rem; /* w-2 = 0.5rem */
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 9999px; /* rounded-full */
+  background: #f3f4f6;   /* bg-gray-100 */
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 9999px; /* rounded-full */
+  background: #d1d5db;   /* bg-gray-300 */
+}
+
+/* Dark mode scrollbar styles */
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-track {
+    background: #1f2937; /* bg-slate-700 */
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #4b5563; /* bg-slate-500 */
+  }
+}
