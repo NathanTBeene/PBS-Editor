@@ -5,7 +5,7 @@ A modern React application for editing Pokemon Essentials PBS (Pokemon Battle Sy
 ## Overview
 
 > [!NOTE]
-> Importing functionality has not yet been implemented, however it's the next thing I'm working on.
+> Importing functionality is in a very basic stage and has not been fully checked. Should you need to remove all of the pokemon, you can clear the database in your local storage. Look up clearing IndexDB. The name of the database is PBSEditor.
 
 Provides a visual editor for Pokemon Essentials PBS data, letting you:
 
