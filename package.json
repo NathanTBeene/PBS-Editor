@@ -1,6 +1,6 @@
 {
   "name": "pbs-editor",
-  "homepage": "https://nathantbeene.github.io/pbs-editor",
+  "homepage": "https://nathantbeene.github.io/PBS-Editor",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.2.6",
