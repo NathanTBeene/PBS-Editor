@@ -37,7 +37,7 @@ const NewMoveForm = () => {
       return;
     }
 
-    const newMove = addMove(name.trim().toUpperCase(), selectedMove || undefined);
+    addMove(name.trim().toUpperCase(), selectedMove || undefined);
     clearFields();
   };
 

@@ -1,4 +1,3 @@
-import type { AlertProps } from "@/components/ui/Alert";
 import { createContext, useContext } from "react";
 import { useAlert } from "../hooks/useAlert";
 

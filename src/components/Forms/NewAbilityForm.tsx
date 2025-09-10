@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Modal from "../ui/Modal";
-import { usePokedexContext } from "../../lib/providers/PokedexProvider";
-import InputField from "../ui/InputField";
+import Modal from "@/components/ui/Modal";
+import { usePokedexContext } from "@/lib/providers/PokedexProvider";
+import InputField from "@/components/ui/InputField";
 import { useAlertContext } from "@/lib/providers/AlertProvider";
 import { Plus } from "lucide-react";
 import { Dialog } from "radix-ui";
-import Autocomplete from "../ui/Autocomplete";
+import Autocomplete from "@/components/ui/Autocomplete";
 import type { Ability } from "@/lib/models/Ability";
 
 const NewAbilityForm = ({

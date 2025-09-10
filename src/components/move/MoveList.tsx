@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import { type Move } from "../../lib/models/Move";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
-import NewMoveForm from "../forms/NewMoveForm";
-import MoveListItem from "../move/MoveListItem";
+import NewMoveForm from "@/components/Forms/NewMoveForm";
+import MoveListItem from "@/components/move/MoveListItem";
 
 interface MoveListProps {
   selectedMove: Move | null;
@@ -67,18 +67,20 @@ const MoveList = ({ selectedMove, onMoveSelect }: MoveListProps) => {
     if (moveElement && containerElement) {
       const containerRect = containerElement.getBoundingClientRect();
       const moveRect = moveElement.getBoundingClientRect();
-      
+
       // Calculate if element is already visible
-      const isVisible = moveRect.top >= containerRect.top && moveRect.bottom <= containerRect.bottom;
-      
+      const isVisible =
+        moveRect.top >= containerRect.top &&
+        moveRect.bottom <= containerRect.bottom;
+
       if (!isVisible) {
         // Calculate scroll position to center the element
         const elementTop = moveElement.offsetTop;
         const elementHeight = moveElement.offsetHeight;
         const containerHeight = containerElement.clientHeight;
-        
-        const scrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2);
-        
+
+        const scrollTop = elementTop - containerHeight / 2 + elementHeight / 2;
+
         containerElement.scrollTo({
           top: Math.max(0, scrollTop),
           behavior: smooth ? "smooth" : "instant",

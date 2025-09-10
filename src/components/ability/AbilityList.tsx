@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import type { Ability } from "@/lib/models/Ability";
 import AbilityListItem from "./AbilityListItem";
-import NewAbilityForm from "../forms/NewAbilityForm";
+import NewAbilityForm from "@/components/Forms/NewAbilityForm";
 
 interface AbilityListProps {
   selectedAbility: Ability | null;

@@ -1,7 +1,6 @@
 import type { Ability } from "../models/Ability";
 import type { Move } from "../models/Move";
 import type { Pokemon } from "../models/Pokemon";
-import { isEqual } from "lodash";
 
 export const useIndexedDB = () => {
   const dbName = "PBS-Editor";
