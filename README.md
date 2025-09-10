@@ -1,69 +1,122 @@
-# React + TypeScript + Vite
+# Pokemon Essentials PBS Editor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application for editing Pokemon Essentials PBS (Pokemon Battle System) data files with a user-friendly interface, eliminating the need to manually edit raw text files.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Provides a visual editor for Pokemon Essentials PBS data, letting you:
 
-## Expanding the ESLint configuration
+- **Manage Pokemon**: Create, edit, and manage Pokemon data including stats, types, abilities, moves, and more
+- **Edit Moves**: Define and modify moves with their properties, effects, and battle mechanics
+- **Alter Abilities**: Create and edit Pokemon abilities with descriptions and flags
+- **Live Preview**: See changes instantly without switching between files
+- **Export Functionality**: Export your edited data back to PBS format for use in Pokemon Essentials
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Pokemon Editor
+- Base stats configuration (HP, Attack, Defense, etc.)
+- Type assignments with visual type bubbles
+- Ability management with multiple ability slots
+- Moveset configuration (level-up, TM, egg moves)
+- Physical attributes (height, weight, gender ratios)
+- Game mechanics (catch rate, base experience, growth rate)
+- Breeding information (egg groups, compatibility)
+- Wild held items configuration
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### Move Editor
+- Basic move properties (name, type, category, power, accuracy)
+- Advanced mechanics (priority, critical hit ratio, effect chance)
+- Move flags and target configuration
+- Description and effect management
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Ability Editor
+- Ability descriptions and in-game text
+- Flag system for ability properties
+- Battle and field effect configuration
+
+### Technical Features
+- **React 19** with modern hooks and state management
+- **TypeScript** for type safety
+- **Tailwind CSS** for responsive styling
+- **IndexedDB** for local data persistence
+- **Vite** for fast development and building
+- **Modular architecture** with reusable components
+
+## Getting Started
+
+### Prerequisites
+- Node.js (version 16 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/PBS-Editor.git
+cd PBS-Editor
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies:
+```bash
+npm install
 ```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+The built application will be available in the `dist` directory.
+
+## Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
+
+### Project Structure
+```
+src/
+  components/          # React components
+    pokemon/           # Pokemon-specific components
+    move/              # Move editor components
+    ability/           # Ability editor components
+    ui/                # Reusable UI components
+    layout/            # Layout components
+  lib/
+    hooks/             # Custom React hooks
+    models/            # Data models and types
+    services/          # Business logic and utilities
+    providers/         # React context providers
+  routes/              # Page components
+  assets/              # Static assets including sample PBS files
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Built for the Pokemon Essentials community
+- Inspired by the need for better PBS data management tools
