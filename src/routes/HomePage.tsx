@@ -123,7 +123,10 @@ const HomePage = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <button className="group relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+            <button
+              className="group relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+              onClick={() => navigate("/pokemon")}
+            >
               <span className="relative z-10 flex items-center space-x-2">
                 <span>Start Editing</span>
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
