@@ -23,7 +23,7 @@ export const useMoveData = () => {
   const fetchMoves = async () => {
     try {
       console.log("Moves were not found. Fetching from PBS.");
-      const response = await fetch("/src/assets/PBS/moves.txt");
+      const response = await fetch("./PBS/moves.txt");
       const data = await response.text();
       const parsedMoves = importMoves(data);
       setMoves(parsedMoves);
@@ -40,7 +40,7 @@ export const useMoveData = () => {
   const fetchDefaults = async () => {
     try {
       console.warn("Move Defaults were not found. Fetching from PBS.");
-      const response = await fetch("/src/assets/PBS/moves.txt");
+      const response = await fetch("./PBS/moves.txt");
       const data = await response.text();
       const parsedMoves = importMoves(data);
       setMoveDefaults(parsedMoves);

@@ -26,7 +26,7 @@ export const usePokemonData = () => {
   const fetchPokemon = async () => {
     try {
       console.log("Pokemon not found. Fetching from PBS.");
-      const response = await fetch("/src/assets/PBS/pokemon.txt");
+      const response = await fetch("./PBS/pokemon.txt");
       const data = await response.text();
       const parsedPokemon = importPokemon(data).sort(
         (a, b) => a.dexNumber - b.dexNumber
@@ -45,7 +45,7 @@ export const usePokemonData = () => {
   const fetchPokemonDefaults = async () => {
     try {
       console.warn("Pokemon Defaults were not found. Fetching from PBS.");
-      const response = await fetch("/src/assets/PBS/pokemon.txt");
+      const response = await fetch("./PBS/pokemon.txt");
       const data = await response.text();
       const parsedPokemon = importPokemon(data).sort(
         (a, b) => a.dexNumber - b.dexNumber

@@ -27,7 +27,7 @@ export const useAbilityData = () => {
   const fetchAbilities = async () => {
     try {
       console.log("Abilities not found. Fetching from PBS.");
-      const response = await fetch("/src/assets/PBS/abilities.txt");
+      const response = await fetch("./PBS/abilities.txt");
       const data = await response.text();
       const parsedAbilities = importAbilities(data);
       setAbilities(parsedAbilities);
@@ -44,7 +44,7 @@ export const useAbilityData = () => {
   const fetchDefaults = async () => {
     try {
       console.warn("Ability Defaults were not found. Fetching from PBS.");
-      const response = await fetch("/src/assets/PBS/abilities.txt");
+      const response = await fetch("./PBS/abilities.txt");
       const data = await response.text();
       const parsedAbilities = importAbilities(data);
       setAbilityDefaults(parsedAbilities);
