@@ -7,6 +7,7 @@ import {
   exportPokemonToPBS,
 } from "@/lib/services/exportFormatter";
 import { FolderUp, FileDown } from "lucide-react";
+import { useToastNotifications } from "@/lib/hooks/useToast";
 
 interface ExportModalProps {
   triggerElement: React.ReactNode;
@@ -15,11 +16,13 @@ interface ExportModalProps {
 const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
   const { pokemon, moves, abilities } = usePokedexContext();
 
+  const toast = useToastNotifications();
+
   const handleImportPokemon = () => {
-    openFileDialog(".txt", (file) => {
-      // Handle the imported file
-      console.log("Imported file:", file);
-    });
+    // openFileDialog(".txt", (file) => {
+    //   // Handle the imported file
+    //   console.log("Imported file:", file);
+    // });
   };
 
   const handleImportMoves = () => {};

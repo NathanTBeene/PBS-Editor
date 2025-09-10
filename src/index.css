@@ -56,7 +56,7 @@ input[type="number"] {
   animation: slideIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .ToastRoot[data-state="closed"] {
-  animation: hide 100ms ease-in forwards;
+  animation: hide 200ms ease-in forwards;
 }
 .ToastRoot[data-swipe="move"] {
   transform: translateX(var(--radix-toast-swipe-move-x));

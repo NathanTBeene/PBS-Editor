@@ -62,7 +62,9 @@ const ToastRenderer = ({ toasts, removeToast }: ToastRendererProps) => {
           duration={toast.duration}
           onOpenChange={(open) => {
             if (!open) {
-              removeToast(toast.id);
+              setTimeout(() => {
+                removeToast(toast.id);
+              }, 200);
             }
           }}
           className="ToastRoot bg-slate-700 flex gap-3 rounded-lg shadow-xl p-4 min-w-[300px] max-w-[400px]"
