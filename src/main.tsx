@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
-
 import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
 import PokemonPage from "./routes/PokemonPage.tsx";
@@ -11,6 +10,7 @@ import AbilitiesPage from "./routes/AbilitiesPage.tsx";
 import MovesPage from "./routes/MovesPage.tsx";
 import { AlertProvider } from "./lib/providers/AlertProvider.tsx";
 import HomePage from "./routes/HomePage.tsx";
+import ToastProvider from "./lib/providers/ToastProvider.tsx";
 
 const router = createBrowserRouter(
   [
@@ -49,9 +49,11 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById("root")!).render(
-  <AlertProvider>
-    <PokedexProvider>
-      <RouterProvider router={router} />
-    </PokedexProvider>
-  </AlertProvider>
+  <ToastProvider>
+    <AlertProvider>
+      <PokedexProvider>
+        <RouterProvider router={router} />
+      </PokedexProvider>
+    </AlertProvider>
+  </ToastProvider>
 );

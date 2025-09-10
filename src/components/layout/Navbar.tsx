@@ -5,12 +5,13 @@ import {
   HandFist,
   Crown,
   Database,
-  Download,
+  FileDown,
   Menu,
   X,
+  Settings,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import ExportModal from "../export/ExportModal";
+import ExportImportModal from "../export/ExportImportModal";
 
 function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,7 +29,8 @@ function Sidebar() {
   ];
 
   const bottomItems = [
-    { id: "export", icon: Download, label: "Export" },
+    { id: "export", icon: FileDown, label: "Export" },
+    { id: "import", icon: Settings, label: "Import" },
     // { id: "settings", icon: Settings, label: "Settings" },
   ];
 
@@ -125,7 +127,7 @@ function Sidebar() {
 
       {/* Bottom Buttons */}
       <div className="border-t border-slate-700 cursor-pointer">
-        <ExportModal
+        <ExportImportModal
           triggerElement={
             <NavItem
               key={bottomItems[0].id}
@@ -134,6 +136,12 @@ function Sidebar() {
               isActive={false}
             />
           }
+        />
+        <NavItem
+          key={bottomItems[1].id}
+          item={bottomItems[1]}
+          onClick={() => {}}
+          isActive={false}
         />
       </div>
     </div>
