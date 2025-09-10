@@ -4,6 +4,9 @@ A modern React application for editing Pokemon Essentials PBS (Pokemon Battle Sy
 
 ## Overview
 
+> [!NOTE]
+> Importing functionality has not yet been implemented, however it's the next thing I'm working on.
+
 Provides a visual editor for Pokemon Essentials PBS data, letting you:
 
 - **Manage Pokemon**: Create, edit, and manage Pokemon data including stats, types, abilities, moves, and more
