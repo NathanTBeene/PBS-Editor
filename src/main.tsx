@@ -2,8 +2,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 
-import { createBrowserRouter } from "react-router";
-import { RouterProvider } from "react-router/dom";
+import { createBrowserRouter } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import PokemonPage from "./routes/PokemonPage.tsx";
 import { PokedexProvider } from "./lib/providers/PokedexProvider.tsx";
 import ConstantsPage from "./routes/ConstantsPage.tsx";

@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import Alert from "./components/ui/Alert";
 import { useAlertContext } from "./lib/providers/AlertProvider";

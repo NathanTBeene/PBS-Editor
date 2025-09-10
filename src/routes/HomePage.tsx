@@ -8,7 +8,7 @@ import {
   Github,
   Star,
 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);

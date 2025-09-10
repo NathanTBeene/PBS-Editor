@@ -9,7 +9,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import ExportModal from "../export/ExportModal";
 
 function Sidebar() {
