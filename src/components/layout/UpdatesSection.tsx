@@ -45,6 +45,13 @@ const AccordionItem = React.forwardRef<
 ));
 
 const UpdatesSection = () => {
+  const updates = {
+    "v.1.0.1": [
+      "Fixed abilities not properly updating.",
+      "Fixed base stats being flipped around.",
+    ],
+  };
+
   return (
     <div className="absolute top-[15%] left-30 w-100 bg-slate-900/60 rounded-lg shadow-lg text-white">
       <h1 className="text-lg font-bold p-4 mb-2 border-b border-slate-800 text-slate-300">
@@ -53,15 +60,18 @@ const UpdatesSection = () => {
       {/* Updates Container */}
       <div className="overflow-y-auto max-h-50">
         <Accordion.Root type="single" defaultValue="item-1" collapsible>
-          <AccordionItem value="item-1">
-            <AccordionTrigger>v.1.0.1</AccordionTrigger>
-            <AccordionContent>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Fixed abilities not properly updating.</li>
-                <li>Fixed base stats being flipped around.</li>
-              </ul>
-            </AccordionContent>
-          </AccordionItem>
+          {Object.entries(updates).map(([version, changes]) => (
+            <AccordionItem key={version} value={version}>
+              <AccordionTrigger>{version}</AccordionTrigger>
+              <AccordionContent>
+                <ul className="list-disc list-inside space-y-1">
+                  {changes.map((change, index) => (
+                    <li key={index}>{change}</li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
         </Accordion.Root>
       </div>
     </div>
