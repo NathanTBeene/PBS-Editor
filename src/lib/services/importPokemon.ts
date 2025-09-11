@@ -58,15 +58,15 @@ export const importPokemon = (data: string) => {
             .map((type) => type.trim() as PokemonType);
           break;
         case "BaseStats":
-          const [hp, attack, defense, specialAttack, specialDefense, speed] =
+          const [hp, attack, defense, speed, specialAttack, specialDefense] =
             pokemonValue.split(",").map((stat) => parseInt(stat.trim(), 10));
           pokemon.baseStats = {
             hp,
             attack,
             defense,
+            speed,
             specialAttack,
             specialDefense,
-            speed,
           };
           break;
         case "GenderRatio":
