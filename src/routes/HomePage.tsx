@@ -9,6 +9,7 @@ import {
   Star,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import UpdatesSection from "@/components/layout/UpdatesSection";
 
 const HomePage = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -67,6 +68,7 @@ const HomePage = () => {
 
   return (
     <div className="h-full w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <UpdatesSection />
       {/* Header */}
       <header className="relative z-10 border-b border-slate-700/50 backdrop-blur-sm h-25">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
