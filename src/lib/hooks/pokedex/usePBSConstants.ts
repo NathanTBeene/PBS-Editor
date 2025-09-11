@@ -37,7 +37,7 @@ export const usePBSConstants = () => {
         console.log("Loaded PBS Constants from IndexDB");
         setPBSData(storedConstants);
       } else {
-        console.log("No PBS Constants found in IndexDB, using defaults.");
+        console.warn("No PBS Constants found in IndexDB, using defaults.");
       }
     } catch (error) {
       console.log("IndexDb Error, using default constants.", error);

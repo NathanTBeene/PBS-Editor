@@ -2,7 +2,7 @@ import type { Pokemon } from "@/lib/models/Pokemon";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import Autocomplete from "../ui/Autocomplete";
 import { Plus, X } from "lucide-react";
-import React, { useEffect } from "react";
+import React from "react";
 import { defaultAbility } from "@/lib/models/Ability";
 
 interface AbilityArrayProps {
@@ -13,10 +13,6 @@ interface AbilityArrayProps {
 
 const AbilityArray = ({ pokemon, setPokemon, isHidden }: AbilityArrayProps) => {
   const { abilities } = usePokedexContext();
-
-  useEffect(() => {
-    console.log("Abilities updated:", pokemon.abilities);
-  }, [pokemon.abilities]);
 
   const handleAbilityChange = (index: number, value: string) => {
     setPokemon((prev) => {
@@ -73,30 +69,25 @@ const AbilityArray = ({ pokemon, setPokemon, isHidden }: AbilityArrayProps) => {
       ? pokemon.hiddenAbilities.length > 1
       : pokemon.abilities.length > 1;
 
-  const abilitiesArray = pokemon.abilities.map(
-    (ability, index) => (
-      console.log("Rendering ability:", ability),
-      (
-        <div key={index} className="flex items-center gap-2 flex-1">
-          <Autocomplete
-            key={`${pokemon.id}-ability-${index}`} // Ensure re-mounting when ability changes
-            value={ability}
-            onValueChange={(value) => handleAbilityChange(index, value)}
-            options={abilities.map((a) => a.id)}
-            placeholder="Select ability..."
-          />
-          {showRemoveButton() && (
-            <button
-              onClick={() => handleRemoveAbility(index)}
-              className="p-1 text-rose-300 hover:text-rose-400 cursor-pointer transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          )}
-        </div>
-      )
-    )
-  );
+  const abilitiesArray = pokemon.abilities.map((ability, index) => (
+    <div key={index} className="flex items-center gap-2 flex-1">
+      <Autocomplete
+        key={`${pokemon.id}-ability-${index}`} // Ensure re-mounting when ability changes
+        value={ability}
+        onValueChange={(value) => handleAbilityChange(index, value)}
+        options={abilities.map((a) => a.id)}
+        placeholder="Select ability..."
+      />
+      {showRemoveButton() && (
+        <button
+          onClick={() => handleRemoveAbility(index)}
+          className="p-1 text-rose-300 hover:text-rose-400 cursor-pointer transition-colors"
+        >
+          <X className="w-6 h-6" />
+        </button>
+      )}
+    </div>
+  ));
 
   const hiddenAbilitiesArray = pokemon.hiddenAbilities.map((ability, index) => (
     <div key={index} className="flex items-center gap-2 flex-1">

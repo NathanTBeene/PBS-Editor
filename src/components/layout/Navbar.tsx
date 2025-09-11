@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExportImportModal from "../export/ExportImportModal";
+import SettingsModal from "./SettingsModal";
 
 function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -137,11 +138,15 @@ function Sidebar() {
             />
           }
         />
-        <NavItem
-          key={bottomItems[1].id}
-          item={bottomItems[1]}
-          onClick={() => {}}
-          isActive={false}
+        <SettingsModal
+          triggerElement={
+            <NavItem
+              key={bottomItems[1].id}
+              item={bottomItems[1]}
+              onClick={() => {}}
+              isActive={false}
+            />
+          }
         />
       </div>
     </div>

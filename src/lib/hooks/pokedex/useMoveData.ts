@@ -22,7 +22,7 @@ export const useMoveData = () => {
   // Fetch and set initial Move data
   const fetchMoves = async () => {
     try {
-      console.log("Moves were not found. Fetching from PBS.");
+      console.warn("Moves were not found. Fetching from PBS.");
       const response = await fetch("./PBS/moves.txt");
       const data = await response.text();
       const parsedMoves = importMoves(data);

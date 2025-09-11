@@ -25,7 +25,7 @@ export const usePokemonData = () => {
   // Fetch and set initial Pokémon data
   const fetchPokemon = async () => {
     try {
-      console.log("Pokemon not found. Fetching from PBS.");
+      console.warn("Pokemon not found. Fetching from PBS.");
       const response = await fetch("./PBS/pokemon.txt");
       const data = await response.text();
       const parsedPokemon = importPokemon(data).sort(

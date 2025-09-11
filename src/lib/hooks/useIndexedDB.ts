@@ -60,6 +60,13 @@ export const useIndexedDB = () => {
     await Promise.all(promises);
   };
 
+  const clearObjectStore = async (storeName: string) => {
+    const db = await openDB();
+    const tx = db.transaction([storeName], "readwrite");
+    const store = tx.objectStore(storeName);
+    await store.clear();
+  };
+
   /* 
   --- MARK: SAVE FUNCTIONS ---
     These save functions will grab all the keys
@@ -172,7 +179,6 @@ export const useIndexedDB = () => {
   };
 
   const saveConstants = async (constantsData: any) => {
-    console.log("Saving constants to IndexedDB...", constantsData);
     const db = await openDB();
     const tx = db.transaction(["constants"], "readwrite");
     const store = tx.objectStore("constants");
@@ -302,5 +308,6 @@ export const useIndexedDB = () => {
     loadAbilityDefaults,
     loadConstants,
     clearDatabase,
+    clearObjectStore,
   };
 };

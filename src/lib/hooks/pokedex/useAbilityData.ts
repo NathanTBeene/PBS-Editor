@@ -26,7 +26,7 @@ export const useAbilityData = () => {
   // Fetch and set initial Ability data
   const fetchAbilities = async () => {
     try {
-      console.log("Abilities not found. Fetching from PBS.");
+      console.warn("Abilities not found. Fetching from PBS.");
       const response = await fetch("./PBS/abilities.txt");
       const data = await response.text();
       const parsedAbilities = importAbilities(data);
