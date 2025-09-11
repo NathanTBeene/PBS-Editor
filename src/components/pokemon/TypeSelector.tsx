@@ -2,7 +2,6 @@ import type { Pokemon } from "@/lib/models/Pokemon";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import CustomSelect from "@/components/ui/CustomSelect";
 import { Plus, X } from "lucide-react";
-import { useArrayManager } from "@/lib/hooks/useArrayManager";
 import React from "react";
 
 interface TypeSelectorProps {
@@ -13,22 +12,31 @@ interface TypeSelectorProps {
 const TypeSelector = ({ pokemon, setPokemon }: TypeSelectorProps) => {
   const { types } = usePokedexContext();
 
-  const { handleArrayChange, removeFromArray, addToArray } = useArrayManager({
-    data: pokemon,
-    setData: setPokemon,
-  });
-
   const handleTypeChange = (index: number, value: string) => {
-    handleArrayChange("types", index, value);
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      const newTypes = [...prev.types];
+      newTypes[index] = value as (typeof prev.types)[number];
+      return { ...prev, types: newTypes };
+    });
   };
 
   const handleAddType = () => {
-    const defaultType = Object.keys(types)[0] || "NORMAL";
-    addToArray("types", defaultType);
+    const defaultType =
+      (Object.keys(types)[0] as (typeof pokemon.types)[number]) || "NORMAL";
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      return { ...prev, types: [...prev.types, defaultType] };
+    });
   };
 
   const handleRemoveType = (index: number) => {
-    removeFromArray("types", index);
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      const newTypes = [...prev.types];
+      newTypes.splice(index, 1);
+      return { ...prev, types: newTypes };
+    });
   };
 
   const canAddType = pokemon.types.length < 2; // Pokemon can have max 2 types
