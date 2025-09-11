@@ -1,9 +1,9 @@
 import type { Pokemon } from "@/lib/models/Pokemon";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
 import Autocomplete from "../ui/Autocomplete";
-import { useArrayManager } from "@/lib/hooks/useArrayManager";
 import { Plus, X } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { defaultAbility } from "@/lib/models/Ability";
 
 interface AbilityArrayProps {
   pokemon: Pokemon;
@@ -13,22 +13,59 @@ interface AbilityArrayProps {
 
 const AbilityArray = ({ pokemon, setPokemon, isHidden }: AbilityArrayProps) => {
   const { abilities } = usePokedexContext();
-  const { handleArrayChange, removeFromArray, addToArray } = useArrayManager({
-    data: pokemon,
-    setData: setPokemon,
-  });
+
+  useEffect(() => {
+    console.log("Abilities updated:", pokemon.abilities);
+  }, [pokemon.abilities]);
 
   const handleAbilityChange = (index: number, value: string) => {
-    handleArrayChange(isHidden ? "hiddenAbilities" : "abilities", index, value);
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      const updatedAbilities = isHidden
+        ? [
+            ...prev.hiddenAbilities.slice(0, index),
+            value,
+            ...prev.hiddenAbilities.slice(index + 1),
+          ]
+        : [
+            ...prev.abilities.slice(0, index),
+            value,
+            ...prev.abilities.slice(index + 1),
+          ];
+      return {
+        ...prev,
+        ...(isHidden
+          ? { hiddenAbilities: updatedAbilities }
+          : { abilities: updatedAbilities }),
+      };
+    });
   };
 
   const handleAddAbility = () => {
-    const defaultAbility = abilities[0] || "STENCH";
-    addToArray(isHidden ? "hiddenAbilities" : "abilities", defaultAbility.id);
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        ...(isHidden
+          ? { hiddenAbilities: [...prev.hiddenAbilities, defaultAbility.id] }
+          : { abilities: [...prev.abilities, defaultAbility.id] }),
+      };
+    });
   };
 
   const handleRemoveAbility = (index: number) => {
-    removeFromArray(isHidden ? "hiddenAbilities" : "abilities", index);
+    setPokemon((prev) => {
+      if (!prev) return prev;
+      const updatedAbilities = isHidden
+        ? prev.hiddenAbilities.filter((_, i) => i !== index)
+        : prev.abilities.filter((_, i) => i !== index);
+      return {
+        ...prev,
+        ...(isHidden
+          ? { hiddenAbilities: updatedAbilities }
+          : { abilities: updatedAbilities }),
+      };
+    });
   };
 
   const showRemoveButton = () =>
@@ -36,28 +73,35 @@ const AbilityArray = ({ pokemon, setPokemon, isHidden }: AbilityArrayProps) => {
       ? pokemon.hiddenAbilities.length > 1
       : pokemon.abilities.length > 1;
 
-  const abilitiesArray = pokemon.abilities.map((ability, index) => (
-    <div key={index} className="flex items-center gap-2 flex-1">
-      <Autocomplete
-        value={ability}
-        onValueChange={(value) => handleAbilityChange(index, value)}
-        options={abilities.map((a) => a.id)}
-        placeholder="Select ability..."
-      />
-      {showRemoveButton() && (
-        <button
-          onClick={() => handleRemoveAbility(index)}
-          className="p-1 text-rose-300 hover:text-rose-400 cursor-pointer transition-colors"
-        >
-          <X className="w-6 h-6" />
-        </button>
-      )}
-    </div>
-  ));
+  const abilitiesArray = pokemon.abilities.map(
+    (ability, index) => (
+      console.log("Rendering ability:", ability),
+      (
+        <div key={index} className="flex items-center gap-2 flex-1">
+          <Autocomplete
+            key={`${pokemon.id}-ability-${index}`} // Ensure re-mounting when ability changes
+            value={ability}
+            onValueChange={(value) => handleAbilityChange(index, value)}
+            options={abilities.map((a) => a.id)}
+            placeholder="Select ability..."
+          />
+          {showRemoveButton() && (
+            <button
+              onClick={() => handleRemoveAbility(index)}
+              className="p-1 text-rose-300 hover:text-rose-400 cursor-pointer transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          )}
+        </div>
+      )
+    )
+  );
 
   const hiddenAbilitiesArray = pokemon.hiddenAbilities.map((ability, index) => (
     <div key={index} className="flex items-center gap-2 flex-1">
       <Autocomplete
+        key={`${pokemon.id}-hidden-ability-${index}`}
         value={ability}
         onValueChange={(value) => handleAbilityChange(index, value)}
         options={abilities.map((a) => a.id)}
