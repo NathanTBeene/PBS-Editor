@@ -27,7 +27,7 @@ const AccordionContent = React.forwardRef<
     {...props}
     ref={forwardedRef}
   >
-    <div className="px-10 py-4">{children}</div>
+    <div className="px-10 py-2 pb-4">{children}</div>
   </Accordion.Content>
 ));
 
@@ -49,7 +49,15 @@ const UpdatesSection = () => {
     "v.1.0.1": [
       "Fixed abilities not properly updating.",
       "Fixed base stats being flipped around.",
+      "?You may need to reimport your data to see these changes.",
     ],
+  };
+
+  const markColors = {
+    "!": "text-rose-300",
+    "*": "text-emerald-300",
+    "-": "text-amber-300",
+    "?": "text-sky-300",
   };
 
   return (
@@ -65,9 +73,23 @@ const UpdatesSection = () => {
               <AccordionTrigger>{version}</AccordionTrigger>
               <AccordionContent>
                 <ul className="list-disc list-inside space-y-1">
-                  {changes.map((change, index) => (
-                    <li key={index}>{change}</li>
-                  ))}
+                  {changes.map((change, index) => {
+                    if (
+                      markColors[change[0] as keyof typeof markColors] ===
+                      undefined
+                    ) {
+                      return <li key={index}>{change}</li>;
+                    }
+                    const mark = change[0];
+                    const color =
+                      markColors[mark as keyof typeof markColors] || "";
+                    const text = change.slice(1).trim();
+                    return (
+                      <li key={index} className={color}>
+                        {text}
+                      </li>
+                    );
+                  })}
                 </ul>
               </AccordionContent>
             </AccordionItem>
