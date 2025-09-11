@@ -103,13 +103,6 @@ const HomePage = () => {
       {/* Hero Section */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center space-x-2 bg-slate-800/50 border border-slate-700/50 rounded-full px-4 py-2 mb-8 pointer-events-none">
-            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-            <span className="text-sm text-slate-300">
-              Now with live constant editing!
-            </span>
-          </div>
-
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 pointer-events-none">
             <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
               Pokemon Essentials
