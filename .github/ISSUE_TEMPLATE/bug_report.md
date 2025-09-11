@@ -20,6 +20,9 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
+**Errors**
+Are there any errors that print in the developer console of your browser? If so, please list them here.
+
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
