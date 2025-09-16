@@ -43,7 +43,7 @@ export const importMoves = (data: string) => {
         case "Accuracy":
           move.accuracy = parseInt(value);
           break;
-        case "PP":
+        case "TotalPP":
           move.pp = parseInt(value);
           break;
         case "Target":
