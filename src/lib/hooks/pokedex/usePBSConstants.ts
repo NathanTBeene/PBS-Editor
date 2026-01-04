@@ -7,8 +7,13 @@ import {
   PokemonHabitats,
   PokemonShapes,
   PokemonTypes,
+  PocketTypes,
+  FieldUses,
+  BattleUses,
+  ItemFlags,
   type PokemonType,
 } from "@/lib/models/constants";
+import { moveFlags } from "@/lib/models/Move";
 import { useEffect, useState } from "react";
 import { useIndexedDB } from "../useIndexedDB";
 import _ from "lodash";
@@ -26,6 +31,11 @@ export const usePBSConstants = () => {
     shapes: [...PokemonShapes],
     habitats: [...PokemonHabitats],
     evolutionMethods: [...EvolutionMethods],
+    pockets: [...PocketTypes],
+    fieldUses: [...FieldUses],
+    battleUses: [...BattleUses],
+    itemFlags: [...ItemFlags],
+    moveFlags: [...moveFlags],
   });
 
   const { saveConstants, loadConstants } = useIndexedDB();
@@ -61,6 +71,11 @@ export const usePBSConstants = () => {
       shapes: [...PokemonShapes],
       habitats: [...PokemonHabitats],
       evolutionMethods: [...EvolutionMethods],
+      pockets: [...PocketTypes],
+      fieldUses: [...FieldUses],
+      battleUses: [...BattleUses],
+      itemFlags: [...ItemFlags],
+      moveFlags: [...moveFlags],
     });
   };
 
@@ -92,6 +107,21 @@ export const usePBSConstants = () => {
           break;
         case "evolutionMethod":
           updated.evolutionMethods = [...EvolutionMethods];
+          break;
+        case "pocket":
+          updated.pockets = [...PocketTypes];
+          break;
+        case "fieldUse":
+          updated.fieldUses = [...FieldUses];
+          break;
+        case "battleUse":
+          updated.battleUses = [...BattleUses];
+          break;
+        case "itemFlag":
+          updated.itemFlags = [...ItemFlags];
+          break;
+        case "moveFlag":
+          updated.moveFlags = [...moveFlags];
           break;
         default:
           break;
@@ -137,6 +167,21 @@ export const usePBSConstants = () => {
         case "evolutionMethod":
           updated.evolutionMethods = [...prev.evolutionMethods, value];
           break;
+        case "pocket":
+          updated.pockets = [...prev.pockets, value];
+          break;
+        case "fieldUse":
+          updated.fieldUses = [...prev.fieldUses, value];
+          break;
+        case "battleUse":
+          updated.battleUses = [...prev.battleUses, value];
+          break;
+        case "itemFlag":
+          updated.itemFlags = [...prev.itemFlags, value];
+          break;
+        case "moveFlag":
+          updated.moveFlags = [...prev.moveFlags, value];
+          break;
         default:
           break;
       }
@@ -174,6 +219,21 @@ export const usePBSConstants = () => {
           updated.evolutionMethods = prev.evolutionMethods.filter(
             (e) => e !== value
           );
+          break;
+        case "pocket":
+          updated.pockets = prev.pockets.filter((p) => p !== value);
+          break;
+        case "fieldUse":
+          updated.fieldUses = prev.fieldUses.filter((f) => f !== value);
+          break;
+        case "battleUse":
+          updated.battleUses = prev.battleUses.filter((b) => b !== value);
+          break;
+        case "itemFlag":
+          updated.itemFlags = prev.itemFlags.filter((i) => i !== value);
+          break;
+        case "moveFlag":
+          updated.moveFlags = prev.moveFlags.filter((m) => m !== value);
           break;
         default:
           break;
@@ -217,6 +277,11 @@ export const usePBSConstants = () => {
     colors: PBSData.colors,
     shapes: PBSData.shapes,
     habitats: PBSData.habitats,
+    pockets: PBSData.pockets,
+    fieldUses: PBSData.fieldUses,
+    battleUses: PBSData.battleUses,
+    itemFlags: PBSData.itemFlags,
+    moveFlags: PBSData.moveFlags,
     evolutionMethods: PBSData.evolutionMethods,
     resetAllConstants,
     resetConstant,

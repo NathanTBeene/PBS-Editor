@@ -193,3 +193,59 @@ export let EvolutionMethods: string[] = [
   "Shedinja",
 ];
 export type EvolutionMethod = string;
+
+export let PocketTypes = [
+  "Items",
+  "Medicine",
+  "Pokeballs",
+  "TMsHMs",
+  "Berries",
+  "Mail",
+  "BattleItems",
+  "KeyItems",
+];
+export type PocketType = (typeof PocketTypes)[number];
+
+export const getPocketNumber = (pocket: PocketType): number => {
+  return PocketTypes.findIndex((pocketType) => pocketType === pocket) + 1
+}
+
+export let FieldUses = [
+  "OnPokemon",
+  "Direct",
+  "TR",
+  "TM",
+  "HM"
+]
+
+export type FieldUse = (typeof FieldUses)[number];
+
+export let BattleUses = [
+  "OnPokemon",
+  "OnMove",
+  "OnBattler",
+  "OnFoe",
+  "Direct"
+]
+
+export type BattleUse = (typeof BattleUses)[number];
+
+export let ItemFlags = [
+  "Mail",
+  "IconMail",
+  "PokeBall",
+  "SnagBall",
+  "Berry",
+  "KeyItem",
+  "EvolutionStone",
+  "Fossil",
+  "Apricorn",
+  "TypeGem",
+  "Mulch",
+  "MegaStone",
+  "MegaRing",
+  "Repel",
+  // Fling and Natural Gift are separately handled
+]
+
+export type ItemFlags = (typeof ItemFlags)[number];
