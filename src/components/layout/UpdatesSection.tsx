@@ -54,7 +54,7 @@ const UpdatesSection = () => {
   };
 
   return (
-    <div className="absolute z-[1000] top-[15%] left-30 w-100 md:w-60 bg-slate-900/60 rounded-lg shadow-lg text-white hidden lg:block">
+    <div className="absolute z-[100] top-[15%] left-30 w-100 md:w-60 bg-slate-900/60 rounded-lg shadow-lg text-white hidden lg:block">
       <h1 className="text-lg font-bold p-4 mb-2 border-b border-slate-800 text-slate-300">
         Updates
       </h1>
