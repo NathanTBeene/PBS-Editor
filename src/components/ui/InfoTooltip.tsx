@@ -13,7 +13,7 @@ const InfoTooltip = ({ title, description, link }: TooltipData) => {
 
   return (
     <Tooltip.Root open={open} onOpenChange={setOpen} delayDuration={100}>
-      <Tooltip.Trigger>
+      <Tooltip.Trigger asChild>
         <Info
           onClick={() => {
             if (link) {

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Popover } from "radix-ui";
 import InputField from "./InputField";
 
@@ -10,6 +10,10 @@ interface AutocompleteProps {
   placeholder?: string;
   inputClass?: string;
   onBlur?: () => void;
+  tooltip?: {
+    description: string;
+    link?: string;
+  };
 }
 
 const Autocomplete = ({
@@ -20,9 +24,15 @@ const Autocomplete = ({
   placeholder,
   inputClass,
   onBlur,
+  tooltip,
 }: AutocompleteProps) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value);
+  const ignoreNextFocus = useRef(false);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
 
   const filteredOptions = useMemo(() => {
     if (!inputValue) return options;
@@ -31,7 +41,7 @@ const Autocomplete = ({
     );
   }, [inputValue, options]);
 
-  const handleInputChange = (e: string | number) => {
+  const handleInputChange = (e: string | number | boolean) => {
     setInputValue(e as string);
     onValueChange(e as string);
   };
@@ -48,6 +58,14 @@ const Autocomplete = ({
     }
   };
 
+  const handleInputFocus = () => {
+    if (ignoreNextFocus.current) {
+      ignoreNextFocus.current = false;
+      return;
+    }
+    setOpen(true);
+  }
+
   return (
     <Popover.Root open={open} modal={false}>
       <Popover.Anchor asChild>
@@ -56,7 +74,7 @@ const Autocomplete = ({
             label={title}
             value={inputValue}
             onChange={handleInputChange}
-            onFocus={() => setOpen(true)}
+            onFocus={handleInputFocus}
             onFinished={() => {
               onBlur && onBlur();
               setOpen(false);
@@ -64,6 +82,7 @@ const Autocomplete = ({
             placeholder={placeholder}
             className={inputClass}
             onKeyDown={onKeyDown}
+            tooltip={tooltip}
           />
         </div>
       </Popover.Anchor>
