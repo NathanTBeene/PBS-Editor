@@ -28,7 +28,7 @@ const MovesPage = () => {
     if (selectedMove) {
       setEditData(selectedMove);
     }
-  }, [selectedMove]);
+  }, [selectedMove, setSelectedMove]);
 
   const handleSave = async () => {
     if (!selectedMove || !editData) return;
