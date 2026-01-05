@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import * as Select from "@radix-ui/react-select";
 import { theme } from "../../lib/theme/colors";
+import InfoTooltip from "./InfoTooltip";
 
 interface CustomSelectProps {
   value: string;
@@ -8,7 +9,11 @@ interface CustomSelectProps {
   options: string[];
   placeholder?: string;
   className?: string;
-  name?: string;
+  label?: string;
+  tooltip?: {
+    description: string;
+    link?: string;
+  };
 }
 
 const CustomSelect = ({
@@ -17,10 +22,24 @@ const CustomSelect = ({
   options,
   placeholder,
   className = "",
+  label,
+  tooltip,
 }: CustomSelectProps) => {
   return (
     <div className={className}>
       <Select.Root value={value} onValueChange={onChange}>
+        {
+          label && (
+            <label className="flex gap-2 items-center text-sm font-medium text-slate-300 mb-2">
+              {label}
+              {tooltip && (
+                <span onClick={(e) => e.stopPropagation()}>
+                  <InfoTooltip {...tooltip} />
+                </span>
+              )}
+            </label>
+          )
+        }
         <Select.Trigger
           className={`w-full px-3 py-2 ${theme.colors.primary.border} border rounded-md focus:outline-none text-left flex items-center justify-between`}
         >
