@@ -1,5 +1,5 @@
 import Modal from "@/components/ui/Modal";
-import { currentVersion } from "@/lib/data/versionHistory";
+import { getCurrentVersion } from "@/lib/data/versionHistory";
 import { useIndexedDB } from "@/lib/hooks/useIndexedDB";
 import { useAlertContext } from "@/lib/providers/AlertProvider";
 
@@ -103,6 +103,21 @@ const SettingsModal = ({ triggerElement }: SettingsModalProps) => {
       },
     },
     {
+      text: "Clear Items",
+      color: "hover:bg-fuchsia-600",
+      action: async () => {
+        if (
+          await showWarning(
+            "Clear Items?",
+            "Are you sure you want to clear all Items data? This action cannot be undone."
+          )
+        ) {
+          clearObjectStore("items");
+          askReload();
+        }
+      },
+    },
+    {
       text: "Clear Constants",
       color: "hover:bg-emerald-600",
       action: async () => {
@@ -127,7 +142,7 @@ const SettingsModal = ({ triggerElement }: SettingsModalProps) => {
       contentClass="max-h-[80vh] relative min-h-80 overflow-y-auto"
     >
       <h2 className="text-sm text-slate-400 absolute bottom-2 left-4">
-        Editor {currentVersion}
+        Editor {getCurrentVersion()}
       </h2>
       {/* Data Management */}
       <div className="flex flex-col">
