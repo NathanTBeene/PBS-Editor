@@ -5,6 +5,7 @@ import {
   exportAbilitiesToPBS,
   exportMovesToPBS,
   exportPokemonToPBS,
+  exportItemsToPBS,
 } from "@/lib/services/exportFormatter";
 import { FolderUp, FileDown } from "lucide-react";
 import { useToastNotifications } from "@/lib/hooks/useToast";
@@ -12,6 +13,7 @@ import { importPokemon } from "@/lib/services/importPokemon";
 import { Switch } from "radix-ui";
 import { importMoves } from "@/lib/services/importMoves";
 import { importAbilities } from "@/lib/services/importAbilities";
+import { importItems } from "@/lib/services/importItems";
 
 interface ExportModalProps {
   triggerElement: React.ReactNode;
@@ -20,14 +22,21 @@ interface ExportModalProps {
 const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
   const {
     pokemon,
+    setSelectedPokemon,
     moves,
+    setSelectedMove,
     abilities,
+    setSelectedAbility,
+    items,
+    setSelectedItem,
     importPokemonMerge,
     importPokemonOverride,
     importMovesMerge,
     importMovesOverride,
     importAbilitiesMerge,
     importAbilitiesOverride,
+    importItemsMerge,
+    importItemsOverride,
   } = usePokedexContext();
 
   const [importMode, setImportMode] = useState<"Override" | "Merge">(
@@ -62,6 +71,8 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
               "Override Successful"
             );
           }
+
+          setSelectedPokemon(importedPokemon[0] || null);
         } catch (error: any) {
           toast.showError(error.message, "Import Failed");
         }
@@ -95,6 +106,8 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
               "Override Successful"
             );
           }
+
+          setSelectedMove(importedMoves[0] || null);
         } catch (error: any) {
           toast.showError(error.message, "Import Failed");
         }
@@ -128,6 +141,8 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
               "Override Successful"
             );
           }
+
+          setSelectedAbility(importedAbilities[0] || null);
         } catch (error: any) {
           toast.showError(error.message, "Import Failed");
         }
@@ -135,6 +150,41 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
       reader.readAsText(file);
     });
   };
+
+  const handleImportItems = () => {
+    openFileDialog(".txt", (file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+
+        try {
+          const importedItems = importItems(content);
+          toast.showSuccess(
+            `Successfully imported ${importedItems.length} Items.`,
+            "Import Successful"
+          );
+          if (importMode === "Merge") {
+            importItemsMerge(importedItems);
+            toast.showSuccess(
+              `Successfully merged imported data with existing Items.`,
+              "Merge Successful"
+            );
+          } else {
+            importItemsOverride(importedItems);
+            toast.showSuccess(
+              `Successfully overridden existing Items data.`,
+              "Override Successful"
+            );
+          }
+
+          setSelectedItem(importedItems[0] || null);
+        } catch (error: any) {
+          toast.showError(error.message, "Import Failed");
+        }
+      }
+      reader.readAsText(file);
+    });
+  }
 
   const openFileDialog = (accept: string, callback: (file: File) => void) => {
     // Open a dialog to choose a txt file
@@ -162,18 +212,22 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
     exportAbilitiesToPBS(abilities);
   };
 
+  const handleExportItems = () => {
+    exportItemsToPBS(items);
+  };
+
   return (
     <Modal
       triggerElement={triggerElement}
       title="Manage Data"
-      maxWidth="max-w-2xl"
+      maxWidth="max-w-4xl"
       contentClass="max-h-[80vh] overflow-y-auto"
       showCloseButton={true}
       onClose={() => {}}
     >
       {/* Import */}
       <div>
-        <div className="mb-4 flex justify-between items-center">
+        <div className="mb-6 flex justify-between items-center">
           <div>
             <h2 className="text-lg font-semibold mb-1">Import</h2>
             <p className="text-slate-400 text-sm">
@@ -184,8 +238,17 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
           {/* Import Mode Switch */}
           <div className="flex flex-col items-end">
             <p className="text-slate-300">Import Mode</p>
-            <div className="flex items-end space-x-3">
-              <p className="text-sm text-slate-400">{importMode}</p>
+            <div className="flex items-center space-x-3">
+              {
+                importMode === "Override" && (
+                  <p className="text-sm text-rose-400 mt-1">Override</p>
+                )
+              }
+              {
+                importMode === "Merge" && (
+                  <p className="text-sm text-emerald-400 mt-1">Merge</p>
+                )
+              }
               <Switch.Root
                 className="w-12 h-6 bg-slate-700 rounded-full relative shadow-inner mt-2 focus:outline-none"
                 checked={importChecked}
@@ -222,6 +285,13 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
             <FolderUp size={24} className="mr-2" />
             Abilities
           </button>
+          <button
+            className="bg-slate-600 flex items-center justify-center w-60 px-10 py-6 rounded-lg hover:bg-violet-600 transition-all cursor-pointer"
+            onClick={handleImportItems}
+          >
+            <FolderUp size={24} className="mr-2" />
+            Items
+          </button>
         </div>
       </div>
 
@@ -229,7 +299,7 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
 
       {/* Export */}
       <div>
-        <div className="mb-4">
+        <div className="mb-6">
           <h2 className="text-lg font-semibold mb-1">Export</h2>
           <p className="text-slate-400 text-sm">
             Export your data to a formatted PBS file.
@@ -256,6 +326,13 @@ const ExportImportModal = ({ triggerElement }: ExportModalProps) => {
           >
             <FileDown size={24} className="mr-2" />
             Abilities
+          </button>
+          <button
+            className="bg-slate-600 flex justify-center items-center w-50 px-10 py-6 rounded-lg hover:bg-violet-600 transition-all cursor-pointer"
+            onClick={handleExportItems}
+          >
+            <FileDown size={24} className="mr-2" />
+            Items
           </button>
         </div>
       </div>

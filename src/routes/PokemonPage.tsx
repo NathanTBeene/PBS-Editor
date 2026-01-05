@@ -35,7 +35,7 @@ const PokemonPage = () => {
     if (selectedPokemon) {
       setEditData(selectedPokemon);
     }
-  }, [selectedPokemon]);
+  }, [selectedPokemon, setSelectedPokemon]);
 
   const handleSave = async () => {
     if (!selectedPokemon || !editData) return;

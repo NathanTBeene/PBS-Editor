@@ -1,4 +1,5 @@
 import type { Ability } from "../models/Ability";
+import type { Item } from "../models/Item";
 import type { Move } from "../models/Move";
 import type { Pokemon } from "../models/Pokemon";
 
@@ -31,6 +32,11 @@ export const useIndexedDB = () => {
           db.createObjectStore("abilities", { keyPath: "id" });
         }
 
+        // Create Item Object Stores
+        if (!db.objectStoreNames.contains("items")) {
+          db.createObjectStore("items", { keyPath: "id" });
+        }
+
         // Create Constant Object Stores
         if (!db.objectStoreNames.contains("constants")) {
           db.createObjectStore("constants", { keyPath: "id" });
@@ -47,13 +53,14 @@ export const useIndexedDB = () => {
   const clearDatabase = async () => {
     const db = await openDB();
     const tx = db.transaction(
-      ["pokemon", "moves", "abilities", "constants", "defaults"],
+      ["pokemon", "moves", "abilities", "items", "constants", "defaults"],
       "readwrite"
     );
     const promises = [
       tx.objectStore("pokemon").clear(),
       tx.objectStore("moves").clear(),
       tx.objectStore("abilities").clear(),
+      tx.objectStore("items").clear(),
       tx.objectStore("constants").clear(),
       tx.objectStore("defaults").clear(),
     ];
@@ -67,7 +74,7 @@ export const useIndexedDB = () => {
     await store.clear();
   };
 
-  /* 
+  /*
   --- MARK: SAVE FUNCTIONS ---
     These save functions will grab all the keys
     and compare that with the keys being provided
@@ -178,6 +185,39 @@ export const useIndexedDB = () => {
     await store.put({ type: "ability", data: abilities });
   };
 
+  const saveItems = async (items: Item[]) => {
+    const db = await openDB();
+    const tx = db.transaction(["items"], "readwrite");
+    const store = tx.objectStore("items");
+
+    // Get all existing keys
+    const existingRequest = store.getAllKeys();
+    const existingKeys: IDBValidKey[] = await new Promise((resolve, reject) => {
+      existingRequest.onsuccess = () => resolve(existingRequest.result);
+      existingRequest.onerror = () => reject(existingRequest.error);
+    });
+
+    // Find keys to delete
+    const newIds = new Set(items.map((i) => i.id));
+    const keysToDelete = existingKeys.filter(
+      (key) => !newIds.has(key as string)
+    );
+
+    // Delete the removed keys
+    await Promise.all(keysToDelete.map((key) => store.delete(key)));
+
+    // Save/Update the current keys
+    await Promise.all(items.map((i) => store.put(i)));
+  };
+
+  const saveItemDefaults = async (items: Item[]) => {
+    const db = await openDB();
+    const tx = db.transaction(["defaults"], "readwrite");
+    const store = tx.objectStore("defaults");
+
+    await store.put({ type: "items", data: items });
+  };
+
   const saveConstants = async (constantsData: any) => {
     const db = await openDB();
     const tx = db.transaction(["constants"], "readwrite");
@@ -203,7 +243,7 @@ export const useIndexedDB = () => {
     await store.put({ id: "constants", data: constantsData });
   };
 
-  /* 
+  /*
   --- MARK: LOAD FUNCTIONS ---
   */
 
@@ -279,6 +319,28 @@ export const useIndexedDB = () => {
     });
   };
 
+  const loadItems = async (): Promise<Item[]> => {
+    const db = await openDB();
+    const tx = db.transaction(["items"], "readonly");
+    const store = tx.objectStore("items");
+    const request = store.getAll();
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  const loadItemDefaults = async (): Promise<Item[]> => {
+    const db = await openDB();
+    const tx = db.transaction(["defaults"], "readonly");
+    const store = tx.objectStore("defaults");
+    const request = store.get("items");
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(request.result?.data);
+      request.onerror = () => reject(request.error);
+    });
+  };
+
   const loadConstants = async (): Promise<any> => {
     const db = await openDB();
     const tx = db.transaction(["constants"], "readonly");
@@ -299,6 +361,8 @@ export const useIndexedDB = () => {
     saveMoveDefaults,
     saveAbilities,
     saveAbilityDefaults,
+    saveItems,
+    saveItemDefaults,
     saveConstants,
     loadPokemon,
     loadPokemonDefaults,
@@ -306,6 +370,8 @@ export const useIndexedDB = () => {
     loadMoveDefaults,
     loadAbilities,
     loadAbilityDefaults,
+    loadItems,
+    loadItemDefaults,
     loadConstants,
     clearDatabase,
     clearObjectStore,

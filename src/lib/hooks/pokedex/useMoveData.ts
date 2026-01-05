@@ -148,6 +148,14 @@ export const useMoveData = () => {
     }
   };
 
+  const getMoveDataById = (id: string): Move | null => {
+    return moves.find((m) => m.id === id) || null;
+  };
+
+  const getMovesList = (): string[] => {
+    return moves.map(move => move.id);
+  }
+
   return {
     loadMoveData,
     moves,
@@ -162,5 +170,7 @@ export const useMoveData = () => {
     overrideMoveData,
     importMerge,
     importOverride,
+    getMoveDataById,
+    getMovesList
   };
 };

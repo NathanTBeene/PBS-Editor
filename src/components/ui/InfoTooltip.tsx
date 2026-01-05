@@ -13,7 +13,7 @@ const InfoTooltip = ({ title, description, link }: TooltipData) => {
 
   return (
     <Tooltip.Root open={open} onOpenChange={setOpen} delayDuration={100}>
-      <Tooltip.Trigger>
+      <Tooltip.Trigger asChild>
         <Info
           onClick={() => {
             if (link) {
@@ -27,7 +27,7 @@ const InfoTooltip = ({ title, description, link }: TooltipData) => {
       </Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Content
-          className="z-50 TooltipContent"
+          className="z-[9999] TooltipContent"
           align="start"
           sideOffset={5}
           alignOffset={10}

@@ -12,6 +12,11 @@ const ConstantsScreen = () => {
     shapes,
     habitats,
     evolutionMethods,
+    pockets,
+    fieldUses,
+    battleUses,
+    itemFlags,
+    moveFlags,
     addConstant,
     removeConstant,
     resetConstants,
@@ -39,6 +44,11 @@ const ConstantsScreen = () => {
       label: "Evolution Methods",
       data: evolutionMethods,
     },
+    { key: "pocket", label: "Pockets", data: pockets },
+    { key: "fieldUse", label: "Field Uses", data: fieldUses },
+    { key: "battleUse", label: "Battle Uses", data: battleUses },
+    { key: "itemFlag", label: "Item Flags", data: itemFlags },
+    { key: "moveFlag", label: "Move Flags", data: moveFlags },
   ];
 
   const handleAddItem = () => {
@@ -193,7 +203,7 @@ const ConstantsScreen = () => {
         </p>
         <p className="text-amber-200">
           NOTE: Constants should have no spaces and be CamelCase. Any spaces
-          will be trimmed.
+          will be trimmed. Types should be full caps.
         </p>
       </div>
 

@@ -27,7 +27,7 @@ export const importPokemon = (data: string) => {
 
   sections.forEach((section, index) => {
     const lines = section.split("\n");
-    const pokemon: Pokemon = { ...defaultPokemon };
+    const pokemon: Pokemon = structuredClone(defaultPokemon);
 
     pokemon.dexNumber = index;
 

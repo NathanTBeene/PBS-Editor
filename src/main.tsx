@@ -12,6 +12,7 @@ import { AlertProvider } from "./lib/providers/AlertProvider.tsx";
 import HomePage from "./routes/HomePage.tsx";
 import ToastProvider from "./lib/providers/ToastProvider.tsx";
 import { Tooltip } from "radix-ui";
+import ItemsPage from "./routes/ItemsPage.tsx";
 
 const router = createBrowserRouter(
   [
@@ -41,6 +42,10 @@ const router = createBrowserRouter(
           path: "/abilities",
           element: <AbilitiesPage />,
         },
+        {
+          path: "/items",
+          element: <ItemsPage />,
+        }
       ],
     },
   ],

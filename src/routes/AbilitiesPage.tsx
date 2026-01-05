@@ -28,7 +28,7 @@ const AbilitiesPage = () => {
     if (selectedAbility) {
       setEditData(selectedAbility);
     }
-  }, [selectedAbility]);
+  }, [selectedAbility, setSelectedAbility]);
 
   const validateAbility = (ability: Ability): string[] | null => {
     const errors: string[] = [];

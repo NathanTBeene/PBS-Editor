@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   Settings,
+  Candy
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExportImportModal from "../export/ExportImportModal";
@@ -26,6 +27,7 @@ function Sidebar() {
     { id: "pokemon", icon: LoaderPinwheel, label: "Pokemon" },
     { id: "moves", icon: HandFist, label: "Moves" },
     { id: "abilities", icon: Crown, label: "Abilities" },
+    { id: "items", icon: Candy, label: "Items" },
     { id: "constants", icon: Database, label: "Constants" },
   ];
 
@@ -100,7 +102,7 @@ function Sidebar() {
     <div
       className={`
           fixed left-0 top-0 h-full bg-slate-800 border-r border-slate-700
-          transition-all duration-300 ease-in-out z-50 flex flex-col overflow-x-hidden
+          transition-all duration-300 ease-in-out z-1000 flex flex-col overflow-x-hidden
           ${isExpanded ? "w-60" : "w-16"}
         `}
     >
