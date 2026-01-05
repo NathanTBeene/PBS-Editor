@@ -30,7 +30,7 @@ const FlagsSection = ({
     });
   };
 
-  const handleChangeFlag = (index: number, value: string | number) => {
+  const handleChangeFlag = (index: number, value: string | number | boolean) => {
     setPokemon((prev) => {
       if (!prev) return null;
       return {

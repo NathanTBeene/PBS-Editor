@@ -3,7 +3,6 @@ import ArraySection from "../layout/ArraySection";
 import InputField from "../ui/InputField";
 import CustomSelect from "../ui/CustomSelect";
 import { usePokedexContext } from "@/lib/providers/PokedexProvider";
-import Autocomplete from "../ui/Autocomplete";
 import { X } from "lucide-react";
 import FormSection from "../layout/FormSection";
 

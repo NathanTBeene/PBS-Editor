@@ -3,7 +3,6 @@ import {
   Zap,
   Users,
   Target,
-  Settings,
   ChevronRight,
   Github,
   Star,
