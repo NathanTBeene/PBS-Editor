@@ -54,6 +54,7 @@ export const usePokedex = () => {
     importMovesMerge: moveData.importMerge,
     importMovesOverride: moveData.importOverride,
     getMoveDataById: moveData.getMoveDataById,
+    getMovesList: moveData.getMovesList,
 
     // Ability data
     abilities: abilityData.abilities,
