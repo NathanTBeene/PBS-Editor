@@ -27,7 +27,7 @@ const InfoTooltip = ({ title, description, link }: TooltipData) => {
       </Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Content
-          className="z-50 TooltipContent"
+          className="z-[9999] TooltipContent"
           align="start"
           sideOffset={5}
           alignOffset={10}

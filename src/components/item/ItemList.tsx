@@ -23,7 +23,7 @@ const ItemList = ({
     return items.filter(
       (item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.id.includes(searchTerm) ||
+        item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.pocket.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.move && item.move.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (item.flags && item.flags.some((flag) => flag.toLowerCase().includes(searchTerm.toLowerCase())))

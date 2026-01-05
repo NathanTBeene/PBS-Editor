@@ -14,7 +14,7 @@ const NewItemForm = () => {
   const [error, setError] = useState<string | null>(null);
   const { items, isItemInPokedex, addItem } = usePokedexContext();
 
-  const { showError } = useAlertContext();
+  const { showError, showWarning } = useAlertContext();
 
   const handleSubmit = () => {
     if (!name.trim()) {
@@ -31,11 +31,17 @@ const NewItemForm = () => {
       setError(
         "This Item identifier is already in the Pokédex. Please choose another Identifier."
       );
+      showWarning(
+        "Duplicate Identifier",
+        "This Item identifier is already in the Pokédex. Please choose another Identifier."
+      );
+      console.warn("Tried to add duplicate Item ID to Pokédex.");
       return;
     }
 
     if (selectedItem && !isItemInPokedex(selectedItem.id)) {
       setError("Could not find the Base Item.");
+      showError("Base Item Not Found", "Could not find the Base Item.");
       setSelectedItem(null);
       return;
     }
