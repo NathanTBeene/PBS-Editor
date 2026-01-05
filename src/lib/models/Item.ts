@@ -6,45 +6,50 @@ export interface Item {
   pocket: PocketType;
   name: string;
   namePlural: string;
-  portionName?: string;
+  portionName: string;
   description: string;
-  portionNamePlural?: string;
+  portionNamePlural: string;
 
   // Pricing
   price: number;
   sellPrice: number; // typically half of price
-  bpPrice?: number;
+  bpPrice: number;
 
+  // In-Game Use Information
+  fieldUse: FieldUse;
+  battleUse: BattleUse;
+  move: string;
+
+  // Miscellaneous
+  consumable: boolean;
+  showQuantity: boolean;
+
+  // Flag information
+  flags: ItemFlags[];
   flingValue: number;
   naturalGift?: {
     type: PokemonType;
     power: number;
   }
-  fieldUse?: FieldUse;
-  battleUse?: BattleUse;
-  flags?: ItemFlags[];
-  consumable?: boolean;
-  showQuantity?: boolean;
-  move?: string;
 }
 
 export const defaultItem: Item = {
-  id: "",
+  id: "[]",
   name: "Unnamed",
   namePlural: "Unnamed",
-  portionName: undefined,
-  portionNamePlural: undefined,
+  portionName: "",
+  portionNamePlural: "",
   pocket: "Items",
   price: 0,
   sellPrice: 0,
   bpPrice: 1,
-  fieldUse: undefined,
-  battleUse: undefined,
-  flags: undefined,
+  fieldUse: "",
+  battleUse: "",
+  flags: [],
   flingValue: 0,
   naturalGift: undefined,
   consumable: true,
   showQuantity: true,
-  move: undefined,
+  move: "",
   description: "???"
 };
