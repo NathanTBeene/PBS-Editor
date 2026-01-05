@@ -125,6 +125,7 @@ export const useItemData = () => {
     const data = {...(baseItem || defaultItem)};
 
     data.id = id.trim().toUpperCase();
+    // data.name = baseItem ? baseItem.name : id.trim();
     setItems((prev) => [...prev, data]);
     setSelectedItem(data);
     return data;

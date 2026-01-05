@@ -54,16 +54,26 @@ const HomePage = () => {
       link: "/abilities",
     },
     {
-      title: "Constants",
-      description:
-        "Edit game constants like types, genderRatios, and more. Reactively updates choices in editor.",
-      icon: Settings,
-      color: "from-emerald-500 to-teal-500",
-      bgColor: "bg-emerald-500/10",
-      borderColor: "border-emerald-500/20",
-      hoverGlow: "hover:shadow-emerald-500/25",
-      link: "/constants",
+      title: "Items",
+      description: "Manage items, their effects, and properties",
+      icon: Users,
+      color: "from-pink-500 to-red-500",
+      bgColor: "bg-pink-500/10",
+      borderColor: "border-pink-500/20",
+      hoverGlow: "hover:shadow-pink-500/25",
+      link: "/items",
     },
+    // {
+    //   title: "Constants",
+    //   description:
+    //     "Edit game constants like types, genderRatios, and more. Reactively updates choices in editor.",
+    //   icon: Settings,
+    //   color: "from-emerald-500 to-teal-500",
+    //   bgColor: "bg-emerald-500/10",
+    //   borderColor: "border-emerald-500/20",
+    //   hoverGlow: "hover:shadow-emerald-500/25",
+    //   link: "/constants",
+    // },
   ];
 
   return (
@@ -82,9 +92,9 @@ const HomePage = () => {
                 <p className="text-sm text-slate-400">Pokemon Essentials</p>
               </div>
             </div>
-            <div className="flex gap-2 justify-center items-center">
-              <p className="text-sm text-slate-400 self-end">
-                Created by Aten2049
+            <div className="flex gap-3 justify-center items-center">
+              <p className="text-sm text-slate-400">
+                Created by Aten.Dev
               </p>
               <button
                 className="text-slate-400 hover:text-white transition-all rounded-lg flex items-center space-x-2 bg-slate-700/50 hover:bg-slate-600/50 cursor-pointer p-2"

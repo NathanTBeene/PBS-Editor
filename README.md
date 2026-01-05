@@ -1,5 +1,12 @@
 # Pokemon Essentials PBS Editor
 
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=flat-square)](https://nathantbeene.github.io/PBS-Editor/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646cff?style=flat-square&logo=vite)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+
 A modern React application for editing Pokemon Essentials PBS (Pokemon Battle System) data files with a user-friendly interface, eliminating the need to manually edit raw text files.
 
 [Link to the Live Page](https://nathantbeene.github.io/PBS-Editor/)
@@ -39,6 +46,12 @@ Provides a visual editor for Pokemon Essentials PBS data, letting you:
 - Ability descriptions and in-game text
 - Flag system for ability properties
 - Battle and field effect configuration
+
+### Item Editor
+- Item properties (name, plural name, price)
+- Item type and pocket assignment
+- Field and battle usage configuration
+- Flag system for item properties
 
 ### Technical Features
 - **React 19** with modern hooks and state management

@@ -51,6 +51,7 @@ const UpdatesSection = () => {
     "*": "text-emerald-300",
     "-": "text-amber-300",
     "?": "text-sky-300",
+    "#": "text-zinc-600",
   };
 
   return (
