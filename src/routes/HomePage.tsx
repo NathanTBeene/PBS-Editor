@@ -111,7 +111,7 @@ const HomePage = () => {
             <span className="text-slate-200">PBS Editor</span>
           </h1>
 
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed pointer-events-none">
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed pointer-events-none">
             A powerful and modern user interface for editing PBS data to be used
             within Pokemon Essentials. You can import, edit, and export your own
             PBS files or use the defaults included with this editor.

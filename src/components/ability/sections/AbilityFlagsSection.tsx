@@ -30,7 +30,7 @@ const AbilityFlagsSection = ({
     });
   };
 
-  const handleChangeFlag = (index: number, value: string | number) => {
+  const handleChangeFlag = (index: number, value: string | number | boolean) => {
     setAbility((prev) => {
       if (!prev) return null;
       return {

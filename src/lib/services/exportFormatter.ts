@@ -1,5 +1,6 @@
 import type { Ability } from "../models/Ability";
-import type { PokemonEvolution } from "../models/constants";
+import { getPocketNumber, type PokemonEvolution } from "../models/constants";
+import type { Item } from "../models/Item";
 import type { Move } from "../models/Move";
 import type { Pokemon } from "../models/Pokemon";
 
@@ -69,6 +70,25 @@ export const exportAbilitiesToPBS = (abilities: Ability[]) => {
   const content = lines.join("\n");
   downloadAsTxt("abilities.txt", content);
 };
+
+export const exportItemsToPBS = (items: Item[]) => {
+  const lines: string[] = [];
+  const header =
+    "# See the documentation on the wiki to learn how to edit this file.";
+  const separator = "#-------------------------------";
+  lines.push(header);
+  lines.push(separator);
+  items.forEach((item) => {
+    lines.push(formatItemForExport(item));
+    lines.push(separator);
+  });
+  // Remove the last separator for cleaner formatting
+  if (lines[lines.length - 1] === separator) {
+    lines.pop();
+  }
+  const content = lines.join("\n");
+  downloadAsTxt("items.txt", content);
+}
 
 // Pokemon Formatting
 
@@ -188,3 +208,42 @@ const formatAbilityForExport = (ability: Ability): string => {
     lines.push(`Flags = ${ability.flags.join(",")}`);
   return lines.join("\n");
 };
+
+// Item Formatting
+const formatItemForExport = (item: Item): string => {
+  const lines = [];
+  lines.push(`[${item.id}]`);
+  lines.push(`Name = ${item.name}`);
+  lines.push(`NamePlural = ${item.namePlural}`);
+  item.portionName && lines.push(`PortionName = ${item.portionName}`);
+  item.portionNamePlural && lines.push(`PortionNamePlural = ${item.portionNamePlural}`);
+  lines.push(`Pocket = ${getPocketNumber(item.pocket)} ## ${item.pocket}`);
+  lines.push(`Price = ${item.price}`);
+  item.sellPrice > 0 && lines.push(`SellPrice = ${item.sellPrice}`);
+  item.bpPrice > 0 && lines.push(`BPPrice = ${item.bpPrice}`);
+  item.fieldUse && lines.push(`FieldUse = ${item.fieldUse}`);
+  item.battleUse && lines.push(`BattleUse = ${item.battleUse}`);
+  item.flags.length > 0 && lines.push(`Flags = ${formatItemFlags(item)}`);
+  item.consumable === false && lines.push(`Consumable = false`);
+  item.showQuantity === false && lines.push(`ShowQuantity = false`);
+  item.move && lines.push(`Move = ${item.move}`);
+  lines.push(`Description = ${item.description}`);
+
+  return lines.join("\n");
+}
+
+const formatItemFlags = (item: Item): string | null => {
+  if (item.flags.length === 0) return null;
+  const lines: string[] = [];
+
+  if (item.flingValue > 0) {
+    lines.push(`Fling_${item.flingValue}`);
+  }
+  if (item.naturalGift) {
+    lines.push(`NaturalGift_${item.naturalGift.type.toUpperCase()}_${item.naturalGift.power}`);
+  }
+  for (const flag of item.flags) {
+    lines.push(flag);
+  }
+  return lines.sort().join(",");
+}

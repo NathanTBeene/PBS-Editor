@@ -1,16 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
-import { type Ability } from "../lib/models/Ability";
 import { usePokedexContext } from "../lib/providers/PokedexProvider";
 import { useAlertContext } from "@/lib/providers/AlertProvider";
-import AbilityList from "@/components/ability/AbilityList";
-import AbilityHeader from "@/components/ability/sections/AbilityHeader";
 import FormSection from "@/components/layout/FormSection";
 import InputField from "@/components/ui/InputField";
-import AbilityFlagsSection from "@/components/ability/sections/AbilityFlagsSection";
 import type { Item } from "@/lib/models/Item";
 import ItemList from "@/components/item/ItemList";
 import ItemHeader from "@/components/item/ItemHeader";
 import Autocomplete from "@/components/ui/Autocomplete";
+import ItemFlagSection from "@/components/item/ItemFlagSection";
 
 const ItemsPage = () => {
   const {
@@ -21,13 +18,20 @@ const ItemsPage = () => {
     removeItem,
     setItemData,
     pockets,
+    fieldUses,
+    battleUses,
+    moves
   } = usePokedexContext();
 
   const { showWarning, showError } = useAlertContext();
 
-  const [editData, setEditData] = useState<Item | null>(
-    items[0] || null
-  );
+  const [editData, setEditData] = useState<Item | null>(null);
+
+  useEffect(() => {
+    if (!selectedItem && items.length > 0) {
+      setSelectedItem(items[0]);
+    }
+  }, [items, selectedItem, setSelectedItem]);
 
   useEffect(() => {
     if (selectedItem) {
@@ -280,6 +284,81 @@ const ItemsPage = () => {
                 />
               </div>
             </FormSection>
+            <FormSection title="In-Game Use Information">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Autocomplete
+                  title="Field Use"
+                  value={editData.fieldUse || ""}
+                  onValueChange={(value) =>
+                    setEditData((prev) =>
+                      prev ? { ...prev, fieldUse: value as string } : null
+                    )
+                  }
+                  options={fieldUses}
+                  tooltip={{
+                    description:
+                      "The effect this item has when used in the field. Click for more details about each effect.",
+                    link:
+                      "https://essentialsdocs.fandom.com/wiki/Defining_an_item"
+                  }}
+                />
+                <Autocomplete
+                  title="Battle Use"
+                  value={editData.battleUse || ""}
+                  onValueChange={(value) =>
+                    setEditData((prev) =>
+                      prev ? { ...prev, battleUse: value as string } : null
+                    )
+                  }
+                  options={battleUses}
+                  tooltip={{
+                    description:
+                      "The effect this item has when used in battle. Click for more details about each effect.",
+                    link:
+                      "https://essentialsdocs.fandom.com/wiki/Defining_an_item"
+                  }}
+                />
+                <Autocomplete
+                  title="Move"
+                  value={editData.move || ""}
+                  onValueChange={(value) =>
+                    setEditData((prev) =>
+                      prev ? { ...prev, move: value as string } : null
+                    )
+                  }
+                  options={moves.map((move) => move.id)}
+                  tooltip={{
+                    description:
+                      "If this item is a TM or HM, the ID of the move it teaches."
+                  }}
+                />
+              </div>
+            </FormSection>
+            <FormSection title="Miscellaneous" tooltip="These options should only be changed for Key Items or special cases as they default to true for most items.">
+              <div className="flex flex-wrap gap-4">
+                <InputField
+                  label="Consumable"
+                  type="checkbox"
+                  value={editData.consumable}
+                  onChange={(value) =>
+                    setEditData((prev) =>
+                      prev ? { ...prev, consumable: value as boolean } : null
+                    )
+                  }
+                />
+                <InputField
+                  label="Show Quantity"
+                  type="checkbox"
+                  value={editData.showQuantity}
+                  onChange={(value) =>
+                    setEditData((prev) =>
+                      prev ? { ...prev, showQuantity: value as boolean } : null
+                    )
+                  }
+                />
+              </div>
+            </FormSection>
+            <ItemFlagSection item={editData} setItem={setEditData} />
           </div>
         </div>
       </div>

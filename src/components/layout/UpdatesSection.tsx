@@ -54,12 +54,15 @@ const UpdatesSection = () => {
   };
 
   return (
-    <div className="absolute z-[100] top-[15%] left-30 w-100 md:w-60 bg-slate-900/60 rounded-lg shadow-lg text-white hidden lg:block">
+    <div className={`absolute z-[100] top-[15%] left-30 bg-slate-900/60 rounded-lg shadow-lg text-white border border-slate-800
+      2xl:w-100 xl:w-80 lg:w-40 lg:block hidden
+      transition-all
+    `}>
       <h1 className="text-lg font-bold p-4 mb-2 border-b border-slate-800 text-slate-300">
         Updates
       </h1>
       {/* Updates Container */}
-      <div className="overflow-y-auto max-h-50">
+      <div className="overflow-y-auto max-h-70">
         <Accordion.Root type="single" defaultValue="item-1" collapsible>
           {Object.entries(versionHistory).map(([version, changes]) => (
             <AccordionItem key={version} value={version}>
