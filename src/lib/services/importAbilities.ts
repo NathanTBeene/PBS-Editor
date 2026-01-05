@@ -12,7 +12,7 @@ export const importAbilities = (data: string) => {
 
   sections.forEach((section) => {
     const lines = section.split("\n");
-    const ability = { ...defaultAbility };
+    const ability: Ability = structuredClone(defaultAbility);
 
     lines.forEach((line) => {
       if (line.trim() === "" || line.startsWith("#")) return; // Skip empty lines and comments

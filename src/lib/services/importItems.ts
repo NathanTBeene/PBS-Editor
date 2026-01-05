@@ -13,7 +13,7 @@ export const importItems = (data: string): Item[] => {
 
   sections.forEach((section) => {
     const lines = section.split("\n");
-    const item = { ...defaultItem };
+    const item: Item = structuredClone(defaultItem);
 
     lines.forEach((line) => {
       if (line.trim() === "" || line.startsWith("#")) return; // Skip empty lines and comments
@@ -71,26 +71,48 @@ export const importItems = (data: string): Item[] => {
           item.move = value;
           break;
         case "Flags":
-          const flagLines = value.split(",").map((s) => s.trim());
-          for (const flag of flagLines) {
-            if (!item.flags) item.flags = [];
-            // Handle special flags with values
+          const flags = value.split(",").map((s) => s.trim()) as any;
+          console.log(`Parsing flags for item ${item.id}:`, flags);
+
+          for (const flag of flags) {
             if (flag.startsWith("Fling")) {
               const [, flingValue] = flag.split("_");
               item.flingValue = parseInt(flingValue);
-            }
-            else if (flag.startsWith("NaturalGift")) {
+            } else if (flag.startsWith("NaturalGift")) {
               const [, type, power] = flag.split("_");
               item.naturalGift = {
                 type: type as PokemonType || "NORMAL",
                 power: parseInt(power)
               };
-            }
-            else {
-              item.flags.push(flag as any);
+            } else {
+              if (!item.flags) item.flags = [];
+              item.flags.push(flag);
             }
           }
-
+          break;
+        // case "Flags":
+        //   const flagLines = value.split(",").map((s) => s.trim());
+        //   for (const flag of flagLines) {
+        //     if (!item.flags) item.flags = [];
+        //     // Handle special flags with values
+        //     if (flag.startsWith("Fling")) {
+        //       const [, flingValue] = flag.split("_");
+        //       item.flingValue = parseInt(flingValue);
+        //     }
+        //     else if (flag.startsWith("NaturalGift")) {
+        //       const [, type, power] = flag.split("_");
+        //       item.naturalGift = {
+        //         type: type as PokemonType || "NORMAL",
+        //         power: parseInt(power)
+        //       };
+        //     }
+        //     else {
+        //       item.flags.push(flag as any);
+        //     }
+        //   }
+        //   break;
+        default:
+          console.warn(`Unknown item key at line ${lineNum}: ${key}`);
       }
 
       lineNum++;
@@ -110,5 +132,6 @@ export const importItems = (data: string): Item[] => {
   })
 
   console.log(`Parsed ${itemsList.length} items from internal PBS.`);
+  console.log(itemsList);
   return itemsList;
 };

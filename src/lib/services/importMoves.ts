@@ -11,7 +11,7 @@ export const importMoves = (data: string) => {
 
   sections.forEach((section) => {
     const lines = section.split("\n");
-    const move = { ...defaultMove };
+    const move: Move = structuredClone(defaultMove);
 
     lines.forEach((line) => {
       if (line.trim() === "" || line.startsWith("#")) {
