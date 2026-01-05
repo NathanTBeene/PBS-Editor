@@ -210,6 +210,10 @@ export const getPocketNumber = (pocket: PocketType): number => {
   return PocketTypes.findIndex((pocketType) => pocketType === pocket) + 1
 }
 
+export const getPocketFromNumber = (pocketNumber: number): PocketType => {
+  return PocketTypes[pocketNumber - 1] as PocketType
+};
+
 export let FieldUses = [
   "OnPokemon",
   "Direct",

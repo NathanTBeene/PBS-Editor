@@ -3,11 +3,13 @@ import { useAbilityData } from "./pokedex/useAbilityData";
 import { useMoveData } from "./pokedex/useMoveData";
 import { usePBSConstants } from "./pokedex/usePBSConstants";
 import { usePokemonData } from "./pokedex/usePokemonData";
+import { useItemData } from "./pokedex/useItemData";
 
 export const usePokedex = () => {
   const pokemonData = usePokemonData();
   const moveData = useMoveData();
   const abilityData = useAbilityData();
+  const itemData = useItemData();
   const constantsData = usePBSConstants();
 
   useEffect(() => {
@@ -17,6 +19,7 @@ export const usePokedex = () => {
       await pokemonData.loadPokemonData();
       await moveData.loadMoveData();
       await abilityData.loadAbilityData();
+      await itemData.loadItemData();
     };
 
     loadData();
@@ -50,6 +53,7 @@ export const usePokedex = () => {
     overrideMoveData: moveData.overrideMoveData,
     importMovesMerge: moveData.importMerge,
     importMovesOverride: moveData.importOverride,
+    getMoveDataById: moveData.getMoveDataById,
 
     // Ability data
     abilities: abilityData.abilities,
@@ -64,6 +68,19 @@ export const usePokedex = () => {
     importAbilitiesMerge: abilityData.importMerge,
     importAbilitiesOverride: abilityData.importOverride,
 
+    // Item data
+    items: itemData.items,
+    setItemData: itemData.setItemData,
+    selectedItem: itemData.selectedItem,
+    setSelectedItem: itemData.setSelectedItem,
+    isItemInPokedex: itemData.isItemInPokedex,
+    addItem: itemData.addItem,
+    removeItem: itemData.removeItem,
+    resetItemData: itemData.resetItemData,
+    setItemToDefault: itemData.setItemToDefault,
+    importItemsMerge: itemData.importMerge,
+    importItemsOverride: itemData.importOverride,
+
     // Constants data
     types: constantsData.types,
     genderRatios: constantsData.genderRatios,
@@ -73,6 +90,11 @@ export const usePokedex = () => {
     shapes: constantsData.shapes,
     habitats: constantsData.habitats,
     evolutionMethods: constantsData.evolutionMethods,
+    pockets: constantsData.pockets,
+    fieldUses: constantsData.fieldUses,
+    battleUses: constantsData.battleUses,
+    itemFlags: constantsData.itemFlags,
+    moveFlags: constantsData.moveFlags,
     resetConstants: constantsData.resetConstant,
     resetAllConstants: constantsData.resetAllConstants,
     addConstant: constantsData.addConstant,

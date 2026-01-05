@@ -1,28 +1,31 @@
 import type { BattleUse, FieldUse, ItemFlags, PocketType, PokemonType } from "./constants";
-import type { PokemonMove } from "./Pokemon";
 
 export interface Item {
+  // Base Information
   id: string;
+  pocket: PocketType;
   name: string;
   namePlural: string;
+  portionName?: string;
   description: string;
-  pocket: PocketType;
+  portionNamePlural?: string;
+
+  // Pricing
   price: number;
   sellPrice: number; // typically half of price
+  bpPrice?: number;
+
   flingValue: number;
   naturalGift?: {
     type: PokemonType;
     power: number;
   }
-  portionName?: string;
-  portionNamePlural?: string;
-  bpPrice?: number;
   fieldUse?: FieldUse;
   battleUse?: BattleUse;
   flags?: ItemFlags[];
   consumable?: boolean;
   showQuantity?: boolean;
-  move?: PokemonMove;
+  move?: string;
 }
 
 export const defaultItem: Item = {
@@ -34,7 +37,7 @@ export const defaultItem: Item = {
   pocket: "Items",
   price: 0,
   sellPrice: 0,
-  bpPrice: 0,
+  bpPrice: 1,
   fieldUse: undefined,
   battleUse: undefined,
   flags: undefined,

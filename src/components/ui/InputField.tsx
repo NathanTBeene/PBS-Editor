@@ -92,7 +92,7 @@ const InputField = ({
           onBlur={handleOnFinish}
           type={type}
           value={value}
-          onChange={(e) => handleChange(e.target.value)}
+          onChange={(e) => handleChange(type === "number" ? Number(e.target.value) : e.target.value)}
           placeholder={placeholder}
           min={min}
           max={max}
